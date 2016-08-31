@@ -109,7 +109,7 @@ class UsersController extends Controller
             $picture_profile = date('His').'_'.$filename_profile;
             //optimize images and store image
             $image_profile=\Image::make($file_profile->getRealPath()); //Call image library installed.
-            $destinationPath_profile = public_path().'/img/users/profile/';
+            $destinationPath_profile ='img/users/profile/';
             $image_profile->resize(200, null, function ($constraint) {
             $constraint->aspectRatio();
             });
@@ -126,7 +126,7 @@ class UsersController extends Controller
             $picture_real_id = date('His').'_'.$filename_real_id;
             //optimize images and store image
             $image_real_id=\Image::make($file_real_id->getRealPath()); //Call image library installed.
-            $destinationPath_real_id = public_path().'/img/users/real_id/';
+            $destinationPath_real_id = 'img/users/real_id/';
             $image_real_id->resize(400, null, function ($constraint) {
             $constraint->aspectRatio();
             });

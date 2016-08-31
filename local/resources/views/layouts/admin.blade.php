@@ -126,6 +126,22 @@
         ? history.replaceState(null, null, window.location.href.split('#')[0])
         : window.location.hash = '';
 }
+        //delete images ajax request
+        $('.btn-delete').on('click', function(e) {
+            var myThis = $(this).parent().parent();
+            var imgid = $(this).data('imgid');
+            var type = $('.type').data('type');
+            $.ajax({
+                url: '{{ url('/admin/images/destroyImage') }}' + '/' + type + '/' + imgid,
+                type: 'DELETE',
+                data:{_token:token,id:imgid,type:type},
+                success: function(msg) {
+                    console.log(msg['msg']);
+                    
+                    $(myThis).fadeOut(150);
+                }
+            });
+        });
     </script>
 </body>
 </html>

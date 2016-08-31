@@ -61,7 +61,7 @@ class PostsController extends Controller
             $posts->tags;
             $posts->user;
         });
-        return redirect('admin.posts.all')
+        return view('admin.posts.all')
         ->with('posts',$posts);
     }
 
@@ -99,9 +99,11 @@ class PostsController extends Controller
         $post->save();  
         //associate all tags for the post
         $post->tags()->sync($request->tags);
-        $picture = '';      
+        $picture = '';    
+
         //Process Form Images
         if ($request->hasFile('images')) {
+
             $files = $request->file('images');
             foreach($files as $file){
                 //image  data
@@ -118,7 +120,7 @@ class PostsController extends Controller
                 //make images thumbnails
                 $image2=\Image::make($file->getRealPath()); //Call immage library installed.
                 $thumbPath ='img/posts/thumbs/';
-                $image2->resize(null, 230, function ($constraint) {
+                $image2->resize(300, 230, function ($constraint) {
                     $constraint->aspectRatio();
                 });
                 $image2->save($thumbPath.'thumb_'.$picture);
@@ -186,7 +188,44 @@ class PostsController extends Controller
         $post->fill($request->all());
         $post->user_id = \Auth::user()->id;
         $post->save();
-        $post->tags()->sync($request->tags);      
+        $post->tags()->sync($request->tags);
+        $picture = '';    
+
+        //Process Form Images
+        if ($request->hasFile('images')) {
+
+            $files = $request->file('images');
+           
+
+            foreach($files as $file){
+                //image  data
+
+                $filename = $file->getClientOriginalName();
+                $extension = $file->getClientOriginalExtension();
+                $picture = date('His').'_'.$filename;
+                //make images sliders
+                $image=\Image::make($file->getRealPath()); //Call image library installed.
+                $destinationPath = 'img/posts/';
+                $image->resize(1300, null, function ($constraint) {
+                    $constraint->aspectRatio();
+                });
+
+                $image->save($destinationPath.'slider_'.$picture);
+                //make images thumbnails
+                $image2=\Image::make($file->getRealPath()); //Call immage library installed.
+                $thumbPath ='img/posts/thumbs/';
+                $image2->resize(300, 230, function ($constraint) {
+                    $constraint->aspectRatio();
+                });
+                $image2->save($thumbPath.'thumb_'.$picture);
+                //save image information on the db.
+                $imageDb = new Image();
+                $imageDb->name = $picture;
+
+                $imageDb->post()->associate($post);
+                $imageDb->save();
+            }
+        }
         Flash::success("Post <strong>".$post->id."</strong> was updated.");
         return redirect()->route('admin.posts.index');
     }
@@ -199,14 +238,12 @@ class PostsController extends Controller
      */
     public function destroy($id)
     {
-        if(Auth::user()->type == 'admin'){
-            $post = Post::find($id);
-            $post->delete();
-            Flash::error("Post <strong>".$post->name."</strong> was deleted.");
-            return redirect()->route('admin.posts.index');            
-        }else{
-            return redirect()->route('admin.dashboard.index');
-        }
+    
+        $post = Post::find($id);
+        $post->delete();
+        Flash::error("Post <strong>".$post->name."</strong> was deleted.");
+        return redirect()->route('admin.posts.index');            
+      
     }
     
     public function approve($id)

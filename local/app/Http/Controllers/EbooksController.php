@@ -124,7 +124,7 @@ class EbooksController extends Controller
                 $picture = date('His').'_'.$filename;
                 //make images sliders
                 $image=\Image::make($file->getRealPath()); //Call image library installed.
-                $destinationPath = public_path().'/img/ebooks/';
+                $destinationPath = 'img/ebooks/';
                 $image->resize(1300, null, function ($constraint) {
                     $constraint->aspectRatio();
                 });
@@ -132,7 +132,7 @@ class EbooksController extends Controller
                 
                 //make images thumbnails
                 $image2=\Image::make($file->getRealPath()); //Call immage library installed.
-                $thumbPath = public_path().'/img/ebooks/thumbs/';
+                $thumbPath = 'img/ebooks/thumbs/';
                 $image2->resize(null, 230, function ($constraint) {
                     $constraint->aspectRatio();
                 });
@@ -143,8 +143,6 @@ class EbooksController extends Controller
                 $imageDb->ebook()->associate($ebook);
                 $imageDb->save();
             }
-        }else{
-            return redirect()->back();
         }
         Flash::success("Ebook <strong>".$ebook->title."</strong> was created.");
         return redirect()->route('admin.ebooks.index');
@@ -181,7 +179,7 @@ class EbooksController extends Controller
             $myTags = $ebook->tags->lists('id')->ToArray(); //give me a array with only the tags id.
             return View('admin.ebooks.edit')->with('ebook',$ebook)->with('categories',$categories)->with('tags',$tags)->with('myTags',$myTags);            
         }else{
-            return redirect()->route('admin.dashboard.index');
+            return redirect()->route('admin.ebooks.index');
         }
 
     }
@@ -204,7 +202,38 @@ class EbooksController extends Controller
         $ebook->fill($request->all());
         $ebook->user_id = \Auth::user()->id;
         $ebook->save();
-        $ebook->tags()->sync($request->tags);      
+        $ebook->tags()->sync($request->tags);
+                //Process Form Images
+        if ($request->hasFile('images')) {
+            $files = $request->file('images');
+            foreach($files as $file){
+
+                //image data
+                $filename = $file->getClientOriginalName();
+                $extension = $file->getClientOriginalExtension();
+                $picture = date('His').'_'.$filename;
+                //make images sliders
+                $image=\Image::make($file->getRealPath()); //Call image library installed.
+                $destinationPath = 'img/ebooks/';
+                $image->resize(1300, null, function ($constraint) {
+                    $constraint->aspectRatio();
+                });
+                $image->save($destinationPath.'ebook_'.$picture);
+                
+                //make images thumbnails
+                $image2=\Image::make($file->getRealPath()); //Call immage library installed.
+                $thumbPath = 'img/ebooks/thumbs/';
+                $image2->resize(null, 230, function ($constraint) {
+                    $constraint->aspectRatio();
+                });
+                $image2->save($thumbPath.'thumb_'.$picture);
+                //save image information on the db.
+                $imageDb = new Image();
+                $imageDb->name = $picture;
+                $imageDb->ebook()->associate($ebook);
+                $imageDb->save();
+            }
+        }      
         Flash::success("Ebook <strong>".$ebook->id."</strong> was updated.");
         return redirect()->route('admin.ebooks.index');
     }

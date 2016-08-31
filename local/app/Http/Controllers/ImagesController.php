@@ -32,11 +32,13 @@ class ImagesController extends Controller
         }
 
     }
-    public function destroyImage(Request $request,$id)
+    public function destroyImage(Request $request,$type,$id)
     {
         $image = Image::find($id);
-        $myimage = "img/posts/slider_".$image->name;
-        $myimageThumb = "img/posts/thumbs/thumb_".$image->name;
+
+        $myimage = "img/".$type."/slider_".$image->name;
+        $myimageThumb = "img/".$type."/thumbs/thumb_".$image->name;
+        
         \File::delete([
             $myimage,
             $myimageThumb

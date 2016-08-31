@@ -44,7 +44,7 @@
 
                 {!! Form::close() !!}
             </div>            
-            <div class="col-md-6">
+            <div class="col-md-6 type" data-type="photos">
                 <h1>Images</h1>
                 <hr>
                 @if(count($photo->images) > 0)  
@@ -55,7 +55,7 @@
                     <div class="col-xs-12">
                         <img src="{{asset('img/photos/thumbs').'/thumb_'.$image->name, '$photo->title'}}" alt="The Public Post {{$photo->title}}">
                         <p class="col-xs-12" style="padding-left:0px; margin-top:10px;">
-                            <a href="#" class="btn-delete btn btn-danger"  data-photoid="{{$image->id}}"><i class="fa fa-trash fa-2x"></i></a>
+                            <a href="#" class="btn-delete btn btn-danger"  data-imgid="{{$image->id}}"><i class="fa fa-trash fa-2x"></i></a>
                         </p>
                     </div>
                     <hr>
@@ -85,21 +85,5 @@
             
         });
     </script>
-    <script>
-    $('.btn-delete').on('click', function(e) {
-        var myThis = $(this).parent().parent();
-        var dataId = $(this).data('photoid');
-
-        $.ajax({
-            url: '{{ url('/admin/images/destroyImage') }}' + '/' + dataId,
-            type: 'DELETE',
-            data:{_token:token,id:dataId},
-            success: function(msg) {
-                console.log(msg['msg']);
-                
-                $(myThis).fadeOut(150);
-            }
-        });
-    });
-    </script>
+ 
 @endsection

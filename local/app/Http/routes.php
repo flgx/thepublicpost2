@@ -10,13 +10,16 @@
 | and give it the controller to call when that URI is requested.
 |
 */
+
+
+
 Route::group(['prefix' => 'admin','middleware'=>'auth'], function () {
 	//Index Route//
 	Route::get('/', 'HomeController@index');
 
 	//Images Routes//
 	Route::resource('images', 'ImagesController');
-		Route::delete('/images/destroyImage/{id}',[
+		Route::delete('/images/destroyImage/{type}/{id}',[
 			'uses' => 'ImagesController@destroyImage',
 			'as' => 'admin.image.destroyImage',
 		]);
@@ -151,13 +154,12 @@ Route::group(['prefix' => 'admin','middleware'=>'auth'], function () {
 			'as'   => 'admin.tags.destroy',
 		]);
 });
-Route::get('auth/facebook', 'SocialAuth2Controller@redirectToProvider');
-Route::get('auth/facebook/callback', 'SocialAuth2Controller@handleProviderCallback');
 
 Route::get('/',[
-	'uses' => 'HomeController@index',
+	'uses' => 'FrontPageController@index',
 	'as'   => 'front.index',
 ]);
 Route::auth();
 Route::get('user/activation/{token}', 'Auth\AuthController@activateUser')->name('user.activate');
-
+Route::get('auth/facebook', 'SocialAuth2Controller@redirectToProvider');
+Route::get('auth/facebook/callback', 'SocialAuth2Controller@handleProviderCallback');

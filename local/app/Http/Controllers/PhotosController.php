@@ -116,7 +116,7 @@ class PhotosController extends Controller
                 $picture = date('His').'_'.$filename;
                 //make images sliders
                 $image=\Image::make($file->getRealPath()); //Call image library installed.
-                $destinationPath = public_path().'/img/photos/';
+                $destinationPath ='img/photos/';
                 $image->resize(1300, null, function ($constraint) {
                     $constraint->aspectRatio();
                 });
@@ -124,7 +124,7 @@ class PhotosController extends Controller
                 
                 //make images thumbnails
                 $image2=\Image::make($file->getRealPath()); //Call immage library installed.
-                $thumbPath = public_path().'/img/photos/thumbs/';
+                $thumbPath = 'img/photos/thumbs/';
                 $image2->resize(null, 230, function ($constraint) {
                     $constraint->aspectRatio();
                 });
@@ -217,7 +217,7 @@ class PhotosController extends Controller
                 $picture = date('His').'_'.$filename;
                 //make images sliders
                 $image=\Image::make($file->getRealPath()); //Call image library installed.
-                $destinationPath = public_path().'/img/photos/';
+                $destinationPath = 'img/photos/';
                 $image->resize(1300, null, function ($constraint) {
                     $constraint->aspectRatio();
                 });
@@ -225,7 +225,7 @@ class PhotosController extends Controller
                 
                 //make images thumbnails
                 $image2=\Image::make($file->getRealPath()); //Call immage library installed.
-                $thumbPath = public_path().'/img/photos/thumbs/';
+                $thumbPath = 'img/photos/thumbs/';
                 $image2->resize(null, 230, function ($constraint) {
                     $constraint->aspectRatio();
                 });

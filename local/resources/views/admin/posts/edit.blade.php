@@ -41,7 +41,7 @@
                     
                     <div class="form-group">
                         {!! Form::label('images','Images') !!}
-                        {!! Form::file('images',null,['class'=> 'form-control','required']) !!}
+                        {!! Form::file('images[]', array('multiple'=>true)) !!}
                     </div>
                     <div class="form-group myid" data-post="{{$post->id}}">
                         {!! Form::submit('Edit Post',['class'=>'btn btn-primary']) !!}
@@ -51,7 +51,7 @@
             </div>
             
             <!-- Post Images -->
-            <div class="col-md-6">
+            <div class="col-md-6 type" data-type="posts">
                 <h1>Images</h1>
                 <hr>
                 @if(count($post->images) > 0)  
@@ -62,7 +62,7 @@
                     <div class="col-xs-12">
                         <img src="{{asset('img/posts/thumbs').'/thumb_'.$image->name, '$post->title'}}" alt="The Public Post {{$post->title}}">
                         <p class="col-xs-12" style="padding-left:0px; margin-top:10px;">
-                            <a href="#" class="btn-delete btn btn-danger"  data-postid="{{$image->id}}"><i class="fa fa-trash fa-2x"></i></a>
+                            <a href="#" class="btn-delete btn btn-danger" onclick="return confirm('Are you sure?');"  data-imgid="{{$image->id}}"><i class="fa fa-trash fa-2x"></i></a>
                         </p>
                     </div>
                     <hr>
@@ -90,8 +90,8 @@
 
         $('.textarea-content').trumbowyg({
             
-        });
-        
+        }); 
+
         var dataId = $('.myid').data('post');
 
         $.ajax({
