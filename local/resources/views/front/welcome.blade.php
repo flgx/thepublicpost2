@@ -1,4 +1,7 @@
 @extends('layouts.front')
+@section('css')
+<link rel="stylesheet" href="{{asset('dist/css/home-logged.css')}}">
+@endsection
 @section('title','INDEX FRONT')
 @section('content')
     <!-- Page Content -->
@@ -70,53 +73,42 @@
                 <a href="#" style="margin-right:10px; font-weight: bold; font-size: 1.3em; text-decoration:none">Link #1</a><a href="#" style="font-weight: bold; font-size: 1.3em; text-decoration:none">Link #2</a>
             </div>
             <div class="titulos col-sm-12" style="text-align:left;padding:0">
-            <p style="margin-top:10px">
-            <div class="col-lg-12 col-md-12 col-sm-4 col-xs-4 sidebar-title-carousel">
-            <a href="#" data-target="#carousel-1" data-slide-to="0" class="active"data-target="#carousel-1" data-slide-to="0"  style="text-decoration:none;font-size:15px;font-weight:bold;color:black;text-align:left">Titulo#1</a>
-            </div>
-            <div class="col-lg-12 col-md-12 col-sm-4 col-xs-4 sidebar-title-carousel">
-            <a href="#" data-target="#carousel-1" data-slide-to="1" style="text-decoration:none;font-size:15px;font-weight:bold;color:black;text-align:left">Titulo#2</a>
-            </div>
-            <div class="col-lg-12 col-md-12 col-sm-4 col-xs-4 sidebar-title-carousel">
-            <a href="#" data-target="#carousel-1" data-slide-to="2" style="text-decoration:none;font-size:15px;font-weight:bold;color:black;text-align:left">Titulo#3</a>
-            </div>
-            <div class="col-lg-12 col-md-12 col-sm-4 col-xs-4 sidebar-title-carousel">
-            <a href="#" data-target="#carousel-1" data-slide-to="3" style="text-decoration:none;font-size:15px;font-weight:bold;color:black;text-align:left">Titulo#4</a>
-            </div>
-            <div class="col-lg-12 col-md-12 col-sm-4 col-xs-4 sidebar-title-carousel">
-            <a href="#" data-target="#carousel-1" data-slide-to="4" style="text-decoration:none;font-size:15px;font-weight:bold;color:black;text-align:left">Titulo#5</a>
-            </div>
-            </p> 
+                <p style="margin-top:10px">
+                <div class="col-lg-12 col-md-12 col-sm-4 col-xs-4 sidebar-title-carousel">
+                <a href="#" data-target="#carousel-1" data-slide-to="0" class="active"data-target="#carousel-1" data-slide-to="0"  style="text-decoration:none;font-size:15px;font-weight:bold;color:black;text-align:left">Titulo#1</a>
+                </div>
+                <div class="col-lg-12 col-md-12 col-sm-4 col-xs-4 sidebar-title-carousel">
+                <a href="#" data-target="#carousel-1" data-slide-to="1" style="text-decoration:none;font-size:15px;font-weight:bold;color:black;text-align:left">Titulo#2</a>
+                </div>
+                <div class="col-lg-12 col-md-12 col-sm-4 col-xs-4 sidebar-title-carousel">
+                <a href="#" data-target="#carousel-1" data-slide-to="2" style="text-decoration:none;font-size:15px;font-weight:bold;color:black;text-align:left">Titulo#3</a>
+                </div>
+                <div class="col-lg-12 col-md-12 col-sm-4 col-xs-4 sidebar-title-carousel">
+                <a href="#" data-target="#carousel-1" data-slide-to="3" style="text-decoration:none;font-size:15px;font-weight:bold;color:black;text-align:left">Titulo#4</a>
+                </div>
+                <div class="col-lg-12 col-md-12 col-sm-4 col-xs-4 sidebar-title-carousel">
+                <a href="#" data-target="#carousel-1" data-slide-to="4" style="text-decoration:none;font-size:15px;font-weight:bold;color:black;text-align:left">Titulo#5</a>
+                </div>
+                </p> 
             </div>
             </div>
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="padding:0; margin-top:50px">
+   
+                @foreach($featured_posts as $featured)
                 <div class="col-md-4 col-sm-6 col-xs-12" style="padding:0;border:1px solid #dcddde">
-                    <div class="post-destacados col-lg-6 col-md-4 col-sm-3 col-xs-3" style="padding-top: 20px;padding-bottom: 20px;padding-left: 20px;padding-right: 0;"><a href="#"><img class="img-responsive center-block" src="https://placeholdit.imgix.net/~text?txtsize=9&txt=100%C3%97100&w=100&h=100" alt=""></a></div>
+                    <div class="post-destacados col-lg-6 col-md-4 col-sm-3 col-xs-3" style="padding-top: 20px;padding-bottom: 20px;padding-left: 20px;padding-right: 0;">
+                        <a href="#">
+                            <img class="img-responsive center-block" src="" alt="">
+                        </a>
+                    </div>
                     <div class="post-destacados-titulo col-lg-6 col-md-8 col-sm-9 col-xs-9" >
                         <br>
-                        <p style="text-align:justify"><a href="#" style="text-decoration:none; color:#55505c; font-weight:bold;text-align:left">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</a></p>
-                        <p style="font-size:10px"><span class="glyphicon glyphicon-time"></span> 2 years 2 weeks ago</p>
+                        <p style="text-align:justify"><a href="http://placehold.it/700x300" style="text-decoration:none; color:#55505c; font-weight:bold;text-align:left">{{$featured->title}}</a></p>
+                        <p style="font-size:10px"><span class="glyphicon glyphicon-time"></span> {{$featured->created_at}}</p>
 
                     </div>
                 </div>
-                <div class="col-md-4 col-sm-6 col-xs-12" style="padding:0;border:1px solid #dcddde">
-                    <div class="post-destacados col-lg-6 col-md-4 col-sm-3 col-xs-3" style="padding-top: 20px;padding-bottom: 20px;padding-left: 20px;padding-right: 0;"><a href="#"><img class="img-responsive center-block" src="https://placeholdit.imgix.net/~text?txtsize=9&txt=100%C3%97100&w=100&h=100" alt=""></a></div>
-                    <div class="post-destacados-titulo col-lg-6 col-md-8 col-sm-9 col-xs-9" >
-                        <br>
-                        <p style="text-align:justify"><a href="#" style="text-decoration:none; color:#55505c; font-weight:bold;text-align:left">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</a></p>
-                        <p style="font-size:10px"><span class="glyphicon glyphicon-time"></span> 2 years 2 weeks ago</p>
-
-                    </div>
-                </div>
-                <div class="col-md-4 col-sm-6 col-xs-12" style="padding:0;border:1px solid #dcddde">
-                    <div class="post-destacados col-lg-6 col-md-4 col-sm-3 col-xs-3" style="padding-top: 20px;padding-bottom: 20px;padding-left: 20px;padding-right: 0;"><a href="#"><img class="img-responsive center-block" src="https://placeholdit.imgix.net/~text?txtsize=9&txt=100%C3%97100&w=100&h=100" alt=""></a></div>
-                    <div class="post-destacados-titulo col-lg-6 col-md-8 col-sm-9 col-xs-9" >
-                        <br>
-                        <p style="text-align:justify"><a href="#" style="text-decoration:none; color:#55505c; font-weight:bold;text-align:left">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</a></p>
-                        <p style="font-size:10px"><span class="glyphicon glyphicon-time"></span> 2 years 2 weeks ago</p>
-
-                    </div>
-                </div>
+                @endforeach
             </div>
                 <div class="tabs col-lg-12 col-md-12 col-sm-12 col-xs-12" style="margin-top:20px;padding:0">
                 <a href="#" style="margin-right:10px; font-weight: bold; font-size: 1.3em; text-decoration:none">Link #1</a><a href="#" style="font-weight: bold; font-size: 1.3em; text-decoration:none">Link #2</a>

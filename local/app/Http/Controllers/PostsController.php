@@ -10,6 +10,7 @@ use App\Post;
 use App\Tag;
 use App\Image;
 use App\Category;
+use App\User;
 use Auth;
 use Config;
 class PostsController extends Controller
@@ -19,6 +20,26 @@ class PostsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function getUserPosts($id){
+        $posts =  Post::orderBy('id','DESC')->where('user_id',$id)->paginate(5);
+        $posts->each(function($posts){
+            $posts->category;
+            $posts->images;
+            $posts->tags;
+            $posts->user;
+        });
+        $user = User::find($id);
+        return view('admin.posts.user')
+        ->with('posts',$posts)->with('user',$user);
+    }
+    public function addView(Request $request,$id){
+        $post = Post::find($id);
+        $post->views = $post->views + 1;
+        $post->update();
+        return response()->json(['msg'=>'success']);
+     
+        
+    }
     public function index(Request $request)
     {
         $posts= Post::Search($request->title)->orderBy('id','DESC')->where('user_id',Auth::user()->id)->paginate(5);
@@ -40,7 +61,7 @@ class PostsController extends Controller
             $posts->tags;
             $posts->user;
         });
-        return view('admin.posts.all')
+        return redirect('admin.posts.all')
         ->with('posts',$posts);
     }
 
@@ -89,14 +110,14 @@ class PostsController extends Controller
                 $picture = date('His').'_'.$filename;
                 //make images sliders
                 $image=\Image::make($file->getRealPath()); //Call image library installed.
-                $destinationPath = public_path().'/img/posts/';
+                $destinationPath = 'img/posts/';
                 $image->resize(1300, null, function ($constraint) {
                     $constraint->aspectRatio();
                 });
                 $image->save($destinationPath.'slider_'.$picture);
                 //make images thumbnails
                 $image2=\Image::make($file->getRealPath()); //Call immage library installed.
-                $thumbPath = public_path().'/img/posts/thumbs/';
+                $thumbPath ='img/posts/thumbs/';
                 $image2->resize(null, 230, function ($constraint) {
                     $constraint->aspectRatio();
                 });
@@ -107,8 +128,6 @@ class PostsController extends Controller
                 $imageDb->post()->associate($post);
                 $imageDb->save();
             }
-        }else{
-           return redirect()->back();
         }
         Flash::success("Post <strong>".$post->title."</strong> was created.");
         return redirect()->route('admin.posts.index');

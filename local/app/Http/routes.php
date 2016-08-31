@@ -45,6 +45,14 @@ Route::group(['prefix' => 'admin','middleware'=>'auth'], function () {
 		'uses' => 'PostsController@suspend',
 		'as'   => 'admin.posts.suspend',
 	]);
+	Route::post('posts/addView/{id}',[
+		'uses' => 'PostsController@addView',
+		'as'   => 'admin.posts.addview',
+	]);
+	Route::get('posts/{id}/user',[
+		'uses' => 'PostsController@getUserPosts',
+		'as'   => 'admin.posts.user',
+	]);
 	//Ebooks Routes//	
 	Route::get('ebooks/all',[
 			'uses' => 'EbooksController@all',
@@ -62,6 +70,14 @@ Route::group(['prefix' => 'admin','middleware'=>'auth'], function () {
 	Route::get('ebooks/{id}/suspend',[
 		'uses' => 'EbooksController@suspend',
 		'as'   => 'admin.ebooks.suspend',
+	]);
+	Route::post('ebooks/addView/{id}',[
+		'uses' => 'EbooksController@addView',
+		'as'   => 'admin.ebook.addview',
+	]);
+	Route::get('ebooks/{id}/user',[
+		'uses' => 'EbooksController@getUserPosts',
+		'as'   => 'admin.ebooks.user',
 	]);
 	//Photos Routes//
 	Route::get('photos/all',[
@@ -81,6 +97,14 @@ Route::group(['prefix' => 'admin','middleware'=>'auth'], function () {
 		'uses' => 'PhotosController@suspend',
 		'as'   => 'admin.photos.suspend',
 	]);
+	Route::post('photos/addView/{id}',[
+		'uses' => 'EbooksController@addView',
+		'as'   => 'admin.ebook.addview',
+	]);
+	Route::get('photos/{id}/user',[
+		'uses' => 'PhotosController@getUserPosts',
+		'as'   => 'admin.photos.user',
+	]);
 	//Videos Routes//
 	Route::get('videos/all',[
 		'uses' => 'VideosController@all',
@@ -99,6 +123,14 @@ Route::group(['prefix' => 'admin','middleware'=>'auth'], function () {
 	Route::get('videos/{id}/suspend',[
 		'uses' => 'VideosController@suspend',
 		'as'   => 'admin.videos.suspend',
+	]);
+	Route::post('videos/addView/{id}',[
+		'uses' => 'VideosController@addView',
+		'as'   => 'admin.videos.addview',
+	]);
+	Route::get('videos/{id}/user',[
+		'uses' => 'VideosController@getUserPosts',
+		'as'   => 'admin.videos.user',
 	]);
 	
 	//Users Routes//
@@ -122,9 +154,10 @@ Route::group(['prefix' => 'admin','middleware'=>'auth'], function () {
 Route::get('auth/facebook', 'SocialAuth2Controller@redirectToProvider');
 Route::get('auth/facebook/callback', 'SocialAuth2Controller@handleProviderCallback');
 
-Route::get('/', function () {
-	    return view('front.welcome');
-});
+Route::get('/',[
+	'uses' => 'HomeController@front',
+	'as'   => 'front.index',
+]);
 Route::auth();
 Route::get('user/activation/{token}', 'Auth\AuthController@activateUser')->name('user.activate');
 

@@ -10,10 +10,29 @@ use App\Tag;
 use App\Image;
 use App\Category;
 use App\Video;
+use App\User;
 use Auth;
 use Config;
 class VideosController extends Controller
 {
+    public function getUserPosts($id){
+        $videos =  Video::orderBy('id','DESC')->where('user_id',$id)->paginate(5);
+        $videos->each(function($videos){
+            $videos->category;
+            $videos->images;
+            $videos->tags;
+            $videos->user;
+        });
+        $user = User::find($id);
+        return view('admin.videos.user')
+        ->with('videos',$videos)->with('user',$user);
+    }
+    public function addView(Request $request,$id){
+        $video = Post::find($id);
+        $video->views = $video->views + 1;
+        $video->update();
+        return response()->json(['msg'=>'success']);       
+    }   
     /**
      * Display a listing of the resource.
      *

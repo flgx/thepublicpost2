@@ -4,7 +4,13 @@
 @section('content')
         <div class="row">
             <div class="col-lg-6 col-md-6">
-
+                <div class="actions col-xs-12">
+                    <a class="btn btn-primary" href="{{url('admin/posts/'.$user->id.'/user')}}"><i class="fa fa-archive"></i> User Posts</a>
+                    <a class="btn btn-primary" href="{{url('admin/photos/'.$user->id.'/user')}}"><i class="fa fa-photo"></i> User Photos</a>
+                    <a class="btn btn-primary" href="{{url('admin/videos/'.$user->id.'/user')}}"><i class="fa fa-video-camera"></i> User Videos</a>
+                    <a class="btn btn-primary" href="{{url('admin/ebooks/'.$user->id.'/user')}}"><i class="fa fa-book"></i> User Ebooks</a>
+                </div>
+                <hr>
             	{!! Form::open(['route' => ['admin.users.update',$user->id],'method' => 'PUT','files' => true]) !!}
                     @if($user->profile_image)
                     <div class="col-xs-6">
@@ -42,23 +48,6 @@
                     <div class="form-group col-xs-12">
                         {!! Form::label('bkash','Bkash') !!}
                         {!! Form::text('bkash', $user->bkash,['class'=> 'form-control','placeholder'=>'Type your bkash ID','required']) !!}
-                    </div>
-
-
-                    <div class="form-group">
-                        <div class="col-xs-6">
-                            @if($user->real_id)                        
-                            <img src="{{asset('img/users/real_id').'/real_id_'. $user->real_id}}" class="img-responsive" alt="The Post Page">
-                            @else
-                                <div class="panel panel-success">
-                                  <div class="panel-heading">* Please add real id.</div>
-                                </div>                            
-                            @endif
-                        </div>
-                        <div class="col-xs-6">
-                            {!! Form::label('real_id)','National ID or Passport or Driving License ') !!}
-                            {!! Form::file('real_id',null,['class'=> 'form-control','required']) !!}
-                        </div>
                     </div>
 
                     @if(Auth::user()->type == 'admin')

@@ -21,6 +21,8 @@
 						<th>Title <span class="pull-right fa fa-sort"></span> </th>
 						<th>Categories <span class="pull-right fa fa-sort"></span></th>
 						<th>User <span class="pull-right fa fa-sort"></span></th>
+						<th>Status <span class="pull-right fa fa-sort"></span></th>
+						<th>Views <span class="pull-right fa fa-sort"></span></th>
 						<th>Action</th>
 					</thead>
 					<tbody>
@@ -30,6 +32,8 @@
 								<td>{{$photo->title}}</td>
 								<td>{{$photo->category->name}}</td>
 								<td>{{$photo->user->name}}</td>
+								<td>{{$photo->status}}</td>
+								<td>{{$photo->views}}</td>
 								<td>
 									@if($photo->status == 'approved' && Auth::user()->type=='admin')
 									<a href="#" onclick="return confirm('This posts is already approved.');" class="btn btn-success" disabled="disabled">Approve</a>

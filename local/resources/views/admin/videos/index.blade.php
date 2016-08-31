@@ -21,6 +21,8 @@
 						<th>Title <span class="pull-right fa fa-sort"></span> </th>
 						<th>Categories <span class="pull-right fa fa-sort"></span></th>
 						<th>User <span class="pull-right fa fa-sort"></span></th>
+						<th>Status <span class="pull-right fa fa-sort"></span></th>
+						<th>Views <span class="pull-right fa fa-sort"></span></th>
 						<th>Action</th>
 					</thead>
 					<tbody>
@@ -30,6 +32,8 @@
 								<td>{{$video->title}}</td>
 								<td>{{$video->category->name}}</td>
 								<td>{{$video->user->name}}</td>
+								<td>{{$video->status}}</td>
+								<td>{{$video->views}}</td>
 								<td>
 									@if($video->status == 'approved' && Auth::user()->type=='admin')
 									<a href="#" onclick="return confirm('This posts is already approved.');" class="btn btn-success" disabled="disabled">Approve</a>

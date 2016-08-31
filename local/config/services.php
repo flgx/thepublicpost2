@@ -41,7 +41,7 @@ return [
     'facebook' => [
     'client_id' => '167806036983988',
     'client_secret' => '0504d49d14514413884528dfb8771e75',
-    'redirect' => 'http://localhost:80/thepublicpost/public/auth/facebook/callback',
+    'redirect' => 'http://public-post.com/beta2/auth/facebook/callback',
     ],
 
 ];

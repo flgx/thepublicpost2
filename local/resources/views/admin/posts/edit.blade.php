@@ -43,7 +43,7 @@
                         {!! Form::label('images','Images') !!}
                         {!! Form::file('images',null,['class'=> 'form-control','required']) !!}
                     </div>
-                    <div class="form-group">
+                    <div class="form-group myid" data-post="{{$post->id}}">
                         {!! Form::submit('Edit Post',['class'=>'btn btn-primary']) !!}
                     </div>
 
@@ -91,23 +91,16 @@
         $('.textarea-content').trumbowyg({
             
         });
-    </script>
-    <script>
-    $('.btn-delete').on('click', function(e) {
         
-        var myThis = $(this).parent().parent();
-        var dataId = $(this).data('postid');
+        var dataId = $('.myid').data('post');
 
         $.ajax({
-            url: '{{ url('/admin/images/destroyImage') }}' + '/' + dataId,
-            type: 'DELETE',
+            url: '{{ url('/admin/posts/addView') }}' + '/' + dataId,
+            type: 'POST',
             data:{_token:token,id:dataId},
             success: function(msg) {
                 console.log(msg['msg']);
-                
-                $(myThis).fadeOut(150);
             }
         });
-    });
-    </script>
+</script>
 @endsection

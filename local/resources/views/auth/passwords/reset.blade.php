@@ -70,8 +70,8 @@
                             </div>
                         </div>
 
-                        <button type="submit" id="login" class="btn active" style="border:0px;background-color:transparent;margin-right: 20px;color:#939393;text-decoration:none">
-                            Send Password Reset Link
+                        <button type="submit"  class="btn active" style="border:0px;background-color:transparent;margin-right: 20px;color:#939393;text-decoration:none">
+                            Reset Password
                         </button>
                     </form>
                     
@@ -87,6 +87,9 @@
     <!-- Bootstrap Core JavaScript -->
     <script src="{{asset('bootstrap/js/bootstrap.min.js')}}"></script>
     <script>
+        $('form').submit(function(){
+alert('HOLA');
+});
         $('#login').click(function(){
             $(this).addClass('active')
             if ($('#login').hasClass('active'))

@@ -10,10 +10,29 @@ use App\Photo;
 use App\Tag;
 use App\Image;
 use App\Category;
+use App\User;
 use Auth;
 use Config;
 class PhotosController extends Controller
 {
+    public function getUserPosts($id){
+        $photos =  Photo::orderBy('id','DESC')->where('user_id',$id)->paginate(5);
+        $photos->each(function($photos){
+            $photos->category;
+            $photos->images;
+            $photos->tags;
+            $photos->user;
+        });
+        $user = User::find($id);
+        return view('admin.photos.user')
+        ->with('photos',$photos)->with('user',$user);
+    }
+    public function addView(Request $request,$id){
+        $photo = Post::find($id);
+        $photo->views = $photo->views + 1;
+        $photo->update();
+        return response()->json(['msg'=>'success']);       
+    }    
     /**
      * Display a listing of the resource.
      *

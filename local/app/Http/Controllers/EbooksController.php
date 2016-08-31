@@ -8,12 +8,32 @@ use App\Http\Requests;
 use Laracasts\Flash\Flash;
 use App\Ebook;
 use App\Tag;
+use App\User;
 use App\Image;
 use App\Category;
 use Auth;
 use Config;
 class EbooksController extends Controller
 {
+
+    public function getUserPosts($id){
+        $ebooks =  Ebook::orderBy('id','DESC')->where('user_id',$id)->paginate(5);
+        $ebooks->each(function($ebooks){
+            $ebooks->category;
+            $ebooks->images;
+            $ebooks->tags;
+            $ebooks->user;
+        });
+        $user = User::find($id);
+        return view('admin.ebooks.user')
+        ->with('ebooks',$ebooks)->with('user',$user);
+    }
+    public function addView(Request $request,$id){
+        $ebook = Post::find($id);
+        $ebook->views = $ebook->views + 1;
+        $ebook->update();
+        return response()->json(['msg'=>'success']);       
+    }
     /**
      * Give me ebooks order by id DESC.
      *

@@ -24,21 +24,27 @@
                         <img class="center-block img-response" src="{{asset('img/Logo_footer.png')}}" alt="" style="margin-top: 30px;">
                     </div>
                     @if (session('status'))
-    <div class="alert alert-success">
-        {{ session('status') }}
-    </div>
-@endif
-@if (session('warning'))
-    <div class="alert alert-warning">
-        {{ session('warning') }}
-    </div>
-@endif
+                        <div class="alert alert-success">
+                            {{ session('status') }}
+                        </div>
+                    @endif
+                    @if (session('warning'))
+                        <div class="alert alert-warning">
+                            {{ session('warning') }}
+                        </div>
+                    @endif
                     <div class="cuerpo" style="width:100%;padding:15px;background-color:#fff">
                         <p style="color:#979696">Sign in to The Public Post through your email address or continue with
                         Twitter or Facebook.</p>
                         <form  role="form" method="POST" action="{{ url('/login') }}">
                             {{ csrf_field() }}
                             <input id="email" placeholder="Type your email" type="email" class="form-control" name="email" value="{{ old('email') }}" style="width: 100%; padding: 10px; border: 1px solid rgb(217, 217, 217); margin: 5px 0px;">
+
+                                        @if ($errors->has('email'))
+                                            <span class="help-block">
+                                                <strong>{{ $errors->first('email') }}</strong>
+                                            </span>
+                                        @endif
                             <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
                                 <input id="password" placeholder="Type Your Password" type="password" class="form-control" name="password" style="width:100%; padding: 10px; border: 1px solid rgb(217, 217, 217); margin: 5px 0px;">
                                         @if ($errors->has('password'))

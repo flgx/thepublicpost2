@@ -9,7 +9,8 @@
     <title>The Public Post | @yield('title')</title>
     <!-- Bootstrap Core CSS -->
     <link href="{{asset('dist/css/bootstrap.min.css')}}" rel="stylesheet">
-    <link href="{{asset('dist/css/home.css')}}" rel="stylesheet">
+
+    @yield('css')
     <link href="{{asset('dist/icons/style.css')}}" rel="stylesheet">
     <link href="{{asset('dist/css/ninja-slider.css')}}" rel="stylesheet">
     <script src="{{asset('dist/js/ninja-slider.js')}}"></script>
@@ -53,12 +54,14 @@
     <script src="{{ asset('plugins/jQuery/jquery-2.2.3.min.js')}}"></script>
     <!-- Bootstrap Core JavaScript -->
     <script src="{{asset('bootstrap/js/bootstrap.min.js')}}"></script>
-    <script src="http://code.jquery.com/jquery-latest.js"></script>
-    <script type="text/javascript">
-        setInterval(function() {
-            var post = document.querySelector(".active .div-post").innerHTML;
-            document.querySelector(".contenedor_post").innerHTML = post;
-        }, 500);
+
+    <script>
+    console.log('here');
+    $('.login').click(function(){
+        console.log('click');
+        $('.profile-menu').toggleClass('mostrar'),
+        $('.icono-toggle').toggleClass('glyphicon-triangle-top');
+    });
     </script>
 @yield('front-js')
 </body>

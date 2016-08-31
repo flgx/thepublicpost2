@@ -6,7 +6,7 @@
       <!-- mini logo for sidebar mini 50x50 pixels -->
       <span class="logo-mini"><b>T</b>PT</span>
       <!-- logo for regular state and mobile devices -->
-      <img src="{{asset('img/logo.png')}}" class="img-responsive" alt="The Post Page ">
+      <img src="{{asset('img/Logo.png')}}" class="img-responsive" alt="The Post Page ">
     </a>
     <!-- Header Navbar: style can be found in header.less -->
     @if(Auth::check())
