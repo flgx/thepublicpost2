@@ -155,7 +155,7 @@ Route::get('auth/facebook', 'SocialAuth2Controller@redirectToProvider');
 Route::get('auth/facebook/callback', 'SocialAuth2Controller@handleProviderCallback');
 
 Route::get('/',[
-	'uses' => 'HomeController@front',
+	'uses' => 'HomeController@index',
 	'as'   => 'front.index',
 ]);
 Route::auth();
