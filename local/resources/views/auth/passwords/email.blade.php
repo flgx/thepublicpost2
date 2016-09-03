@@ -8,9 +8,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
-    <title>The Public Post | Reset</title>
+    <title>The Public Post | Login</title>
     <!-- Bootstrap Core CSS -->
-    <link href="{{asset('dist/css/bootstrap.min.css')}}" rel="stylesheet">
+    <link href="{{asset('bootstrap/css/bootstrap.min.css')}}" rel="stylesheet">
 
     <!-- Custom CSS -->
     <link href="{{asset('dist/css/login.css')}}" rel="stylesheet">
@@ -24,30 +24,38 @@
                     <img class="center-block img-response" src="{{asset('img/Logo_footer.png')}}" alt="" style="margin-top: 30px;">
                 </div>
                 <div class="cuerpo" style="width:100%;padding:15px;background-color:#fff">
-                    <p style="color:#979696">Sign in to The Public Post through your email address or continue with
-                    Twitter or Facebook.</p>
-                    <form  role="form" method="POST" action="{{ url('/password/email') }}">
+                    <p style="color:#979696">Reset Your Password</p>
+                    @if (session('status'))
+                        <div class="alert alert-success">
+                            {{ session('status') }}
+                        </div>
+                    @endif
+
+                    <form class="form-horizontal" role="form" method="POST" action="{{ url('/password/email') }}">
                         {{ csrf_field() }}
 
                         <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
+                            <label for="email" class="col-md-4 control-label">E-Mail Address</label>
 
-                            
-                            <label for="email">E-Mail Address</label>
-                                <input id="email" type="email"  style="width: 100%; padding: 10px; border: 1px solid rgb(217, 217, 217); margin: 5px 0px;" class="form-control" name="email" value="{{ old('email') }}">
+                            <div class="col-md-6">
+                                <input id="email" type="email" class="form-control" name="email" value="{{ old('email') }}">
 
                                 @if ($errors->has('email'))
                                     <span class="help-block">
                                         <strong>{{ $errors->first('email') }}</strong>
                                     </span>
                                 @endif
+                            </div>
                         </div>
-                        <button type="submit" id="login" class="btn active" style="border:0px;background-color:transparent;margin-right: 20px;color:#939393;text-decoration:none">
-                            Send Password Reset Link
-                        </button>
+
+                        <div class="form-group">
+                            <div class="col-md-6 col-md-offset-4">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fa fa-btn fa-envelope"></i> Send Password Reset Link
+                                </button>
+                            </div>
+                        </div>
                     </form>
-                    
-                    
-                        
                      </div>
                 </div>
             </div>

@@ -24,7 +24,7 @@
                     <img class="center-block img-response" src="{{asset('images/Logo_footer.png')}}" alt="" style="margin-top: 30px;">
                 </div>
                 <div class="cuerpo" style="width:100%;padding:15px;background-color:#fff">
-                    <p style="color:#979696">Sign in to The Public Post through your email address or continue with
+                    <p style="color:#979696">Sign in tott The Public Post through your email address or continue with
                     Twitter or Facebook.</p>
                     <form action="">
                     <input placeholder="Your email address or user name" type="text" style="width: 100%; padding: 10px; border: 1px solid rgb(217, 217, 217); margin: 5px 0px;">

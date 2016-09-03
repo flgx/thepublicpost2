@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
+use App\Http\Requests\VideoRequest;
 use Laracasts\Flash\Flash;
+
 use App\Tag;
 use App\Image;
 use App\Category;
@@ -71,7 +73,7 @@ class VideosController extends Controller
     public function create()
     {
         if(Auth::check()){
-            $categories = Category::orderBy('name','ASC')->lists('name','id');
+            $categories = Category::orderBy('name','ASC')->where('type','post')->lists('type','name','id');
             $tags =Tag::orderBy('name','ASC')->lists('name','id');
             $videos = Video::orderBy('id','DESC')->paginate(4);
             return view('admin.videos.create')
@@ -86,12 +88,12 @@ class VideosController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\VideoRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(VideoRequest $request)
     {
-        $video = new Video($request->except('images','category_id','tags'));
+        $video = new Video($request->all());
 
         $video->user_id = \Auth::user()->id;
        //associate category with video
@@ -128,7 +130,7 @@ class VideosController extends Controller
     {          
         if(Auth::user()->type == 'admin'){
             $video = Video::find($id);
-            $categories = Category::orderBy('name','DESC')->lists('name','id');
+            $categories = Category::orderBy('name','DESC')->where('type','post')->lists('type','name','id');
             $tags = Tag::orderBy('name','DESC')->lists('name','id');
             $myTags = $video->tags->lists('id')->ToArray(); //give me a array with only the tags id.
             return View('admin.videos.edit')->with('video',$video)->with('categories',$categories)->with('tags',$tags)->with('myTags',$myTags);            
@@ -141,11 +143,11 @@ class VideosController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\VideoRequest  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(VideoRequest $request, $id)
     {
         $video =Video::find($id);
         if($request->featured){
@@ -158,7 +160,7 @@ class VideosController extends Controller
         $video->save();
         $video->tags()->sync($request->tags);      
         Flash::success("Video <strong>".$video->id."</strong> was updated.");
-        return redirect()->route('admin.videos.index');
+        return redirect()->back();
     }
 
     /**

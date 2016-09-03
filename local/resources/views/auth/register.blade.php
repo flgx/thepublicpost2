@@ -26,7 +26,7 @@
                 <div class="cuerpo" style="width:100%;padding:15px;background-color:#fff">
                     <p style="color:#979696">Sign in to The Public Post through your email address or continue with
                     Twitter or Facebook.</p>
-                    <form  role="form" method="POST" action="{{ url('/register') }}">
+                    <form  role="form" method="POST" action="{{ url('/register') }}" enctype="multipart/form-data">
                         {{ csrf_field() }}
                         <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
                 
@@ -45,6 +45,30 @@
                             @if ($errors->has('bkash'))
                                 <span class="help-block">
                                     <strong>{{ $errors->first('bkash') }}</strong>
+                                </span>
+                            @endif
+                        </div>
+                        <div class="form-group{{ $errors->has('tagline') ? ' has-error' : '' }}">
+
+                        <label for="tagline">Your Tagline</label>
+                        <input id="tagline" type="text" class="form-control" placeholder="Type your tagline" name="tagline" value="{{ old('tagline') }}">
+                            @if ($errors->has('tagline'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('tagline') }}</strong>
+                                </span>
+                            @endif
+                        </div>
+                        <div class="form-group{{ $errors->has('images') ? ' has-error' : '' }}">
+                    
+                            <div class="form-group">
+                                {!! Form::label('profile_image','Profile Image') !!}
+                                {!! Form::file('profile_image',null,['class'=> 'form-control','required']) !!}
+
+                            </div>  
+
+                            @if ($errors->has('profile_image'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('profile_image') }}</strong>
                                 </span>
                             @endif
                         </div>

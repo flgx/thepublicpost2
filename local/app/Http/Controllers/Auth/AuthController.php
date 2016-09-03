@@ -53,6 +53,8 @@ class AuthController extends Controller
         return Validator::make($data, [
             'name' => 'required|max:255',
             'email' => 'required|email|max:255|unique:users',
+            'profile_image' => 'required|image',
+            'tagline' => 'required',
             'password' => 'required|min:6|confirmed',
         ]);
     }
@@ -69,7 +71,10 @@ class AuthController extends Controller
         return User::create([
             'name' => $data['name'],
             'email' => $data['email'],
-            'password' => bcrypt($data['password']),
+            'tagline' =>$data['tagline'],
+            'bkash' => $data['bkash'],
+            'profile_image' => $data['profile_image'],
+            'password' => bcrypt($data['password'])
         ]);
     }
         /**
@@ -80,12 +85,9 @@ class AuthController extends Controller
 
     public function register(Request $request)
     {
-        $validator = $this->validator($request->all());
-
+        $validator = $this->validator($request->all());      
         if ($validator->fails()) {
-            $this->throwValidationException(
-                $request, $validator
-            );
+           return redirect()->back()->withErrors($validator)->withInput();
         }
 
         $user = $this->create($request->all());

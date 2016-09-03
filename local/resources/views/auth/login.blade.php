@@ -63,7 +63,7 @@
                         <a href="{{ url('/password/reset') }}" id="forget" style="margin-right: 20px;color:#939393;text-decoration:none">Forget Password?</a>
                         <a href="{{ url('/register') }}" id="new" style="margin-right: 20px;color:#939393;text-decoration:none">New here?</a>
                         </div>
-                            <a href="#" class="button twitter" style="text-decoration:none;color:white!important">
+                            <a href="{{ url('/auth/twitter') }}" class="button twitter" style="text-decoration:none;color:white!important">
                                 <span class="icon icon-twitter"></span>Continue with Twitter
                                 <p style="color:#c4daf4">We won't post without asking</p>
                             </a>                        

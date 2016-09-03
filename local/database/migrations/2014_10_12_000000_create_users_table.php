@@ -18,13 +18,13 @@ class CreateUsersTable extends Migration
             $table->string('email')->unique()->nullable();
             $table->string('facebook_id');
             $table->string('profile_image');
-            $table->string('google_id');
+            $table->string('tagline');
+            $table->string('twitter_id');
             $table->boolean('activated')->default(false);
             $table->string('bkash');
-            $table->string('real_id');
             $table->string('password');
             $table->string('featured');
-            $table->enum('type',['admin','member','premium'])->default('member');
+            $table->enum('type',['admin','editor','writer','subscriber'])->default('subscriber');
             $table->rememberToken();
             $table->timestamps();
         });

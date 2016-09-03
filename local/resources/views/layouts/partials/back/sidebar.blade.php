@@ -6,10 +6,9 @@
       <!-- Sidebar user panel -->
       <div class="user-panel">
         <div class="pull-left image">
-        @if(Auth::user()->profile_image && Auth::user()->facebook_id == 'null')
-        
-          <img src="{{asset('img/users/profile').'/profile_'.Auth::user()->profile_image}}" class="img-circle" alt="The Post Page ">
-        @elseif(Auth::user()->facebook_id != 'null' && Auth::user()->profile_image )          
+        @if(Auth::user()->facebook_id == null && Auth::user()->twitter_id == null)        
+        <img src="{{asset('img/users/profile').'/profile_'.Auth::user()->profile_image}}" class="img-circle" alt="The Post Page ">
+        @elseif(Auth::user()->facebook_id != 'null' || Auth::user()->twitter_id != 'null')          
           <img src="{{Auth::user()->profile_image}}" class="img-circle" alt="The Post Page ">
         @else
          <img src="{{asset('img/profile.png')}}" class="img-circle" alt="The Post Page ">
@@ -18,7 +17,7 @@
         
         <div class="pull-left info">
           <p>{{Auth::user()->name}}</p>
-          <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
+          <a href="#"><i class="fa fa-circle text-success"></i> {{Auth::user()->tagline}}</a>
         </div>
         s
       </div>
@@ -44,7 +43,7 @@
               <i class="fa fa-angle-left pull-right"></i>
             </span>
           </a>
-          <ul class="treeview-menu">
+          <ul class="treeview-menu {{ (Request::is('admin/categories') ? 'active' : '') }}">
             <li class="{{ (Request::is('admin/categories') ? 'active' : '') }}"><a href="{{url('admin/categories')}}"><i class="fa fa-circle-o"></i> View Categories</a></li>
             <li class="{{ (Request::is('admin/categories/create') ? 'active' : '') }}"><a href="{{url('admin/categories/create')}}"><i class="fa fa-circle-o"></i> Create Category</a></li>
           </ul>

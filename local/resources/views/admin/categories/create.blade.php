@@ -12,6 +12,10 @@
             			{!! Form::label('name','Name') !!}
             			{!! Form::text('name', null,['class'=> 'form-control','placeholder'=>'Type a name for the category','required']) !!}
             		</div>
+                    <div class="form-group">
+                        {!! Form::label('type','User Type') !!}
+                        {!! Form::select('type',[''=>'Select type of category','ebook'=> 'Ebook','post' => 'Post','photo'=>'Photo','video' => 'Video'],null,['class'=> 'form-control','required']) !!}
+                    </div>
             		<div class="form-group">
             			{!! Form::submit('Add Category',['class'=>'btn btn-primary']) !!}
             		</div>

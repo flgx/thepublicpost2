@@ -41,7 +41,12 @@ return [
     'facebook' => [
     'client_id' => '167806036983988',
     'client_secret' => '0504d49d14514413884528dfb8771e75',
-    'redirect' => 'http://public-post.com/beta2/auth/facebook/callback',
+    'redirect' => 'http://localhost/thepublicpost2/auth/facebook/callback',
+    ],
+    'twitter' => [
+    'client_id' => '4Brwp141HrMdvEefCWwxtwQSa',
+    'client_secret' => 'MJ9G5jvrP2YPxe9EjaNDsGBD9rPd2PIY8uPF8eLMY0PiwqJKL4',
+    'redirect' => ' http://localhost/thepublicpost2/auth/twitter/callback',
     ],
 
 ];

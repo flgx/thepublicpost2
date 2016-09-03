@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\DB;
 use App\Http\Requests;
 use App\Ebook;
 use App\Tag;
@@ -23,25 +23,62 @@ class FrontPageController extends Controller
      */
     public function index()
     {
-        $slider_posts = Post::orderBy('id','DESC')->paginate(5);
-        $lastest_posts = Post::orderBy('id','DESC')->paginate(5);
-        $featured_posts = Post::orderBy('id','DESC')->paginate(3);
+        $slider_posts = Post::orderBy('id','DESC')->where('status','approved')->paginate(5);
+        $lastest_posts = Post::orderBy('id','DESC')->where('status','approved')->paginate(5);
+        $pagination= Post::orderBy('id','DESC')->where('status','approved')->paginate(10, ['*'], 'p');
+        $featured_posts = Post::orderBy('id','DESC')->where('status','approved')->paginate(3);
+        $lastest_videos = Video::orderBy('id','DESC')->where('status','approved')->paginate(3);
+        $lastest_photos = Photo::orderBy('id','DESC')->where('status','approved')->paginate(4);
+        $lastest_ebooks = Ebook::orderBy('id','DESC')->where('status','approved')->paginate(4);
+        $categories = Category::all();
         $images = new Image();
         $featured_posts->each(function($post){
                 $post->images->each(function($postimg){
                     $postimg->images;
                 });
         });
-        dd($featured_posts->items()[0]['images'][0]);
-        exit();
-        $lastest_videos = Video::orderBy('id','DESC')->paginate(3);
-        $lastest_photos = Photo::orderBy('id','DESC')->paginate(4);
+        $slider_posts->each(function($post){
+                $post->images->each(function($postimg){
+                    $postimg->images;
+                });
+        });
+        $lastest_photos->each(function($post){
+                $post->images->each(function($postimg){
+                    $postimg->images;
+                });
+                $post->user->each(function($post){
+                    $post->user;
+                });
+        });
+        $lastest_ebooks->each(function($post){
+                $post->images->each(function($postimg){
+                    $postimg->images;
+                });
+        });
+        //dd($lastest_posts->items()[0]['user']);
+        
+
         return view('front.welcome')
         ->with('slider_posts',$slider_posts)
-        ->with('lastest_posts',$lastest_posts)
-        ->with('featured_posts',$featured_posts)
+        ->with('lastest_posts',$lastest_posts->items())
+        ->with('featured_posts',$featured_posts->items())
         ->with('lastest_videos',$lastest_videos)
-        ->with('lastest_photos',$lastest_photos);
+        ->with('lastest_photos',$lastest_photos)
+        ->with('pagination',$pagination)
+        ->with('categories',$categories);
+    }
+    public function posts()
+    {
+        // Current page number (defaults to 1)
+        $page = Input::get('page', 1);
+
+        // Get 10 post according to page number, after the first 3
+        $posts = Post::skip(3 + ($page - 1) * 10)->take(10)->get();
+
+        // Create pagination
+        $pagination = Paginator::make($posts->toArray(), Post::count(), 10);
+
+        return View::make('posts', compact('posts', 'pagination'));
     }
 
     /**

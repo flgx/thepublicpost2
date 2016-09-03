@@ -31,6 +31,7 @@
     <link rel="stylesheet" href="{{ asset('plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css')}}">
     <link rel="stylesheet" href="{{ asset('dist/js/ui/trumbowyg.min.css')}}">
     <link rel="stylesheet" href="{{ asset('dist/css/chosen.css')}}">
+    <link rel="stylesheet" href="{{ asset('dist/css/notie.css')}}">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -54,7 +55,12 @@
     </section>
     <!-- Main content -->
     <section class="content">
-      @include('flash::message')
+    <div class="row">
+      <div class="col-xs-6">
+          @include('flash::message')
+      </div>
+    </div>
+      <div class="clearfix"></div>
       @yield('content')
     </section>
     <!-- /.content -->
@@ -113,7 +119,7 @@
     <script src="{{ asset('dist/js/chosen.jquery.min.js')}}"></script>
 
     <script src="{{ asset('dist/js/jquery.tablesorter.js')}}"></script>
-    <script src="{{ asset('dist/js/jquery.tablesorter.js')}}"></script>
+    <script src="{{ asset('dist/js/notie.js')}}"></script>
     <script>
         $('#flash-overlay-modal').modal();
         $("#myTable").tablesorter();
@@ -128,19 +134,29 @@
 }
         //delete images ajax request
         $('.btn-delete').on('click', function(e) {
-            var myThis = $(this).parent().parent();
-            var imgid = $(this).data('imgid');
-            var type = $('.type').data('type');
-            $.ajax({
-                url: '{{ url('/admin/images/destroyImage') }}' + '/' + type + '/' + imgid,
-                type: 'DELETE',
-                data:{_token:token,id:imgid,type:type},
-                success: function(msg) {
-                    console.log(msg['msg']);
-                    
-                    $(myThis).fadeOut(150);
-                }
-            });
+            var count = $('.count').data('count');
+            if(count == 1){
+                notie.alert('error', "আপনি একটি পোস্ট থেকে সব ইমেজ মুছে ফেলতে পারবেন না . তাদের অন্তত এক ত্যাগ.", 4.5)
+            }else{
+                var myThis = $(this).parent().parent();
+                var imgid = $(this).data('imgid');
+                var type = $('.type').data('type');
+                notie.confirm('আপনি যে কাজ করতে চান আপনি কি নিশ্চিত?', 'হাঁ', 'বাতিল', function() {
+                    notie.alert(1, 'ঠিক আছে, দূর', 2)
+
+                    $.ajax({
+                        url: '{{ url('/admin/images/destroyImage') }}' + '/' + type + '/' + imgid,
+                        type: 'DELETE',
+                        data:{_token:token,id:imgid,type:type},
+                        success: function(msg) {
+                            console.log(msg['msg']);
+                            
+                            $(myThis).fadeOut(150);
+                        }
+                    });
+                });  
+
+            }
         });
     </script>
 </body>

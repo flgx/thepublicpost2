@@ -6,6 +6,17 @@
 @section('content')
         <div class="row">
             <div class="col-lg-6 col-md-6">
+            
+  
+                @if(count($errors) > 0)
+                <div class="alert alert-danger" role="alert">
+                    <ul>
+                    @foreach($errors->all() as $error)
+                        <li>{{$error}}</li>                               
+                    @endforeach
+                    </ul>
+                </div>
+                @endif
                 {!! Form::open(['route' => ['admin.ebooks.update',$ebook->id],'method' => 'PUT','files'=>'true']) !!}
 
                     <div class="form-group">
@@ -16,6 +27,11 @@
                     <div class="form-group">
                         {!! Form::label('category_id','Category') !!}
                         {!! Form::select('category_id', $categories,$ebook->category->id,['class'=> 'form-control select-category','required']) !!}
+                    </div>
+
+                    <div class="form-group">
+                        {!! Form::label('ebook_link','Ebook Link') !!}
+                        {!! Form::text('ebook_link', $ebook->ebook_link,['class'=> 'form-control','placeholder'=>'Type ebook download url','required']) !!}
                     </div>
 
                     <div class="form-group">

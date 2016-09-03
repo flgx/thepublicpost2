@@ -96,8 +96,7 @@ class UsersController extends Controller
     {
         $user = User::find($id);
 
-        $user->name = $request->name;
-        $user->email = $request->email;
+       $user->fill($request->all());
         $picture_profile = '';
         $picture_real_id = '';
 
@@ -110,7 +109,7 @@ class UsersController extends Controller
             //optimize images and store image
             $image_profile=\Image::make($file_profile->getRealPath()); //Call image library installed.
             $destinationPath_profile ='img/users/profile/';
-            $image_profile->resize(200, null, function ($constraint) {
+            $image_profile->resize(100, 100, function ($constraint) {
             $constraint->aspectRatio();
             });
             $image_profile->save($destinationPath_profile.'profile_'.$picture_profile);

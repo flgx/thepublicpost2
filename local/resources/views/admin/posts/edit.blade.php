@@ -6,6 +6,15 @@
 @section('content')
         <div class="row">
             <div class="col-lg-6 col-md-6">
+                @if(count($errors) > 0)
+                <div class="alert alert-danger" role="alert">
+                    <ul>
+                    @foreach($errors->all() as $error)
+                        <li>{{$error}}</li>                               
+                    @endforeach
+                    </ul>
+                </div>
+                @endif
                 {!! Form::open(['route' => ['admin.posts.update',$post->id],'method' => 'PUT','files'=>'true']) !!}
 
                     <div class="form-group">
@@ -32,16 +41,19 @@
                         {{ Form::checkbox('featured', 'true',true) }}
                         @else
                         {{ Form::checkbox('featured', 'true',false) }}
-                        @endif      
+                        @endif  
                     </div>
                     <div class="form-group">
                         {!! Form::label('tags','Tags') !!}
                         {!! Form::select('tags[]', $tags,$myTags,['class'=> 'form-control select-tag','multiple','required']) !!}
                     </div>
-                    
                     <div class="form-group">
                         {!! Form::label('images','Images') !!}
+
                         {!! Form::file('images[]', array('multiple'=>true)) !!}
+                        <div class="alert alert-warning">
+                            <p>* Images must be 450px tall.</p>
+                        </div>
                     </div>
                     <div class="form-group myid" data-post="{{$post->id}}">
                         {!! Form::submit('Edit Post',['class'=>'btn btn-primary']) !!}
@@ -53,7 +65,7 @@
             <!-- Post Images -->
             <div class="col-md-6 type" data-type="posts">
                 <h1>Images</h1>
-                <hr>
+                <hr class="count" data-count="{{count($post->images)}}">
                 @if(count($post->images) > 0)  
                     <?php
                         $i=0;
@@ -62,7 +74,7 @@
                     <div class="col-xs-12">
                         <img src="{{asset('img/posts/thumbs').'/thumb_'.$image->name, '$post->title'}}" alt="The Public Post {{$post->title}}">
                         <p class="col-xs-12" style="padding-left:0px; margin-top:10px;">
-                            <a href="#" class="btn-delete btn btn-danger" onclick="return confirm('Are you sure?');"  data-imgid="{{$image->id}}"><i class="fa fa-trash fa-2x"></i></a>
+                            <a href="#" class="btn-delete btn btn-danger"  data-imgid="{{$image->id}}"><i class="fa fa-trash fa-2x"></i></a>
                         </p>
                     </div>
                     <hr>

@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "604e0ce2781a853c4de004da02743d1d",
-    "content-hash": "ad4907e0236488424a842c294c1c46c5",
+    "hash": "64c391605f22b1fdcefdaba7e03fa4a4",
+    "content-hash": "4db87e80af7d3b337a63528d6485108d",
     "packages": [
         {
             "name": "classpreloader/classpreloader",
@@ -175,6 +175,56 @@
                 "slug"
             ],
             "time": "2016-07-15 16:05:39"
+        },
+        {
+            "name": "cviebrock/image-validator",
+            "version": "2.1.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/cviebrock/image-validator.git",
+                "reference": "c49c328b010077b173b56229bfbd4e5230d0cbdc"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/cviebrock/image-validator/zipball/c49c328b010077b173b56229bfbd4e5230d0cbdc",
+                "reference": "c49c328b010077b173b56229bfbd4e5230d0cbdc",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/support": "5.*",
+                "illuminate/translation": "5.*",
+                "illuminate/validation": "5.*",
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "mockery/mockery": "dev-master",
+                "orchestra/testbench": "3.0.*",
+                "phpunit/phpunit": "4.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Cviebrock\\ImageValidator\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Colin Viebrock",
+                    "email": "colin@viebrock.ca"
+                }
+            ],
+            "description": "Custom Laravel Validator for image dimensions",
+            "homepage": "https://github.com/cviebrock/image-validator",
+            "keywords": [
+                "image",
+                "laravel",
+                "validator"
+            ],
+            "time": "2016-07-20 19:04:51"
         },
         {
             "name": "dnoegel/php-xdg-base-dir",

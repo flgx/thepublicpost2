@@ -5,8 +5,18 @@
 
 @section('content')
         <div class="row">
-            <div class="col-lg-6 col-md-6">
-            	{!! Form::open(['route' => 'admin.ebooks.store','method' => 'POST','files'=>'true']) !!}
+            <div class="col-lg-6 col-md-6">           
+                
+                @if(count($errors) > 0)
+                <div class="alert alert-danger" role="alert">
+                    <ul>
+                    @foreach($errors->all() as $error)
+                        <li>{{$error}}</li>                               
+                    @endforeach
+                    </ul>
+                </div>
+                @endif
+                {!! Form::open(['route' => 'admin.ebooks.store','method' => 'POST','files'=>'true']) !!}
 
                     <div class="form-group">
                         {!! Form::label('title','Title') !!}
@@ -14,13 +24,13 @@
                     </div>
 
                     <div class="form-group">
-                        {!! Form::label('ebook_link','Ebook Link') !!}
-                        {!! Form::text('ebook_link', null,['class'=> 'form-control','placeholder'=>'Type a Ebook Link','required']) !!}
+                        {!! Form::label('category_id','Category') !!}
+                        {!! Form::select('category_id', $categories,null,['class'=> 'form-control select-category','required']) !!}
                     </div>
 
                     <div class="form-group">
-                        {!! Form::label('category_id','Category') !!}
-                        {!! Form::select('category_id', $categories,null,['class'=> 'form-control select-category','required']) !!}
+                        {!! Form::label('ebook_link','Ebook Link') !!}
+                        {!! Form::text('ebook_link', null,['class'=> 'form-control','placeholder'=>'Type ebook download url','required']) !!}
                     </div>
 
                     <div class="form-group">
@@ -32,20 +42,25 @@
                         {!! Form::label('featured','Mark as Featured') !!}                        
                         {{ Form::checkbox('featured', 'true') }}                         
                     </div>
+                    
                     <div class="form-group">
                         {!! Form::label('tags','Tags') !!}
                         {!! Form::select('tags[]', $tags,null,['class'=> 'form-control select-tag','multiple','required']) !!}
                     </div>
                     <div class="form-group">
                         {!! Form::label('images','Images') !!}
+
                         {!! Form::file('images[]', array('multiple'=>true)) !!}
+                        <div class="alert alert-warning">
+                            <p>* Images must be 450px tall.</p>
+                        </div>
                     </div>
 
-            		<div class="form-group">
-            			{!! Form::submit('Add Ebook',['class'=>'btn btn-primary']) !!}
-            		</div>
+                    <div class="form-group">
+                        {!! Form::submit('Add Ebook',['class'=>'btn btn-primary']) !!}
+                    </div>
 
-            	{!! Form::close() !!}
+                {!! Form::close() !!}
             </div>
         </div>
         <!-- /.row -->

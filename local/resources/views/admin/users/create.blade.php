@@ -6,7 +6,17 @@
 @section('content')
         <div class="row">
             <div class="col-lg-3 col-md-6">
-            	{!! Form::open(['route' => 'admin.users.store','method' => 'POST']) !!}
+                            
+                @if(count($errors) > 0)
+                <div class="alert alert-danger" role="alert">
+                    <ul>
+                    @foreach($errors->all() as $error)
+                        <li>{{$error}}</li>                               
+                    @endforeach
+                    </ul>
+                </div>
+                @endif
+            	{!! Form::open(['url' => 'admin.users.store','method' => 'POST']) !!}
 
                     <div class="form-group">
                         {!! Form::label('name','Name') !!}
@@ -16,9 +26,13 @@
                         {!! Form::label('facebookid','Facebook') !!}
                         {!! Form::text('facebookid', null,['class'=> 'form-control','placeholder'=>'Type your Facebook ID','required']) !!}
                     </div>
+                    <div class="form-group">
+                        {!! Form::label('bkash','Bkash') !!}
+                        {!! Form::text('bkash', null,['class'=> 'form-control','placeholder'=>'Type your bkash ID','required']) !!}
+                    </div>
             		<div class="form-group">
-            			{!! Form::label('bkash','Bkash') !!}
-            			{!! Form::text('bkash', null,['class'=> 'form-control','placeholder'=>'Type your bkash ID','required']) !!}
+            			{!! Form::label('tagline','Tagline') !!}
+            			{!! Form::text('tagline', null,['class'=> 'form-control','placeholder'=>'Type your bkash ID','required']) !!}
             		</div>
                     @if(Auth::user()->type == 'admin')
                         <div class="form-group">
@@ -33,7 +47,12 @@
             		<div class="form-group">
             			{!! Form::label('password','Password') !!}
             			{!! Form::password('password',['class'=> 'form-control','required']) !!}
-            		</div>
+            		</div>                    
+                    <div class="form-group col-xs-6">
+                        {!! Form::label('profile_image','Profile Image') !!}
+                        {!! Form::file('profile_image',null,['class'=> 'form-control','required']) !!}
+
+                    </div>  
                     @if(Auth::user()->type == 'admin')
             		<div class="form-group">
             			{!! Form::label('type','User Type') !!}

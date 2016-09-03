@@ -6,6 +6,15 @@
 @section('content')
         <div class="row">
             <div class="col-lg-6 col-md-6">
+                @if(count($errors) > 0)
+                <div class="alert alert-danger" role="alert">
+                    <ul>
+                    @foreach($errors->all() as $error)
+                        <li>{{$error}}</li>                               
+                    @endforeach
+                    </ul>
+                </div>
+                @endif
             	{!! Form::open(['route' => 'admin.videos.store','method' => 'POST','files'=>'true']) !!}
 
                     <div class="form-group">
@@ -13,9 +22,14 @@
                         {!! Form::text('title', null,['class'=> 'form-control','placeholder'=>'Type a title','required']) !!}
                     </div>
                     <div class="form-group">
-                        {!! Form::label('video_link','Video Link') !!}
-                        {!! Form::text('video_link', null,['class'=> 'form-control','placeholder'=>'Type a video link','required']) !!}
+                        {!! Form::label('video_link','Video ID') !!}
+
+                        
+                        {!! Form::text('video_link', null,['class'=> 'form-control','placeholder'=>'Type a Video ID','required']) !!}
+                       <h4>Copy and Paste from YouTube ID : </h4>
+                        <img src="{{asset('img/youtube.jpg')}}" alt="">
                     </div>
+
 
                     <div class="form-group">
                         {!! Form::label('category_id','Category') !!}

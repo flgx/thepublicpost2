@@ -5,7 +5,17 @@
 
 @section('content')
         <div class="row">
-            <div class="col-lg-6 col-md-6">
+            <div class="col-lg-6 col-md-6">           
+                
+                @if(count($errors) > 0)
+                <div class="alert alert-danger" role="alert">
+                    <ul>
+                    @foreach($errors->all() as $error)
+                        <li>{{$error}}</li>                               
+                    @endforeach
+                    </ul>
+                </div>
+                @endif
             	{!! Form::open(['route' => 'admin.posts.store','method' => 'POST','files'=>'true']) !!}
 
                     <div class="form-group">
@@ -38,7 +48,11 @@
                     </div>
                     <div class="form-group">
                         {!! Form::label('images','Images') !!}
+
                         {!! Form::file('images[]', array('multiple'=>true)) !!}
+                        <div class="alert alert-warning">
+                            <p>* Images must be 450px tall.</p>
+                        </div>
                     </div>
 
             		<div class="form-group">

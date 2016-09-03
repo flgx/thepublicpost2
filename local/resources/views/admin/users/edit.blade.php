@@ -14,11 +14,11 @@
             	{!! Form::open(['route' => ['admin.users.update',$user->id],'method' => 'PUT','files' => true]) !!}
                     @if($user->profile_image)
                     <div class="col-xs-6">
-                        @if(Auth::user()->profile_image && Auth::user()->facebook_id == 'null')
+                        @if(Auth::user()->profile_image)
                         
-                          <img src="{{asset('img/users/profile').'/profile_'.Auth::user()->profile_image}}" class="img-circle col-xs-12" alt="The Post Page ">
-                        @elseif(Auth::user()->facebook_id != 'null')          
-                          <img src="{{Auth::user()->profile_image}}" class="img-circle" alt="The Post Page ">
+                          <img src="{{asset('img/users/profile').'/profile_'.Auth::user()->profile_image}}" class="img-circle col-xs-4" alt="The Post Page ">
+                        @elseif(Auth::user()->facebook_id != 'null' ||  Auth::user()->twitter_id != 'null')          
+                          <img src="{{Auth::user()->profile_image}}" class="img-circle" alt="The Public Post ">
                         @else
                          <img src="asset('img/profile.png')" class="img-circle" alt="The Post Page ">
                         @endif                        
@@ -36,10 +36,16 @@
                         {!! Form::file('profile_image',null,['class'=> 'form-control','required']) !!}
 
                     </div>                
-            		<div class="form-group col-xs-12">
-            			{!! Form::label('name','Name') !!}
-            			{!! Form::text('name', $user->name,['class'=> 'form-control','placeholder'=>'Type a name','required']) !!}
-            		</div>
+                    <div class="form-group col-xs-12">
+                        {!! Form::label('name','Name') !!}
+                        {!! Form::text('name', $user->name,['class'=> 'form-control','placeholder'=>'Type a name','required']) !!}
+                    </div>
+                                
+                		<div class="form-group col-xs-12">
+                			{!! Form::label('tagline','Tagline') !!}
+                			{!! Form::text('tagline', $user->tagline,['class'=> 'form-control','placeholder'=>'Type a tagline','required']) !!}
+                		</div>
+                   
             		<div class="form-group col-xs-12">
             			{!! Form::label('email','E-mail') !!}
             			{!! Form::email('email', $user->email,['class'=> 'form-control','placeholder'=>'youremail@gmail.com','required']) !!}
@@ -50,7 +56,7 @@
                         {!! Form::text('bkash', $user->bkash,['class'=> 'form-control','placeholder'=>'Type your bkash ID','required']) !!}
                     </div>
 
-                    @if(Auth::user()->type == 'admin')
+                    @if(Auth::user()->type == 'admin' || Auth::user()->type == 'editor')
             		<div class="form-group col-xs-12">
             			{!! Form::label('type','User Type') !!}
             			{!! Form::select('type',[''=>'Select type of user','member'=> 'Member','admin' => 'Administrator'],$user->type,['class'=> 'form-control','required']) !!}

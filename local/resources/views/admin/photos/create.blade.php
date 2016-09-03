@@ -1,11 +1,21 @@
 @extends('layouts.admin')
 @section('title')
-    New PhotoPost
+    New Photo
 @endsection
 
 @section('content')
         <div class="row">
-            <div class="col-lg-6 col-md-6">
+            <div class="col-lg-6 col-md-6">           
+                
+                @if(count($errors) > 0)
+                <div class="alert alert-danger" role="alert">
+                    <ul>
+                    @foreach($errors->all() as $error)
+                        <li>{{$error}}</li>                               
+                    @endforeach
+                    </ul>
+                </div>
+                @endif
                 {!! Form::open(['route' => 'admin.photos.store','method' => 'POST','files'=>'true']) !!}
 
                     <div class="form-group">
@@ -14,13 +24,13 @@
                     </div>
 
                     <div class="form-group">
-                        {!! Form::label('photo_link','PhotoPost Link') !!}
-                        {!! Form::text('photo_link', null,['class'=> 'form-control','placeholder'=>'Type a PhotoPost Link','required']) !!}
+                        {!! Form::label('category_id','Category') !!}
+                        {!! Form::select('category_id', $categories,null,['class'=> 'form-control select-category','required']) !!}
                     </div>
 
                     <div class="form-group">
-                        {!! Form::label('category_id','Category') !!}
-                        {!! Form::select('category_id', $categories,null,['class'=> 'form-control select-category','required']) !!}
+                        {!! Form::label('photo_link','Photo Link') !!}
+                        {!! Form::text('photo_link', null,['class'=> 'form-control','placeholder'=>'Type photo download url','required']) !!}
                     </div>
 
                     <div class="form-group">
@@ -32,18 +42,22 @@
                         {!! Form::label('featured','Mark as Featured') !!}                        
                         {{ Form::checkbox('featured', 'true') }}                         
                     </div>
-
+                    
                     <div class="form-group">
                         {!! Form::label('tags','Tags') !!}
                         {!! Form::select('tags[]', $tags,null,['class'=> 'form-control select-tag','multiple','required']) !!}
                     </div>
                     <div class="form-group">
                         {!! Form::label('images','Images') !!}
+
                         {!! Form::file('images[]', array('multiple'=>true)) !!}
+                        <div class="alert alert-warning">
+                            <p>* Images must be 450px tall.</p>
+                        </div>
                     </div>
 
                     <div class="form-group">
-                        {!! Form::submit('Add PhotoPost',['class'=>'btn btn-primary']) !!}
+                        {!! Form::submit('Add Photo',['class'=>'btn btn-primary']) !!}
                     </div>
 
                 {!! Form::close() !!}

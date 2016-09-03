@@ -12,10 +12,10 @@
 */
 
 
-
 Route::group(['prefix' => 'admin','middleware'=>'auth'], function () {
 	//Index Route//
 	Route::get('/', 'HomeController@index');
+	Route::get('/verifyemail', 'HomeController@index');
 
 	//Images Routes//
 	Route::resource('images', 'ImagesController');
@@ -155,11 +155,20 @@ Route::group(['prefix' => 'admin','middleware'=>'auth'], function () {
 		]);
 });
 
+;
+Route::group(['middleware' => 'web'], function() {
 Route::get('/',[
-	'uses' => 'FrontPageController@index',
-	'as'   => 'front.index',
+'uses' => 'FrontPageController@index',
+'as'   => 'front.index',
 ]);
+Route::get('posts', [ 'as' => 'posts', 'uses' => 'FrontPageController@posts' ]);
 Route::auth();
 Route::get('user/activation/{token}', 'Auth\AuthController@activateUser')->name('user.activate');
 Route::get('auth/facebook', 'SocialAuth2Controller@redirectToProvider');
 Route::get('auth/facebook/callback', 'SocialAuth2Controller@handleProviderCallback');
+Route::get('auth/twitter', 'SocialAuth2Controller@redirectToProvider2');
+Route::get('auth/twitter/callback', 'SocialAuth2Controller@twitterCallback');
+});
+
+
+Route::auth();

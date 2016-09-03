@@ -54,9 +54,13 @@
     <script src="{{ asset('plugins/jQuery/jquery-2.2.3.min.js')}}"></script>
     <!-- Bootstrap Core JavaScript -->
     <script src="{{asset('bootstrap/js/bootstrap.min.js')}}"></script>
-
+  <script type="text/javascript">
+  setInterval(function() {
+    var post = document.querySelector(".active .div-post").innerHTML;
+    document.querySelector(".contenedor_post").innerHTML = post;
+  }, 500);
+  </script>
     <script>
-    console.log('here');
     $('.login').click(function(){
         console.log('click');
         $('.profile-menu').toggleClass('mostrar'),

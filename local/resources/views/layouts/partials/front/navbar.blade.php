@@ -17,45 +17,16 @@
             <div class="collapse navbar-collapse main-menu" id="bs-example-navbar-collapse-1">
                 <div class="ul">
                 <ul class="nav navbar-nav">
-                    <li class="li-items" style="height:100%">
-                        <a href="#" style="line-height:65px;padding:0px 10px;color:white; text-decoration:none">Item#1</a>
-                    </li>
-                    <li class="li-items" style="height:100%">
-                        <a href="#" style="line-height:65px;padding:0px 10px;color:white; text-decoration:none">Item#2</a>
-                    </li>
-                    <li class="li-items" style="height:100%">
-                        <a href="#" style="line-height:65px;padding:0px 10px;color:white; text-decoration:none">Item#3</a>
-                    </li>
-                    <li class="li-items" style="height:100%">
-                        <a href="#" style="line-height:65px;padding:0px 10px;color:white; text-decoration:none">Item#4</a>
-                    </li>
-                    <li class="li-items" style="height:100%">
-                        <a href="#" style="line-height:65px;padding:0px 10px;color:white; text-decoration:none">Item#5</a>
-                    </li>
-                    <li class="li-items" style="height:100%">
-                        <a href="#" style="line-height:65px;padding:0px 10px;color:white; text-decoration:none">Item#6</a>
-                    </li>
-                    <li class="li-items" style="height:100%">
-                        <a href="#" style="line-height:65px;padding:0px 10px;color:white; text-decoration:none">Item#7</a>
-                    </li>
-                    <li class="li-items" style="height:100%">
-                        <a href="#" style="line-height:65px;padding:0px 10px;color:white; text-decoration:none">Item#8</a>
-                    </li>
-                    <li class="li-items" style="height:100%">
-                        <a href="#" style="line-height:65px;padding:0px 10px;color:white; text-decoration:none">Item#9</a>
-                    </li>
-                    <li class="li-items2" style="height:100%">
-                        <a href="#" style="line-height:65px;padding:0px 10px;color:white; text-decoration:none">Item#10</a>
-                    </li>
+
                     <li style="cursor:pointer;" class="login">
                     @if(Auth::check())
                     <span class="icono-toggle glyphicon glyphicon-triangle-bottom triangulo2" style="color: rgb(255, 255, 255); position: absolute; top: 24px; font-size: 15px; right: 15px;"></span>
                     <a href="#" class="user-login register pull-right">
                             
-                                @if(Auth::user()->profile_image && Auth::user()->facebook_id == 'null')
+                                @if(Auth::user()->profile_image && Auth::user()->facebook_id == null && Auth::user()->twitter_id == null)
                                 
                                   <img src="{{asset('img/users/profile').'/profile_'.Auth::user()->profile_image}}" class="img-circle" alt="The Post Page " style="max-width:40px" alt="">
-                                @elseif(Auth::user()->facebook_id != 'null' && Auth::user()->profile_image )          
+                                @elseif(Auth::user()->facebook_id != null || Auth::user()->twitter_id != null )          
                                   <img src="{{Auth::user()->profile_image}}" style="max-width:40px" alt="" class="img-circle" alt="The Post Page ">
                                 @else
                                  <img src="{{asset('img/profile.png')}}" style="max-width:40px" alt="" class="img-circle" alt="The Post Page ">

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
+use App\Http\Requests\PostRequest;
 use Laracasts\Flash\Flash;
 use App\Post;
 use App\Tag;
@@ -73,7 +74,7 @@ class PostsController extends Controller
     public function create()
     {
         if(Auth::check()){
-                $categories = Category::orderBy('name','ASC')->lists('name','id');
+                $categories = Category::orderBy('name','ASC')->where('type','post')->lists('type','name','id');
                 $tags =Tag::orderBy('name','ASC')->lists('name','id');
                 $posts = Post::orderBy('id','DESC')->paginate(4);
                 return view('admin.posts.create')
@@ -89,50 +90,76 @@ class PostsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(PostRequest $request)
     {
-        $post = new Post($request->except('images','category_id','tags'));
-        $post->user_id = \Auth::user()->id;
-       //associate category with post
-        $category = Category::find($request['category_id']);
-        $post->category()->associate($category);
-        $post->save();  
-        //associate all tags for the post
-        $post->tags()->sync($request->tags);
-        $picture = '';    
 
+        //Check if the images are null or not.
+        $fileArray0 = array('images' => $request->file('images')[0]);
+        // Tell the validator that this file should be required
+        $rules0 = array(
+            'images' => 'required'//max 10000kb
+        );
+        // Now pass the input and rules into the validator
+        $validator0 = \Validator::make($fileArray0, $rules0);       
+        if($validator0->fails()){
+           return redirect()->back()->withErrors($validator0)->withInput();
+        }else{
         //Process Form Images
         if ($request->hasFile('images')) {
-
             $files = $request->file('images');
-            foreach($files as $file){
-                //image  data
-                $filename = $file->getClientOriginalName();
-                $extension = $file->getClientOriginalExtension();
-                $picture = date('His').'_'.$filename;
-                //make images sliders
-                $image=\Image::make($file->getRealPath()); //Call image library installed.
-                $destinationPath = 'img/posts/';
-                $image->resize(1300, null, function ($constraint) {
-                    $constraint->aspectRatio();
-                });
-                $image->save($destinationPath.'slider_'.$picture);
-                //make images thumbnails
-                $image2=\Image::make($file->getRealPath()); //Call immage library installed.
-                $thumbPath ='img/posts/thumbs/';
-                $image2->resize(300, 230, function ($constraint) {
-                    $constraint->aspectRatio();
-                });
-                $image2->save($thumbPath.'thumb_'.$picture);
-                //save image information on the db.
-                $imageDb = new Image();
-                $imageDb->name = $picture;
-                $imageDb->post()->associate($post);
-                $imageDb->save();
+            foreach($files as $file){             
+
+                    //Slider
+                    $filename = $file->getClientOriginalName();
+                    $extension = $file->getClientOriginalExtension();
+                    $picture = date('His').'_'.$filename;
+                    //make images sliders
+                    $image=\Image::make($file->getRealPath()); //Call image library installed.
+                    // Build the input for validation
+                    $fileArray = array('images' => $file);
+                    // Tell the validator that this file should be an image
+                    $rules = array(
+                        'images' => 'dimensions:min_width=*,min_height=450'//max 10000kb
+                    );
+                    // Now pass the input and rules into the validator
+                    $validator = \Validator::make($fileArray, $rules);
+                    
+                    if($validator->fails()){
+                        
+                        return redirect()->back()->withErrors($validator)->withInput();
+                    }else{
+                    //if pass all the validations we add the post and the images                        
+                        $post = new Post($request->except('images','category_id','tags'));
+                        $post->user_id = \Auth::user()->id;
+                       //associate category with post
+                        $category = Category::find($request['category_id']);
+                        $post->category()->associate($category);
+                        $post->save();  
+                        //associate all tags for the post
+                        $post->tags()->sync($request->tags);
+                       
+                        $destinationPath = 'img/posts/';
+                        $image->resize(null,280, function ($constraint) {
+                            $constraint->aspectRatio();
+                        });
+                        $image->save($destinationPath.'slider_'.$picture);
+                        // Thumbnails
+                        $image2=\Image::make($file->getRealPath()); //Call immage library installed.      
+                        //make images thumbnails                        
+                        $thumbPath ='img/posts/thumbs/';
+                        $image2->resize(100, 100);
+                        $image2->save($thumbPath.'thumb_'.$picture);
+                        //save image information on the db.
+                        $imageDb = new Image();
+                        $imageDb->name = $picture;
+                        $imageDb->post()->associate($post);
+                        $imageDb->save();       
+                    }        
             }
         }
         Flash::success("Post <strong>".$post->title."</strong> was created.");
         return redirect()->route('admin.posts.index');
+        }
     }
     /**
      * Display the specified resource.
@@ -156,7 +183,7 @@ class PostsController extends Controller
     {          
         if(Auth::user()->type == 'admin'){
             $post = Post::find($id);
-            $categories = Category::orderBy('name','DESC')->lists('name','id');
+            $categories = Category::orderBy('name','DESC')->where('type','post')->lists('type','name','id');
             $tags = Tag::orderBy('name','DESC')->lists('name','id');
             $images = new Image();
             $post->images->each(function($post){
@@ -177,8 +204,9 @@ class PostsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(PostRequest $request, $id)
     {
+
         $post =Post::find($id);
         if($request->featured){
             $post->featured = 'true';
@@ -187,47 +215,60 @@ class PostsController extends Controller
         }
         $post->fill($request->all());
         $post->user_id = \Auth::user()->id;
+        
         $post->save();
         $post->tags()->sync($request->tags);
-        $picture = '';    
+        $picture = '';
 
         //Process Form Images
         if ($request->hasFile('images')) {
-
             $files = $request->file('images');
-           
 
-            foreach($files as $file){
-                //image  data
+            foreach($files as $file){             
 
-                $filename = $file->getClientOriginalName();
-                $extension = $file->getClientOriginalExtension();
-                $picture = date('His').'_'.$filename;
-                //make images sliders
-                $image=\Image::make($file->getRealPath()); //Call image library installed.
-                $destinationPath = 'img/posts/';
-                $image->resize(1300, null, function ($constraint) {
-                    $constraint->aspectRatio();
-                });
+                    //Slider
+                    $filename = $file->getClientOriginalName();
+                    $extension = $file->getClientOriginalExtension();
+                    $picture = date('His').'_'.$filename;
+                    //make images sliders
+                    $image=\Image::make($file->getRealPath()); //Call image library installed.
+                    // Build the input for validation
+                    $fileArray = array('img' => $file);
+                    // Tell the validator that this file should be an image
+                    $rules = array(
+                        'img' => 'dimensions:min_width=*,min_height=450'//max 10000kb
+                    );
+                    // Now pass the input and rules into the validator
+                    $validator = \Validator::make($fileArray, $rules);
+                   
+                    if($validator->fails()){     
+                         Flash('* Images must be 450px tall.','danger');         
+                         return redirect()->back();
+                    }else{
+                        $destinationPath = 'img/posts/';
+                        $image->resize(null,280, function ($constraint) {
+                            $constraint->aspectRatio();
+                        });
+                        $image->save($destinationPath.'slider_'.$picture);
+                        // Thumbnails
+                        $image2=\Image::make($file->getRealPath()); //Call immage library installed.      
+                        //make images thumbnails                        
+                        $thumbPath ='img/posts/thumbs/';
+                        $image2->resize(100, 100);
+                        $image2->save($thumbPath.'thumb_'.$picture);
+                        //save image information on the db.
+                        $imageDb = new Image();
+                        $imageDb->name = $picture;
+                        $imageDb->post()->associate($post);
+                        $imageDb->save();       
+                    }
 
-                $image->save($destinationPath.'slider_'.$picture);
-                //make images thumbnails
-                $image2=\Image::make($file->getRealPath()); //Call immage library installed.
-                $thumbPath ='img/posts/thumbs/';
-                $image2->resize(300, 230, function ($constraint) {
-                    $constraint->aspectRatio();
-                });
-                $image2->save($thumbPath.'thumb_'.$picture);
-                //save image information on the db.
-                $imageDb = new Image();
-                $imageDb->name = $picture;
-
-                $imageDb->post()->associate($post);
-                $imageDb->save();
+       
+                   
             }
         }
-        Flash::success("Post <strong>".$post->id."</strong> was updated.");
-        return redirect()->route('admin.posts.index');
+        Flash::success('Post <strong>'.$post->title.'</strong> was updated.');
+        return redirect()->back();
     }
 
     /**

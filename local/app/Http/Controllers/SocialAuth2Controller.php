@@ -19,12 +19,51 @@ class SocialAuth2Controller extends Controller
     {
         return Socialite::driver('facebook')->redirect();
     }
+    public function redirectToProvider2()
+    {
+        return Socialite::driver('twitter')->redirect();
+    }
 
     /**
      * Obtain the user information from GitHub.
      *
      * @return Response
      */
+    public function twitterCallback()
+    {
+        // Important change from previous post is that I'm now passing
+        // whole driver, not only the user. So no more ->user() part
+        $user = Socialite::driver('twitter')->user();
+        // OAuth Two Providers
+        $token = $user->token;
+
+        // OAuth One facebookfacebookfacebookfacebookfacebookfacebook
+        $token = $user->token;
+       
+        //All Providers
+        $user->getId();
+        $user->getNickname();
+        $user->getName();
+        $user->getEmail();
+        $user->getAvatar();
+        $my_user = User::where('email','=', $user->getEmail())->first();
+        if($my_user == null) {
+            $newUser = new User();
+            $newUser->name =$user->getName();
+            $newUser->email = $user->getEmail();
+            $newUser->twitter_id = $user->getId();
+            $newUser->profile_image = $user->avatar_original;
+            $newUser->type = "subscriber";
+            Auth::login($newUser, true);
+        }else {
+            $my_user->profile_image=$user->avatar_original;
+            $my_user->twitter_id = $user->getId();
+            $my_user->save();
+            Auth::login($my_user,true);
+        }       
+
+        return redirect()->to('/admin');
+    }
     public function handleProviderCallback()
     {
         $user = Socialite::driver('facebook')->user();
@@ -45,7 +84,7 @@ class SocialAuth2Controller extends Controller
         $user->getAvatar();
         
         $my_user = User::where('email','=', $user->getEmail())->first();
-	    if($my_user === null) {
+	    if($my_user == null) {
 		    $newUser = new User();
 	        $newUser->name =$user->getName();
 	        $newUser->email = $user->getEmail();
@@ -54,7 +93,7 @@ class SocialAuth2Controller extends Controller
 	        $newUser->type = "member";
 	        Auth::login($newUser, true);
 	    }else {
-	    	$my_user->facebook_id = 'null';
+	    	$my_user->facebook_id = $user->getId();
 	        Auth::login($my_user,true);
 	    }        
         return redirect()->to('/admin');

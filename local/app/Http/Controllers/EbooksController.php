@@ -5,18 +5,23 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
+use App\Http\Requests\EbookRequest;
 use Laracasts\Flash\Flash;
 use App\Ebook;
 use App\Tag;
-use App\User;
 use App\Image;
 use App\Category;
+use App\User;
 use Auth;
 use Config;
 class EbooksController extends Controller
 {
-
-    public function getUserPosts($id){
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getUserEbooks($id){
         $ebooks =  Ebook::orderBy('id','DESC')->where('user_id',$id)->paginate(5);
         $ebooks->each(function($ebooks){
             $ebooks->category;
@@ -29,27 +34,16 @@ class EbooksController extends Controller
         ->with('ebooks',$ebooks)->with('user',$user);
     }
     public function addView(Request $request,$id){
-        $ebook = Post::find($id);
+        $ebook = Ebook::find($id);
         $ebook->views = $ebook->views + 1;
         $ebook->update();
-        return response()->json(['msg'=>'success']);       
+        return response()->json(['msg'=>'success']);
+     
+        
     }
-    /**
-     * Give me ebooks order by id DESC.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    /**
-
-    
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index(Request $request)
     {
-        $ebooks= Ebook::Search($request->title)->orderBy('id','DESC')->where('user_id',Auth::user()->id)->paginate(2);
-        $sortType = 'desc';
+        $ebooks= Ebook::Search($request->title)->orderBy('id','DESC')->where('user_id',Auth::user()->id)->paginate(5);
         $ebooks->each(function($ebooks){
             $ebooks->category;
             $ebooks->images;
@@ -57,12 +51,11 @@ class EbooksController extends Controller
             $ebooks->user;
         });
         return view('admin.ebooks.index')
-        ->with('ebooks',$ebooks)->with('sortType',$sortType);
+        ->with('ebooks',$ebooks);
     }
     public function all(Request $request)
     {
-        $ebooks= Ebook::Search($request->title)->orderBy('id','DESC')->paginate(2);
-        $sortType = 'desc';
+        $ebooks= Ebook::Search($request->title)->orderBy('id','DESC')->paginate(5);
         $ebooks->each(function($ebooks){
             $ebooks->category;
             $ebooks->images;
@@ -70,7 +63,7 @@ class EbooksController extends Controller
             $ebooks->user;
         });
         return view('admin.ebooks.all')
-        ->with('ebooks',$ebooks)->with('sortType',$sortType);
+        ->with('ebooks',$ebooks);
     }
 
     /**
@@ -80,16 +73,14 @@ class EbooksController extends Controller
      */
     public function create()
     {
-        if(Auth::check()){        
-            $categories = Category::orderBy('name','ASC')->lists('name','id');
-            $tags =Tag::orderBy('name','ASC')->lists('name','id');
-            $ebooks = Ebook::orderBy('id','DESC')->paginate(4);
-            return view('admin.ebooks.create')
-            ->with('ebooks',$ebooks)
-            ->with('categories',$categories)
-            ->with('tags',$tags);
-        }else{
-            return redirect()->back();
+        if(Auth::check()){
+                $categories = Category::orderBy('name','ASC')->where('type','ebook')->lists('type','name','id');
+                $tags =Tag::orderBy('name','ASC')->lists('name','id');
+                $ebooks = Ebook::orderBy('id','DESC')->paginate(4);
+                return view('admin.ebooks.create')
+                ->with('ebooks',$ebooks)
+                ->with('categories',$categories)
+                ->with('tags',$tags);
         }
     }
 
@@ -99,55 +90,77 @@ class EbooksController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(EbookRequest $request)
     {
-        $ebook = new Ebook($request->except('images','category_id','tags'));
-        $ebook->user_id = \Auth::user()->id;
-       //associate category with ebook
-        $category = Category::find($request['category_id']);
-        $ebook->category()->associate($category);
-        $ebook->save();  
 
-        //associate all tags for the ebook
-        $ebook->tags()->sync($request->tags);
-        $picture = '';
-
-      
+        //Check if the images are null or not.
+        $fileArray0 = array('images' => $request->file('images')[0]);
+        // Tell the validator that this file should be required
+        $rules0 = array(
+            'images' => 'required'//max 10000kb
+        );
+        // Now pass the input and rules into the validator
+        $validator0 = \Validator::make($fileArray0, $rules0);       
+        if($validator0->fails()){
+           return redirect()->back()->withErrors($validator0)->withInput();
+        }else{
         //Process Form Images
         if ($request->hasFile('images')) {
             $files = $request->file('images');
-            foreach($files as $file){
+            foreach($files as $file){             
 
-                //image data
-                $filename = $file->getClientOriginalName();
-                $extension = $file->getClientOriginalExtension();
-                $picture = date('His').'_'.$filename;
-                //make images sliders
-                $image=\Image::make($file->getRealPath()); //Call image library installed.
-                $destinationPath = 'img/ebooks/';
-                $image->resize(1300, null, function ($constraint) {
-                    $constraint->aspectRatio();
-                });
-                $image->save($destinationPath.'ebook_'.$picture);
-                
-                //make images thumbnails
-                $image2=\Image::make($file->getRealPath()); //Call immage library installed.
-                $thumbPath = 'img/ebooks/thumbs/';
-                $image2->resize(null, 230, function ($constraint) {
-                    $constraint->aspectRatio();
-                });
-                $image2->save($thumbPath.'thumb_'.$picture);
-                //save image information on the db.
-                $imageDb = new Image();
-                $imageDb->name = $picture;
-                $imageDb->ebook()->associate($ebook);
-                $imageDb->save();
+                    //Slider
+                    $filename = $file->getClientOriginalName();
+                    $extension = $file->getClientOriginalExtension();
+                    $picture = date('His').'_'.$filename;
+                    //make images sliders
+                    $image=\Image::make($file->getRealPath()); //Call image library installed.
+                    // Build the input for validation
+                    $fileArray = array('images' => $file);
+                    // Tell the validator that this file should be an image
+                    $rules = array(
+                        'images' => 'dimensions:min_width=*,min_height=450'//max 10000kb
+                    );
+                    // Now pass the input and rules into the validator
+                    $validator = \Validator::make($fileArray, $rules);
+                    
+                    if($validator->fails()){
+                        
+                        return redirect()->back()->withErrors($validator)->withInput();
+                    }else{
+                    //if pass all the validations we add the ebook and the images                        
+                        $ebook = new Ebook($request->except('images','category_id','tags'));
+                        $ebook->user_id = \Auth::user()->id;
+                       //associate category with ebook
+                        $category = Category::find($request['category_id']);
+                        $ebook->category()->associate($category);
+                        $ebook->save();  
+                        //associate all tags for the ebook
+                        $ebook->tags()->sync($request->tags);
+                        $picture = '';
+                        $destinationPath = 'img/ebooks/';
+                        $image->resize(null,280, function ($constraint) {
+                            $constraint->aspectRatio();
+                        });
+                        $image->save($destinationPath.'slider_'.$picture);
+                        // Thumbnails
+                        $image2=\Image::make($file->getRealPath()); //Call immage library installed.      
+                        //make images thumbnails                        
+                        $thumbPath ='img/ebooks/thumbs/';
+                        $image2->resize(100, 100);
+                        $image2->save($thumbPath.'thumb_'.$picture);
+                        //save image information on the db.
+                        $imageDb = new Image();
+                        $imageDb->name = $picture;
+                        $imageDb->ebook()->associate($ebook);
+                        $imageDb->save();       
+                    }        
             }
         }
         Flash::success("Ebook <strong>".$ebook->title."</strong> was created.");
         return redirect()->route('admin.ebooks.index');
+        }
     }
-
     /**
      * Display the specified resource.
      *
@@ -191,8 +204,9 @@ class EbooksController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(EbookRequest $request, $id)
     {
+
         $ebook =Ebook::find($id);
         if($request->featured){
             $ebook->featured = 'true';
@@ -201,41 +215,60 @@ class EbooksController extends Controller
         }
         $ebook->fill($request->all());
         $ebook->user_id = \Auth::user()->id;
+        
         $ebook->save();
         $ebook->tags()->sync($request->tags);
-                //Process Form Images
+        $picture = '';
+
+        //Process Form Images
         if ($request->hasFile('images')) {
             $files = $request->file('images');
-            foreach($files as $file){
 
-                //image data
-                $filename = $file->getClientOriginalName();
-                $extension = $file->getClientOriginalExtension();
-                $picture = date('His').'_'.$filename;
-                //make images sliders
-                $image=\Image::make($file->getRealPath()); //Call image library installed.
-                $destinationPath = 'img/ebooks/';
-                $image->resize(1300, null, function ($constraint) {
-                    $constraint->aspectRatio();
-                });
-                $image->save($destinationPath.'ebook_'.$picture);
-                
-                //make images thumbnails
-                $image2=\Image::make($file->getRealPath()); //Call immage library installed.
-                $thumbPath = 'img/ebooks/thumbs/';
-                $image2->resize(null, 230, function ($constraint) {
-                    $constraint->aspectRatio();
-                });
-                $image2->save($thumbPath.'thumb_'.$picture);
-                //save image information on the db.
-                $imageDb = new Image();
-                $imageDb->name = $picture;
-                $imageDb->ebook()->associate($ebook);
-                $imageDb->save();
+            foreach($files as $file){             
+
+                    //Slider
+                    $filename = $file->getClientOriginalName();
+                    $extension = $file->getClientOriginalExtension();
+                    $picture = date('His').'_'.$filename;
+                    //make images sliders
+                    $image=\Image::make($file->getRealPath()); //Call image library installed.
+                    // Build the input for validation
+                    $fileArray = array('img' => $file);
+                    // Tell the validator that this file should be an image
+                    $rules = array(
+                        'img' => 'dimensions:min_width=*,min_height=450'//max 10000kb
+                    );
+                    // Now pass the input and rules into the validator
+                    $validator = \Validator::make($fileArray, $rules);
+                   
+                    if($validator->fails()){     
+                         Flash('* Images must be 450px tall.','danger');         
+                         return redirect()->back();
+                    }else{
+                        $destinationPath = 'img/ebooks/';
+                        $image->resize(null,280, function ($constraint) {
+                            $constraint->aspectRatio();
+                        });
+                        $image->save($destinationPath.'slider_'.$picture);
+                        // Thumbnails
+                        $image2=\Image::make($file->getRealPath()); //Call immage library installed.      
+                        //make images thumbnails                        
+                        $thumbPath ='img/ebooks/thumbs/';
+                        $image2->resize(100, 100);
+                        $image2->save($thumbPath.'thumb_'.$picture);
+                        //save image information on the db.
+                        $imageDb = new Image();
+                        $imageDb->name = $picture;
+                        $imageDb->ebook()->associate($ebook);
+                        $imageDb->save();       
+                    }
+
+       
+                   
             }
-        }      
-        Flash::success("Ebook <strong>".$ebook->id."</strong> was updated.");
-        return redirect()->route('admin.ebooks.index');
+        }
+        Flash::success('Ebook <strong>'.$ebook->title.'</strong> was updated.');
+        return redirect()->back();
     }
 
     /**
@@ -246,15 +279,14 @@ class EbooksController extends Controller
      */
     public function destroy($id)
     {
-        if(Auth::user()->type == 'admin'){
-            $ebook = Ebook::find($id);
-            $ebook->delete();
-            Flash::error("Ebook <strong>".$ebook->title."</strong> was deleted.");
-            return redirect()->route('admin.ebooks.index');            
-        }else{
-            return redirect()->route('admin.dashboard.index');
-        }
+    
+        $ebook = Ebook::find($id);
+        $ebook->delete();
+        Flash::error("Ebook <strong>".$ebook->name."</strong> was deleted.");
+        return redirect()->route('admin.ebooks.index');            
+      
     }
+    
     public function approve($id)
     {
         if(Auth::user()->type == 'admin'){
