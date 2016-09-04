@@ -102,7 +102,7 @@
                     <h3 style="margin:0">{{$post->title}}</h3>
                     @if($post->user()->first()->profile_image && $post->user()->first()->facebook_id == null && $post->user()->first()->twitter_id == null)
 
-                    <a href="#" class="pull-left" style="margin-right:5px"><img src="{{asset('img/profile.png')}}" class="img-responsive" width="20px" height="20px" alt=""></a>{{$post->user()->first()->name}} <span class="glyphicon glyphicon-time" style="margin-left:10px;margin-right:10px"> 12 minutes ago</span><span class="icon icon-eye">
+                    <a href="#" class="pull-left" style="margin-right:5px"><img src="{{asset('img/users/profile/profile_'.$post->user()->first()->profile_image)}}" class="img-responsive" width="20px" height="20px" alt=""></a>{{$post->user()->first()->name}} <span class="glyphicon glyphicon-time" style="margin-left:10px;margin-right:10px"> {{$post->created_at}}</span><span class="icon icon-eye">
 
                     @elseif($post->user()->first()->facebook_id != null && $post->user()->first()->twitter_id != null)
                         <a href="#" class="pull-left" style="margin-right:5px"><img src="{{$post->user()->first()->profile_image}}" class="img-responsive" width="20px" height="20px" alt=""></a>{{$post->user()->first()->name}} <span class="glyphicon glyphicon-time" style="margin-left:10px;margin-right:10px"> {{$post->created_at}}</span><span class="icon icon-eye">
@@ -149,13 +149,14 @@
                     @if(count($lastest_photos)>0)
                         @foreach($lastest_photos as $photo)                 
                             <li style="padding:0;margin:0;">
-                                <a class="thumb" href="{{asset('img/photos/thumbs/thumb_'.$photo->images()->first()->name)}}"></a>
+                                <a class="thumb" href="{{asset('img/photos/slider_'.$photo->images()->first()->name)}}">
                                 <p class="title"><a href="#" style="text-decoration:none;color:black"><strong>{{$photo->title}}</strong></a></p>
+                                </a>
                             <div class="oculto div-post col-md-8 col-sm-8 col-xs-12">
                                 <h3>{{$photo->title}}</h3>
                         @if($photo->user()->first()->profile_image && $photo->user()->first()->facebook_id == null && $photo->user()->first()->twitter_id == null)                                
                                 <a href="#" class="pull-left" style="margin-right:5px"><img src="{{asset('img/users/profile/profile_'.$photo->user()->first()->profile_image)}}" class="img-responsive" width="20px" height="20px" alt=""></a>
-                        @elseif($photo->user()->first()->facebook_id != null && $photo->user()->first()->twitter_id != null)
+                        @elseif($photo->user()->first()->facebook_id != null || $photo->user()->first()->twitter_id != null)
                                 <a href="#" class="pull-left" style="margin-right:5px"><img src="{{$photo->user()->first()->profile_image}}" class="img-responsive" width="20px" height="20px" alt=""></a>
                         @endif
 
@@ -189,7 +190,10 @@
                     <?php 
                         $video1="";
                         $video2="";
-                        $video3=""; 
+                        $video3="";
+                        $image1="";
+                        $image2="";
+                        $image3="";
                     ?>
                     @foreach($lastest_videos as $key => $video)
                     @if($key == 0)
@@ -197,7 +201,7 @@
                             $video1 = $video->title;
                             $user1=$video->user()->first()->name;
                             if($video->user()->first()->profile_image && $video->user()->first()->facebook_id == null && $video->user()->first()->twitter_id == null){
-                               $image1='img/users/profile/profile/profile_'.$video->user()->first()->profile_image;      
+                               $image1='img/users/profile/profile_'.$video->user()->first()->profile_image;      
                             }elseif ($video->user()->first()->facebook_id != null && $video->user()->first()->twitter_id != null) {
                                $image1=$video->user()->first()->profile_image;
                             } 
@@ -208,7 +212,7 @@
                             $video2 = $video->title;
                             $user2=$video->user()->first()->name;
                             if($video->user()->first()->profile_image && $video->user()->first()->facebook_id == null && $video->user()->first()->twitter_id == null){
-                               $image2='img/users/profile/profile/profile_'.$video->user()->first()->profile_image;      
+                               $image2='img/users/profile/profile_'.$video->user()->first()->profile_image;      
                             }elseif ($video->user()->first()->facebook_id != null && $video->user()->first()->twitter_id != null) {
                                $image2=$video->user()->first()->profile_image;
                             } 
@@ -218,7 +222,7 @@
                             $video3 = $video->title;
                             $user3=$video->user()->first()->name;
                             if($video->user()->first()->profile_image && $video->user()->first()->facebook_id == null && $video->user()->first()->twitter_id == null){
-                               $image3='img/users/profile/profile/profile_'.$video->user()->first()->profile_image;      
+                               $image3='img/users/profile/profile_'.$video->user()->first()->profile_image;      
                             }elseif ($video->user()->first()->facebook_id != null && $video->user()->first()->twitter_id != null) {
                                $image3=$video->user()->first()->profile_image;
                             } 
@@ -229,26 +233,34 @@
                  
                     </div>
                     @endforeach
-                
+                    @if($image1)
                     <div class="col-md-3 col-sm-3 col-xs-3 descripcion desc1" style="margin-right:7px;padding:0px">
+                       <a href="#" class="pull-left" style="margin-right:5px">
                         <h4>{{($video1) ? : $video1}} #1</h4>
-                        <a href="#" class="pull-left" style="margin-right:5px">
+                        
                             <img src="{{$image1}}" class="img-responsive pull-left" style="margin-right:5px" width="20px" height="20px" alt="">
                             {{$user1}}
                         </a>
                     </div>
+                    @endif
+                    @if($image2)
                     <div class="col-md-3 col-sm-3 col-xs-3 descripcion desc2" style="margin:0px 7px;padding:0px">
+                        <a href="#" class="pull-left" style="margin-right:5px">
                         <h4>{{($video2) ? : $video2}} #2</h4>
                         <a href="#" class="pull-left" style="margin-right:5px">
                             <img src="{{$image2}}" class="img-responsive pull-left" style="margin-right:5px" width="20px" height="20px" alt="">{{$user2}}
                         </a>
-                    </div> 
+                    </div>
+                    @endif
+                    @if($image3)
                     <div class="col-md-3 col-sm-3 col-xs-3 descripcion desc3" style="margin:0px 7px;padding:0px">
-                        <h4>{{($video3) ? : $video3}} #3</h4>
                         <a href="#" class="pull-left" style="margin-right:5px">
+                            <h4>{{($video3) ? : $video3}} #3</h4>
+                        
                             <img src="{{$image3}}" class="img-responsive pull-left" style="margin-right:5px" width="20px" height="20px" alt="">{{$user3}}
                         </a>
                     </div>
+                    @endif
                 @endif   
                 </div>
             </div>

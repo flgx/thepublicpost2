@@ -9,7 +9,7 @@
                     <span class="icon-bar"></span>
                 </button>
                 <div class="logo">
-                <a href="#" class="navbar-left"><img class="img-responsive" src="{{asset('img/Logo.png')}}" alt="logo"></a>
+                <a href="{{url('/')}}" class="navbar-left"><img class="img-responsive" src="{{asset('img/Logo.png')}}" alt="logo"></a>
                 </div>
                 <!---<a class="navbar-brand" href="#">Start Bootstrap</a>-->
             </div>
@@ -31,7 +31,7 @@
                                 
                                     @if(Auth::user()->profile_image && Auth::user()->facebook_id == null && Auth::user()->twitter_id == null)
                                     
-                                      <img src="{{asset('img/users/profile').'/'.Auth::user()->profile_image}}" class="img-circle" alt="The Post Page " style="max-width:40px" alt="">
+                                      <img src="{{asset('img/users/profile').'/profile_'.Auth::user()->profile_image}}" class="img-circle" alt="The Post Page " style="max-width:40px" alt="">
                                     @elseif(Auth::user()->facebook_id != null || Auth::user()->twitter_id != null )          
                                       <img src="{{Auth::user()->profile_image}}" style="max-width:40px" alt="" class="img-circle" alt="The Post Page ">
                                     @else
@@ -46,6 +46,8 @@
                                 <li><a href="{{url('admin/photos/create')}}">Post photo story</a></li>
                                 <li><a href="{{url('admin/videos/create')}}">Post video story</a></li>
                                 <li><a href="{{url('admin/ebooks/create')}}">Post ebook </a></li>
+                                <li><a href="{{url('admin/users/'.Auth::user()->id.'/edit/')}}">Profile</a></li>
+                                <li class="li-last"><a href="{{url('/logout')}}">Log out</a></li>
                                 @else
                                 <li><a href="{{url('admin/users/'.Auth::user()->id.'/edit/')}}">Profile</a></li>
                                 <li class="li-last"><a href="{{url('/logout')}}">Log out</a></li>

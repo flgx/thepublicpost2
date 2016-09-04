@@ -16,7 +16,7 @@
                     <div class="col-xs-6">
 
                         @if($user->facebook_id == null &&  $user->twitter_id == null)                        
-                        <img src="{{asset('img/users/profile').'/'.$user->profile_image}}" style="max-width:100%;" class="img-circle col-xs-4" alt="The Post Page ">
+                        <img src="{{asset('img/users/profile').'/profile_'.$user->profile_image}}" style="max-width:100%;" class="img-circle col-xs-4" alt="The Post Page ">
                         @elseif(Auth::user()->facebook_id != null ||  Auth::user()->twitter_id != null)          
                           <img src="{{$user->profile_image}}" style="max-width:100%;" class="img-circle" alt="The Public Post ">
                         @else

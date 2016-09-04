@@ -81,8 +81,8 @@
     </script>
     <script>
     $(function(){
-    $('.treeview a').filter(function(){return this.href==location.href}).parent().addClass('active').siblings().removeClass('active')
-      $('.treeview a').click(function(){
+    $('.treeview a').filter(function(){return this.href==location.href}).parent().addClass('active').siblings().removeClass('active');
+      $('.treeview').click(function(){
         $(this).parent().addClass('active').siblings().removeClass('active')  
       })
     })
@@ -158,6 +158,13 @@
                 });  
 
             }
+        });
+
+        $('.delete').on('click',function(e){
+            e.preventDefault();
+                notie.confirm('আপনি যে কাজ করতে চান আপনি কি নিশ্চিত?', 'হাঁ', 'বাতিল', function() {
+                    window.location.href=$('.delete').attr('href');                    
+                });
         });
     </script>
 

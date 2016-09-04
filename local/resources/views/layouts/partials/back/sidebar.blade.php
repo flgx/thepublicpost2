@@ -7,7 +7,7 @@
       <div class="user-panel">
         <div class="pull-left image">
         @if(Auth::user()->facebook_id == null && Auth::user()->twitter_id == null)        
-        <img src="{{asset('img/users/profile').'/'.Auth::user()->profile_image}}" class="img-circle" alt="The Post Page ">
+        <img src="{{asset('img/users/profile').'/profile_'.Auth::user()->profile_image}}" class="img-circle" alt="The Post Page ">
         @elseif(Auth::user()->facebook_id != 'null' || Auth::user()->twitter_id != 'null')          
           <img src="{{Auth::user()->profile_image}}" class="img-circle" alt="The Post Page ">
         @else
@@ -35,6 +35,8 @@
       <!-- sidebar menu: : style can be found in sidebar.less -->
       <ul class="sidebar-menu">
         <li class="header">MAIN NAVIGATION</li>
+        <li class="{{ (Request::is('admin/users/'.Auth::user()->id.'/edit') ? 'active' : '') }}"><a href="{{route('admin.home')}}"><i class="fa fa-dashboard"></i>Dashboard</a>
+        </li>
         @if(Auth::user()->type == 'admin' || Auth::user()->type == 'editor')
         <li class="treeview {{ (Request::is('admin/categories') ? 'active' : '') }}">
           <a href="#">

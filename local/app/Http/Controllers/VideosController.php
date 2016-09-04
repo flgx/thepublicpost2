@@ -105,74 +105,18 @@ class VideosController extends Controller
      */
     public function store(VideoRequest $request)
     {
-        if(Auth::user()->type != 'subscriber'){
-            //Check if the images are null or not.
-            $fileArray0 = array('images' => $request->file('images')[0]);
-            // Tell the validator that this file should be required
-            $rules0 = array(
-                'images' => 'required'//max 10000kb
-            );
-            // Now pass the input and rules into the validator
-            $validator0 = \Validator::make($fileArray0, $rules0);       
-            if($validator0->fails()){
-               return redirect()->back()->withErrors($validator0)->withInput();
-            }else{
-            //Process Form Images
-            if ($request->hasFile('images')) {
-                $files = $request->file('images');
-                foreach($files as $file){             
-
-                        //Slider
-                        $filename = $file->getClientOriginalName();
-                        $extension = $file->getClientOriginalExtension();
-                        $picture = date('His').'_'.$filename;
-                        //make images sliders
-                        $image=\Image::make($file->getRealPath()); //Call image library installed.
-                        // Build the input for validation
-                        $fileArray = array('images' => $file);
-                        // Tell the validator that this file should be an image
-                        $rules = array(
-                            'images' => 'dimensions:min_width=*,min_height=450'//max 10000kb
-                        );
-                        // Now pass the input and rules into the validator
-                        $validator = \Validator::make($fileArray, $rules);
-                        
-                        if($validator->fails()){
-                            
-                            return redirect()->back()->withErrors($validator)->withInput();
-                        }else{
-                        //if pass all the validations we add the video and the images                        
-                            $video = new Video($request->except('images','category_id','tags'));
-                            $video->user_id = \Auth::user()->id;
-                           //associate category with video
-                            $category = Category::find($request['category_id']);
-                            $video->category()->associate($category);
-                            $video->save();  
-                            //associate all tags for the video
-                            $video->tags()->sync($request->tags);
-                           
-                            $destinationPath = 'img/videos/';
-                            $image->resize(null,280, function ($constraint) {
-                                $constraint->aspectRatio();
-                            });
-                            $image->save($destinationPath.'slider_'.$picture);
-                            // Thumbnails
-                            $image2=\Image::make($file->getRealPath()); //Call immage library installed.      
-                            //make images thumbnails                        
-                            $thumbPath ='img/videos/thumbs/';
-                            $image2->resize(100, 100);
-                            $image2->save($thumbPath.'thumb_'.$picture);
-                            //save image information on the db.
-                            $imageDb = new Image();
-                            $imageDb->name = $picture;
-                            $imageDb->video()->associate($video);
-                            $imageDb->save();       
-                        }        
-                }
-            }
-            Flash::success("Video <strong>".$video->title."</strong> was created.");
-            return redirect()->route('admin.videos.index');
-            }
+        if(Auth::user()->type != 'subscriber'){   
+        //if pass all the validations we add the video                       
+        $video = new Video($request->except('images','category_id','tags'));
+        $video->user_id = \Auth::user()->id;
+       //associate category with video
+        $category = Category::find($request['category_id']);
+        $video->category()->associate($category);
+        $video->save();  
+        //associate all tags for the video
+        $video->tags()->sync($request->tags);          
+        Flash::success("Video <strong>".$video->title."</strong> was created.");
+        return redirect()->route('admin.videos.index');          
         }else{
                 Flash::error("You don't have permissions");
                 return redirect()->route('admin.home');
@@ -196,16 +140,13 @@ class VideosController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($id)   
     {        
         $video = Video::find($id); 
         if(Auth::user()->type == 'admin' || Auth::user()->type == 'editor' || $video->user()->first()->id == Auth::user()->id){            
             $categories = Category::orderBy('name','DESC')->where('type','video')->lists('name','id');
             $tags = Tag::orderBy('name','DESC')->lists('name','id');
             $images = new Image();
-            $video->images->each(function($video){
-                $video->images;
-            });
             $myTags = $video->tags->lists('id')->ToArray(); //give me a array with only the tags id.
             return View('admin.videos.edit')->with('video',$video)->with('categories',$categories)->with('tags',$tags)->with('myTags',$myTags);            
         }else{
@@ -236,52 +177,6 @@ class VideosController extends Controller
             
             $video->save();
             $video->tags()->sync($request->tags);
-            $picture = '';
-
-            //Process Form Images
-            if ($request->hasFile('images')) {
-                $files = $request->file('images');
-
-                foreach($files as $file){            
-
-                        //Slider
-                        $filename = $file->getClientOriginalName();
-                        $extension = $file->getClientOriginalExtension();
-                        $picture = date('His').'_'.$filename;
-                        //make images sliders
-                        $image=\Image::make($file->getRealPath()); //Call image library installed.
-                        // Build the input for validation
-                        $fileArray = array('img' => $file);
-                        // Tell the validator that this file should be an image
-                        $rules = array(
-                            'img' => 'dimensions:min_width=*,min_height=450'//max 10000kb
-                        );
-                        // Now pass the input and rules into the validator
-                        $validator = \Validator::make($fileArray, $rules);
-                       
-                        if($validator->fails()){     
-                             Flash('* Images must be 450px tall.','danger');         
-                             return redirect()->back();
-                        }else{
-                            $destinationPath = 'img/videos/';
-                            $image->resize(null,280, function ($constraint) {
-                                $constraint->aspectRatio();
-                            });
-                            $image->save($destinationPath.'slider_'.$picture);
-                            // Thumbnails
-                            $image2=\Image::make($file->getRealPath()); //Call immage library installed.      
-                            //make images thumbnails                        
-                            $thumbPath ='img/videos/thumbs/';
-                            $image2->resize(100, 100);
-                            $image2->save($thumbPath.'thumb_'.$picture);
-                            //save image information on the db.
-                            $imageDb = new Image();
-                            $imageDb->name = $picture;
-                            $imageDb->video()->associate($video);
-                            $imageDb->save();       
-                        }
-                }
-            }
             Flash::success('Video <strong>'.$video->title.'</strong> was updated.');
             return redirect()->back();
         }else{

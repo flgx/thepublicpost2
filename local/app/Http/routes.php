@@ -168,6 +168,7 @@ Route::get('posts', [ 'as' => 'posts', 'uses' => 'FrontPageController@posts' ]);
 Route::auth();
 Route::get('user/activation/{token}', 'Auth\AuthController@activateUser')->name('user.activate');
 Route::get('auth/facebook', 'SocialAuth2Controller@redirectToProvider');
+
 Route::get('auth/facebook/callback', 'SocialAuth2Controller@handleProviderCallback');
 Route::get('auth/twitter', 'SocialAuth2Controller@redirectToProvider2');
 Route::get('auth/twitter/callback', 'SocialAuth2Controller@twitterCallback');

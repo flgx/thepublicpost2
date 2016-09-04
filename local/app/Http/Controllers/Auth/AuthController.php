@@ -72,8 +72,8 @@ class AuthController extends Controller
       
       $extension = $data['profile_image']->getClientOriginalExtension(); // getting image extension
 
-      $fileName = 'profile_'.rand(11111,99999).'.'.$extension; // renameing image
-      $data['profile_image']->move($destinationPath, $fileName); // uploading file to given path
+      $fileName = rand(11111,99999).'.'.$extension; // renameing image
+      $data['profile_image']->move($destinationPath, 'profile_'.$fileName); // uploading file to given path
 
         return User::create([
             'name' => $data['name'],
