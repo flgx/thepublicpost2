@@ -30,9 +30,17 @@
                         {!! Form::label('bkash','Bkash') !!}
                         {!! Form::text('bkash', null,['class'=> 'form-control','placeholder'=>'Type your bkash ID','required']) !!}
                     </div>
+                    <div class="form-group">
+                        {!! Form::label('tagline','Tagline') !!}
+                        {!! Form::text('tagline', null,['class'=> 'form-control','placeholder'=>'Type your bkash ID','required']) !!}
+                    </div>
+                    <div class="form-group">
+                        {!! Form::label('facebook_real','Facebook ID') !!}
+                        {!! Form::text('facebook_real', null,['class'=> 'form-control','placeholder'=>'Type your Facebook ID']) !!}
+                    </div>
             		<div class="form-group">
-            			{!! Form::label('tagline','Tagline') !!}
-            			{!! Form::text('tagline', null,['class'=> 'form-control','placeholder'=>'Type your bkash ID','required']) !!}
+            			{!! Form::label('twitter_real','Twitter ID') !!}
+            			{!! Form::text('twitter_real', null,['class'=> 'form-control','placeholder'=>'Type your Twitter ID']) !!}
             		</div>
                     @if(Auth::user()->type == 'admin')
                         <div class="form-group">

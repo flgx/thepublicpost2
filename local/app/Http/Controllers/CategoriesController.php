@@ -19,7 +19,7 @@ class CategoriesController extends Controller
 
             return view('admin.categories.index')->with('categories',$categories);
         }else{
-            return redirect()->route('admin.dashboard.index');
+            return redirect()->route('admin.home');
         }
 
     }
@@ -34,7 +34,7 @@ class CategoriesController extends Controller
         if(Auth::user()->type == 'admin'){
             return view('admin.categories.create');
         }else{
-            return redirect()->route('admin.dashboard.index');
+            return redirect()->route('admin.home');
         }
     }
 
@@ -75,7 +75,7 @@ class CategoriesController extends Controller
         $category = Category::find($id);
             return View('admin.categories.edit')->with('category',$category);
         }else{
-            return redirect()->route('admin.dashboard.index');
+            return redirect()->route('admin.home');
         }
     }
 
@@ -109,7 +109,7 @@ class CategoriesController extends Controller
         Flash::error("Category <strong>".$category->name."</strong> was deleted.");
         return redirect()->route('admin.categories.index');
         }else{
-            return redirect()->route('admin.dashboard.index');
+            return redirect()->route('admin.home');
         }
     }
 }

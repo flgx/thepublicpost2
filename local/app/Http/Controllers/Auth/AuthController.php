@@ -68,12 +68,21 @@ class AuthController extends Controller
     
     protected function create(array $data)
     {
+      $destinationPath = 'img/users/profile/'; // upload path
+      
+      $extension = $data['profile_image']->getClientOriginalExtension(); // getting image extension
+
+      $fileName = 'profile_'.rand(11111,99999).'.'.$extension; // renameing image
+      $data['profile_image']->move($destinationPath, $fileName); // uploading file to given path
+
         return User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'tagline' =>$data['tagline'],
             'bkash' => $data['bkash'],
-            'profile_image' => $data['profile_image'],
+            'twitter_real' => $data['twitter_real'],
+            'facebook_real' => $data['facebook_real'],
+            'profile_image' => $fileName ,
             'password' => bcrypt($data['password'])
         ]);
     }
@@ -94,7 +103,7 @@ class AuthController extends Controller
 
         $this->activationService->sendActivationMail($user);
 
-        return redirect('/login')->with('status', 'We sent you an activation code. Check your email.');
+        return redirect('/login')->with('status', 'We sent you an activation code. Check your email.'); 
     }
     public function authenticated(Request $request, $user)
     {

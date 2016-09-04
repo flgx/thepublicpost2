@@ -35,18 +35,23 @@
 								<td>{{$ebook->status}}</td>
 								<td>{{$ebook->views}}</td>
 								<td>
-									@if($ebook->status == 'approved' && Auth::user()->type=='admin')
-									<a href="#" onclick="return confirm('This posts is already approved.');" class="btn btn-success" disabled="disabled">Approve</a>
-									@elseif(Auth::user()->type == 'admin')
-										<a href="{{route('admin.ebooks.approve',$ebook->id)}}" onclick="return confirm('Are you sure?');" class="btn btn-success">Approve</a>
+									@if($ebook->status == 'approved' && Auth::user()->type=='admin' || Auth::user()->type == 'editor')
+									<a href="#"  class="approve-disable btn btn-success" disabled="disabled">Approve</a>
+									@elseif(Auth::user()->type == 'admin' || Auth::user()->type == 'editor')
+									<a href="{{route('admin.ebooks.approve',$ebook->id)}}"  class="approve btn btn-success">Approve</a>
 									@endif
-									@if($ebook->status == 'suspended' && Auth::user()->type=='admin')
-									<a href="{{route('admin.ebooks.suspend',$ebook->id)}}" onclick="return confirm('This posts is already suspended.');" disabled="disabled" class="btn btn-primary">Suspend</a>
-									@elseif(Auth::user()->type == 'admin')									
-									<a href="{{route('admin.ebooks.suspend',$ebook->id)}}" onclick="return confirm('Are you sure?');" class="btn btn-primary">Suspend</a>
+									@if($ebook->status == 'suspended' && Auth::user()->type=='admin' || Auth::user()->type == 'editor')
+									<a href="{{route('admin.ebooks.suspend',$ebook->id)}}"  disabled="disabled" class="suspend-disable btn btn-primary">Suspend</a>
+									@elseif(Auth::user()->type == 'admin' || Auth::user()->type == 'editor')
+									@if(Auth::user()->type != 'subscriptor')					
+									<a href="{{route('admin.ebooks.suspend',$ebook->id)}}" class="suspend btn btn-primary">Suspend</a>
 									@endif
-									<a href="{{route('admin.ebooks.edit',$ebook->id)}}" class="btn btn-warning">Edit</a>
-								   <a href="{{route('admin.ebooks.destroy',$ebook->id)}}" onclick="return confirm('Are you sure?');" class="btn btn-danger">Delete</a> </td>
+									@endif
+									<a href="{{route('admin.ebooks.edit',$ebook->id)}}" class="edit btn btn-warning">Edit</a>
+									@if(Auth::user()->type == 'admin')
+								    <a href="{{route('admin.ebooks.destroy',$ebook->id)}}"  class="delete btn btn-danger">Delete</a>
+								    @endif 
+								</td>
 							</tr>
 						@endforeach
 					</tbody>

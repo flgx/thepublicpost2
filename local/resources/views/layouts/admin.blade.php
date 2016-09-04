@@ -32,6 +32,7 @@
     <link rel="stylesheet" href="{{ asset('dist/js/ui/trumbowyg.min.css')}}">
     <link rel="stylesheet" href="{{ asset('dist/css/chosen.css')}}">
     <link rel="stylesheet" href="{{ asset('dist/css/notie.css')}}">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -128,10 +129,10 @@
     @yield('js')
     <script>
         if (window.location.hash == '#_=_'){
-    history.replaceState 
-        ? history.replaceState(null, null, window.location.href.split('#')[0])
-        : window.location.hash = '';
-}
+            history.replaceState 
+                ? history.replaceState(null, null, window.location.href.split('#')[0])
+                : window.location.hash = '';
+        }
         //delete images ajax request
         $('.btn-delete').on('click', function(e) {
             var count = $('.count').data('count');
@@ -159,5 +160,6 @@
             }
         });
     </script>
+
 </body>
 </html>

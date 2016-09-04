@@ -17,10 +17,10 @@ class CreateVideosTable extends Migration
             $table->string('title');
             $table->text('content');
             $table->string('video_link');
-            $table->string('featured');
+            $table->string('featured')->default('false');
             $table->string('slug');
             $table->string('views');
-            $table->enum('status',['approved','suspended']);
+            $table->enum('status',['approved','suspended'])->default('suspended');
             $table->integer('user_id')->unsigned();
             $table->integer('category_id')->unsigned();
 

@@ -11,6 +11,7 @@
     <title>The Public Post | Login</title>
     <!-- Bootstrap Core CSS -->
     <link href="{{asset('bootstrap/css/bootstrap.min.css')}}" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
 
     <!-- Custom CSS -->
     <link href="{{asset('dist/css/login.css')}}" rel="stylesheet">
@@ -24,7 +25,7 @@
                     <img class="center-block img-response" src="{{asset('img/Logo_footer.png')}}" alt="" style="margin-top: 30px;">
                 </div>
                 <div class="cuerpo" style="width:100%;padding:15px;background-color:#fff">
-                    <p style="color:#979696">Reset Your Password</p>
+                    <p style="color:#979696"><i class="fa fa-user"></i>Reset Your Password</p>
                     @if (session('status'))
                         <div class="alert alert-success">
                             {{ session('status') }}
@@ -37,7 +38,8 @@
                         <input type="hidden" name="token" value="{{ $token }}">
 
                         <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
-                            <label for="email" class="col-md-4 control-label">E-Mail Address</label>
+                        
+                            <label for="email" class="col-md-4 control-label"><i class="fa fa-envelope"></i>E-Mail Address</label>
 
                             <div class="col-md-6">
                                 <input id="email" type="email" class="form-control" name="email" value="{{ $email or old('email') }}">
@@ -51,7 +53,8 @@
                         </div>
 
                         <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
-                            <label for="password" class="col-md-4 control-label">Password</label>
+                        
+                            <label for="password" class="col-md-4 control-label"><i class="fa fa-lock"></i>Password </label>
 
                             <div class="col-md-6">
                                 <input id="password" type="password" class="form-control" name="password">
@@ -65,7 +68,8 @@
                         </div>
 
                         <div class="form-group{{ $errors->has('password_confirmation') ? ' has-error' : '' }}">
-                            <label for="password-confirm" class="col-md-4 control-label">Confirm Password</label>
+                        
+                            <label for="password-confirm" class="col-md-4 control-label"><i class="fa fa-lock"></i>Confirm Password</label>
                             <div class="col-md-6">
                                 <input id="password-confirm" type="password" class="form-control" name="password_confirmation">
 

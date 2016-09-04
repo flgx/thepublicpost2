@@ -16,11 +16,11 @@ class CreateReviewsTable extends Migration
             $table->increments('id');
             $table->string('content');
             $table->integer('rate')->default(0);
-            $table->integer('user_id')->unsigned();
-            $table->integer('post_id')->unsigned();
-            $table->integer('video_id')->unsigned();
-            $table->integer('photo_id')->unsigned();
-            $table->integer('ebook_id')->unsigned();
+            $table->integer('user_id')->unsigned()->default(null);
+            $table->integer('post_id')->unsigned()->default(null);
+            $table->integer('video_id')->unsigned()->default(null);
+            $table->integer('photo_id')->unsigned()->default(null);
+            $table->integer('ebook_id')->unsigned()->default(null);
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('post_id')->references('id')->on('posts')->onDelete('cascade');

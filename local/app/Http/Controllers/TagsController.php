@@ -22,7 +22,7 @@ class TagsController extends Controller
 
             return view('admin.tags.index')->with('tags',$tags);
         }else{
-            return redirect()->route('admin.dashboard.index');
+            return redirect()->route('admin.home');
         }
     }
 
@@ -73,7 +73,7 @@ class TagsController extends Controller
             $tag = Tag::find($id);
             return View('admin.tags.edit')->with('tag',$tag);
         }else{
-            return redirect()->route('admin.dashboard.index');
+            return redirect()->route('admin.home');
         }
 
 
@@ -109,7 +109,7 @@ class TagsController extends Controller
             Flash::error("Tag <strong>".$tag->name."</strong> was deleted.");
             return redirect()->route('admin.tags.index');            
         }else{
-            return redirect()->route('admin.dashboard.index');
+            return redirect()->route('admin.home');
         }
 
     }

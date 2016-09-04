@@ -11,6 +11,7 @@
     <title>The Public Post | Login</title>
     <!-- Bootstrap Core CSS -->
     <link href="{{asset('bootstrap/css/bootstrap.min.css')}}" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
 
     <!-- Custom CSS -->
     <link href="{{asset('dist/css/login.css')}}" rel="stylesheet">
@@ -29,7 +30,7 @@
                     <form  role="form" method="POST" action="{{ url('/register') }}" enctype="multipart/form-data">
                         {{ csrf_field() }}
                         <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
-                
+                        <i class="fa fa-pencil"></i>
                         <label for="name">Your Name</label>
                         <input id="name" type="text" class="form-control" placeholder="Type your name" name="name" value="{{ old('name') }}">
                             @if ($errors->has('name'))
@@ -39,7 +40,7 @@
                             @endif
                         </div>
                         <div class="form-group{{ $errors->has('bkash') ? ' has-error' : '' }}">
-
+                        <i class="fa fa-money"></i>
                         <label for="bkash">Your Bkash Id</label>
                         <input id="bkash" type="text" class="form-control" placeholder="Type your bkash" name="bkash" value="{{ old('bkash') }}">
                             @if ($errors->has('bkash'))
@@ -49,19 +50,51 @@
                             @endif
                         </div>
                         <div class="form-group{{ $errors->has('tagline') ? ' has-error' : '' }}">
-
+                        <i class="fa fa-tag"></i>
                         <label for="tagline">Your Tagline</label>
-                        <input id="tagline" type="text" class="form-control" placeholder="Type your tagline" name="tagline" value="{{ old('tagline') }}">
+                        <input id="tagline" type="text" class="form-control" placeholder="Type your tagline" name="tagline" value="{{ old('tagline') }}" required>
                             @if ($errors->has('tagline'))
                                 <span class="help-block">
                                     <strong>{{ $errors->first('tagline') }}</strong>
                                 </span>
                             @endif
                         </div>
+                        <div class="form-group{{ $errors->has('tagline') ? ' has-error' : '' }}">
+
+                        <label for="facebook_real"> <i class="fa fa-facebook-square"></i> Your Facebook ID</label>
+                        <input id="facebook_real" type="text" class="form-control" placeholder="Type your Facebook ID" name="facebook_real" value="{{ old('facebook_real') }}">
+                            @if ($errors->has('facebook_real'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('facebook_real') }}</strong>
+                                </span>
+                            @endif
+                        </div>
+                        <div class="form-group{{ $errors->has('twitter_real') ? ' has-error' : '' }}">
+
+                        <label for="twitter_real"><i class="fa fa-twitter-square"></i> Your Twitter ID</label>
+                        <input id="twitter_real" type="text" class="form-control" placeholder="Type your Twitter ID" name="twitter_real" value="{{ old('twitter_real') }}">
+                            @if ($errors->has('twitter_real'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('twitter_real') }}</strong>
+                                </span>
+                            @endif
+                        </div>
+                       <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
+                        <i class="fa fa-envelope"></i>
+                        <label for="email">Your E-mail</label>
+                        <input id="email" type="email" class="form-control" placeholder="Type your email" name="email" value="{{ old('email') }}" style="width: 100%; padding: 10px; border: 1px solid rgb(217, 217, 217); margin: 5px 0px;">
+                        
+                            @if ($errors->has('email'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('email') }}</strong>
+                                </span>
+                            @endif
+                        </div>
+                        
                         <div class="form-group{{ $errors->has('images') ? ' has-error' : '' }}">
                     
                             <div class="form-group">
-                                {!! Form::label('profile_image','Profile Image') !!}
+                                <i class="fa fa-photo"></i>  {!! Form::label('profile_image','Profile Image') !!}
                                 {!! Form::file('profile_image',null,['class'=> 'form-control','required']) !!}
 
                             </div>  
@@ -72,19 +105,9 @@
                                 </span>
                             @endif
                         </div>
-                       <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
-                        <label for="email">Your E-mail</label>
-                        <input id="email" type="email" class="form-control" placeholder="Type your email" name="email" value="{{ old('email') }}" style="width: 100%; padding: 10px; border: 1px solid rgb(217, 217, 217); margin: 5px 0px;">
-                        
-                            @if ($errors->has('email'))
-                                <span class="help-block">
-                                    <strong>{{ $errors->first('email') }}</strong>
-                                </span>
-                            @endif
-                        </div>
                        <div class="form-group{{ $errors->has('password_confirmation') ? ' has-error' : '' }}">
 
-                       
+                       <i class="fa fa-lock"></i>
                         <label for="password">Your Password</label>
                             <input id="password" type="password" placeholder="Type your password" class="form-control" name="password" style="width:100%; padding: 10px; border: 1px solid rgb(217, 217, 217); margin: 5px 0px;">
                                     @if ($errors->has('password'))
@@ -96,7 +119,9 @@
 
 
                         <div class="form-group{{ $errors->has('password_confirmation') ? ' has-error' : '' }}">
+                        <i class="fa fa-lock"></i>
                          <label for="passwrod-confimr">Your Password Again</label>
+
                             <input id="password-confirm" placeholder="Type Again your password" type="password" class="form-control" name="password_confirmation">
 
                             @if ($errors->has('password_confirmation'))

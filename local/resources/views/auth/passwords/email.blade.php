@@ -11,7 +11,7 @@
     <title>The Public Post | Login</title>
     <!-- Bootstrap Core CSS -->
     <link href="{{asset('bootstrap/css/bootstrap.min.css')}}" rel="stylesheet">
-
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
     <!-- Custom CSS -->
     <link href="{{asset('dist/css/login.css')}}" rel="stylesheet">
     <link href="{{asset('dist/icons/style.css')}}" rel="stylesheet">
@@ -24,7 +24,7 @@
                     <img class="center-block img-response" src="{{asset('img/Logo_footer.png')}}" alt="" style="margin-top: 30px;">
                 </div>
                 <div class="cuerpo" style="width:100%;padding:15px;background-color:#fff">
-                    <p style="color:#979696">Reset Your Password</p>
+                    <p style="color:#979696"><i class="fa fa-user"></i> Reset Your Password</p>
                     @if (session('status'))
                         <div class="alert alert-success">
                             {{ session('status') }}
@@ -35,9 +35,11 @@
                         {{ csrf_field() }}
 
                         <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
-                            <label for="email" class="col-md-4 control-label">E-Mail Address</label>
+
+                            <label for="email" class="col-md-4 control-label"><i class="fa fa-envelope"></i> E-Mail Address</label>
 
                             <div class="col-md-6">
+
                                 <input id="email" type="email" class="form-control" name="email" value="{{ old('email') }}">
 
                                 @if ($errors->has('email'))
@@ -51,7 +53,7 @@
                         <div class="form-group">
                             <div class="col-md-6 col-md-offset-4">
                                 <button type="submit" class="btn btn-primary">
-                                    <i class="fa fa-btn fa-envelope"></i> Send Password Reset Link
+                                    <i class="fa fa-btn fa-send"></i> Send Password Reset Link
                                 </button>
                             </div>
                         </div>

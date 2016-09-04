@@ -36,19 +36,23 @@
 								<td>{{$post->status}}</td>
 								<td>{{$post->views}}</td>
 								<td>
-									@if($post->status == 'approved' && Auth::user()->type=='admin')
-									<a href="#" onclick="return confirm('This posts is already approved.');" class="btn btn-success" disabled="disabled">Approve</a>
-									@elseif(Auth::user()->type == 'admin')
-										<a href="{{route('admin.posts.approve',$post->id)}}" onclick="return confirm('Are you sure?');" class="btn btn-success">Approve</a>
+									@if($post->status == 'approved' && Auth::user()->type=='admin' || Auth::user()->type == 'editor')
+									<a href="#"  class="approve-disable btn btn-success" disabled="disabled">Approve</a>
+									@elseif(Auth::user()->type == 'admin' || Auth::user()->type == 'editor')
+									<a href="{{route('admin.posts.approve',$post->id)}}"  class="approve btn btn-success">Approve</a>
 									@endif
-									@if($post->status == 'suspended' && Auth::user()->type=='admin')
-									<a href="{{route('admin.posts.suspend',$post->id)}}" onclick="return confirm('This posts is already suspended.');" disabled="disabled" class="btn btn-primary">Suspend</a>
-									@elseif(Auth::user()->type == 'admin')									
-									<a href="{{route('admin.posts.suspend',$post->id)}}" onclick="return confirm('Are you sure?');" class="btn btn-primary">Suspend</a>
+									@if($post->status == 'suspended' && Auth::user()->type=='admin' || Auth::user()->type == 'editor')
+									<a href="{{route('admin.posts.suspend',$post->id)}}"  disabled="disabled" class="suspend-disable btn btn-primary">Suspend</a>
+									@elseif(Auth::user()->type == 'admin' || Auth::user()->type == 'editor')
+									@if(Auth::user()->type != 'subscriptor')					
+									<a href="{{route('admin.posts.suspend',$post->id)}}" class="suspend btn btn-primary">Suspend</a>
 									@endif
-									<a href="{{route('admin.posts.edit',$post->id)}}" class="btn btn-warning">Edit</a>
-								   <a href="{{route('admin.posts.destroy',$post->id)}}" onclick="return confirm('Are you sure?');" class="btn btn-danger">Delete</a> </td>
-							</tr>
+									@endif
+									<a href="{{route('admin.posts.edit',$post->id)}}" class="edit btn btn-warning">Edit</a>
+									@if(Auth::user()->type == 'admin')
+								    <a href="{{route('admin.posts.destroy',$post->id)}}"  class="delete btn btn-danger">Delete</a>
+								    @endif 
+								</td>
 						@endforeach
 					</tbody>
 				</table>
@@ -61,4 +65,5 @@
         <!-- /.row -->
 @endsection
 @section('js')
+
 @endsection

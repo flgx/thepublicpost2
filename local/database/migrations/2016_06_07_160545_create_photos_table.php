@@ -17,10 +17,10 @@ class CreatePhotosTable extends Migration
             $table->string('title');
             $table->text('content');
             $table->string('photo_link');
-            $table->string('featured');
+            $table->string('featured')->default('false');
             $table->string('views');
             $table->string('slug');
-            $table->enum('status',['approved','suspended']);
+            $table->enum('status',['approved','suspended'])->default('suspended');
             $table->integer('user_id')->unsigned();
             $table->integer('category_id')->unsigned();
 

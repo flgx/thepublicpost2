@@ -20,6 +20,8 @@ class CreateUsersTable extends Migration
             $table->string('profile_image');
             $table->string('tagline');
             $table->string('twitter_id');
+            $table->string('twitter_real');
+            $table->string('facebook_real');
             $table->boolean('activated')->default(false);
             $table->string('bkash');
             $table->string('password');

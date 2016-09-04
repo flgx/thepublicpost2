@@ -17,35 +17,44 @@
             <div class="collapse navbar-collapse main-menu" id="bs-example-navbar-collapse-1">
                 <div class="ul">
                 <ul class="nav navbar-nav">
-
+                @if(count($categories)>0)
+                    @foreach($categories as $category)
+                    <li class="li-items" style="height:100%">
+                        <a href="#" style="line-height:65px;padding:0px 10px;color:white; text-decoration:none">{{$category->name}}</a>
+                    </li>
+                    @endforeach
+                @endif
                     <li style="cursor:pointer;" class="login">
                     @if(Auth::check())
-                    <span class="icono-toggle glyphicon glyphicon-triangle-bottom triangulo2" style="color: rgb(255, 255, 255); position: absolute; top: 24px; font-size: 15px; right: 15px;"></span>
-                    <a href="#" class="user-login register pull-right">
-                            
-                                @if(Auth::user()->profile_image && Auth::user()->facebook_id == null && Auth::user()->twitter_id == null)
+                        <span class="icono-toggle glyphicon glyphicon-triangle-bottom triangulo2" style="color: rgb(255, 255, 255); position: absolute; top: 24px; font-size: 15px; right: 15px;"></span>
+                        <a href="#" class="user-login register pull-right">
                                 
-                                  <img src="{{asset('img/users/profile').'/profile_'.Auth::user()->profile_image}}" class="img-circle" alt="The Post Page " style="max-width:40px" alt="">
-                                @elseif(Auth::user()->facebook_id != null || Auth::user()->twitter_id != null )          
-                                  <img src="{{Auth::user()->profile_image}}" style="max-width:40px" alt="" class="img-circle" alt="The Post Page ">
+                                    @if(Auth::user()->profile_image && Auth::user()->facebook_id == null && Auth::user()->twitter_id == null)
+                                    
+                                      <img src="{{asset('img/users/profile').'/'.Auth::user()->profile_image}}" class="img-circle" alt="The Post Page " style="max-width:40px" alt="">
+                                    @elseif(Auth::user()->facebook_id != null || Auth::user()->twitter_id != null )          
+                                      <img src="{{Auth::user()->profile_image}}" style="max-width:40px" alt="" class="img-circle" alt="The Post Page ">
+                                    @else
+                                     <img src="{{asset('img/profile.png')}}" style="max-width:40px" alt="" class="img-circle" alt="The Post Page ">
+                                    @endif                            
+                        
+                        <div class="profile-menu">
+                            <span class="glyphicon glyphicon-triangle-top triangulo" style="right: 12px; color: rgb(255, 255, 255); top: -11px; position:absolute;"></span>
+                            <ul class="profile-ul">
+                                @if(Auth::user()->type != 'subscriber')
+                                <li class="li-first"><a href="{{url('admin/posts/create')}}">Post your story</a></li>
+                                <li><a href="{{url('admin/photos/create')}}">Post photo story</a></li>
+                                <li><a href="{{url('admin/videos/create')}}">Post video story</a></li>
+                                <li><a href="{{url('admin/ebooks/create')}}">Post ebook </a></li>
                                 @else
-                                 <img src="{{asset('img/profile.png')}}" style="max-width:40px" alt="" class="img-circle" alt="The Post Page ">
-                                @endif                            
-                    
-                    <div class="profile-menu">
-                        <span class="glyphicon glyphicon-triangle-top triangulo" style="right: 12px; color: rgb(255, 255, 255); top: -11px; position:absolute;"></span>
-                        <ul class="profile-ul">
-                            <li class="li-first"><a href="{{url('admin/posts/create')}}">Post your story</a></li>
-                            <li><a href="{{url('admin/photos/create')}}">Post photo story</a></li>
-                            <li><a href="{{url('admin/videos/create')}}">Post video story</a></li>
-                            <li><a href="{{url('admin/ebooks/create')}}">Post ebook </a></li>
-                            <li><a href="{{url('admin/users/'.Auth::user()->id.'/edit/')}}">Profile</a></li>
-                            <li class="li-last"><a href="{{url('/logout')}}">Log out</a></li>
-                        </ul>
-                    </div>
-                    </a>
-                    @else
-                    <a href="{{url('/login')}}" style="line-height:65px;padding:0px 10px;color:white" class="register pull-right">sign in / sign up</a>
+                                <li><a href="{{url('admin/users/'.Auth::user()->id.'/edit/')}}">Profile</a></li>
+                                <li class="li-last"><a href="{{url('/logout')}}">Log out</a></li>
+                                @endif
+                            </ul>
+                        </div>
+                        </a>
+                        @else
+                        <a href="{{url('/login')}}" style="line-height:65px;padding:0px 10px;color:white" class="register pull-right">sign in / sign up</a>
                     @endif
                     
                     </li>

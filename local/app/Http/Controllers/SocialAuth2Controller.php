@@ -52,12 +52,14 @@ class SocialAuth2Controller extends Controller
             $newUser->name =$user->getName();
             $newUser->email = $user->getEmail();
             $newUser->twitter_id = $user->getId();
+            $newUser->activated=1;
             $newUser->profile_image = $user->avatar_original;
             $newUser->type = "subscriber";
             Auth::login($newUser, true);
         }else {
             $my_user->profile_image=$user->avatar_original;
             $my_user->twitter_id = $user->getId();
+            $my_user->activated=1;
             $my_user->save();
             Auth::login($my_user,true);
         }       
@@ -89,11 +91,14 @@ class SocialAuth2Controller extends Controller
 	        $newUser->name =$user->getName();
 	        $newUser->email = $user->getEmail();
 	        $newUser->facebook_id = $user->getId();
+            $newUser->activated=1;
 	        $newUser->profile_image = $user->getAvatar();
-	        $newUser->type = "member";
+	        $newUser->type = "subscriber";
 	        Auth::login($newUser, true);
 	    }else {
+            $my_user->profile_image = $user->getAvatar();
 	    	$my_user->facebook_id = $user->getId();
+            $my_user->activated=1;
 	        Auth::login($my_user,true);
 	    }        
         return redirect()->to('/admin');

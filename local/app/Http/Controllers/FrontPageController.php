@@ -26,7 +26,7 @@ class FrontPageController extends Controller
         $slider_posts = Post::orderBy('id','DESC')->where('status','approved')->paginate(5);
         $lastest_posts = Post::orderBy('id','DESC')->where('status','approved')->paginate(5);
         $pagination= Post::orderBy('id','DESC')->where('status','approved')->paginate(10, ['*'], 'p');
-        $featured_posts = Post::orderBy('id','DESC')->where('status','approved')->paginate(3);
+        $featured_posts = Post::orderBy('id','DESC')->where('status','approved')->where('featured','true')->paginate(3);
         $lastest_videos = Video::orderBy('id','DESC')->where('status','approved')->paginate(3);
         $lastest_photos = Photo::orderBy('id','DESC')->where('status','approved')->paginate(4);
         $lastest_ebooks = Ebook::orderBy('id','DESC')->where('status','approved')->paginate(4);

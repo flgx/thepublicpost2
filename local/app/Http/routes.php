@@ -14,7 +14,10 @@
 
 Route::group(['prefix' => 'admin','middleware'=>'auth'], function () {
 	//Index Route//
-	Route::get('/', 'HomeController@index');
+	Route::get('/',[
+			'uses' => 'HomeController@index',
+			'as'   => 'admin.home',
+	]);	
 	Route::get('/verifyemail', 'HomeController@index');
 
 	//Images Routes//

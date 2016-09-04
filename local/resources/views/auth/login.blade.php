@@ -11,6 +11,7 @@
         <title>The Public Post | Login</title>
         <!-- Bootstrap Core CSS -->
         <link href="{{asset('bootstrap/css/bootstrap.min.css')}}" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
 
         <!-- Custom CSS -->
         <link href="{{asset('dist/css/login.css')}}" rel="stylesheet">
@@ -38,15 +39,21 @@
                         Twitter or Facebook.</p>
                         <form  role="form" method="POST" action="{{ url('/login') }}">
                             {{ csrf_field() }}
-                            <input id="email" placeholder="Type your email" type="email" class="form-control" name="email" value="{{ old('email') }}" style="width: 100%; padding: 10px; border: 1px solid rgb(217, 217, 217); margin: 5px 0px;">
+                            <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
+                            <i class="fa fa-envelope"></i>
+                            <label for="name">Your Email</label>
+                            <input id="email" placeholder="Type your email" type="email" class="form-control" name="email" value="{{ old('email') }}">
 
                                         @if ($errors->has('email'))
                                             <span class="help-block">
                                                 <strong>{{ $errors->first('email') }}</strong>
                                             </span>
                                         @endif
+                            </div>
                             <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
-                                <input id="password" placeholder="Type Your Password" type="password" class="form-control" name="password" style="width:100%; padding: 10px; border: 1px solid rgb(217, 217, 217); margin: 5px 0px;">
+                            <i class="fa fa-lock"></i>
+                            <label for="name">Your Password</label>
+                                <input id="password" placeholder="Type Your Password" type="password" class="form-control" name="password">
                                         @if ($errors->has('password'))
                                             <span class="help-block">
                                                 <strong>{{ $errors->first('password') }}</strong>

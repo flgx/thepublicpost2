@@ -16,11 +16,11 @@ class CreatePostTable extends Migration
             $table->increments('id');
             $table->string('title');
             $table->text('content');
-            $table->string('featured');
+            $table->string('featured')->default('false');
             $table->string('featured_text');
             $table->string('views');
             $table->string('slug');
-            $table->enum('status',['approved','suspended']);
+            $table->enum('status',['approved','suspended'])->default('suspended');
             $table->integer('user_id')->unsigned();
             $table->integer('category_id')->unsigned();
 

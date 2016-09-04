@@ -4,10 +4,10 @@
 @section('content')
         <div class="row">
             <div class="col-lg-12 col-md-6">
-            	<a href="{{ route('admin.photos.create')}}" class="btn btn-info"> Create New Photopost</a>
+            	<a href="{{ route('admin.photos.create')}}" class="btn btn-info"> Create New Photophoto</a>
             	{!!Form::open(['route'=>'admin.photos.index','method'=>'GET','class'=>'navbar-form pull-right'])!!}
             		<div class="input-group">
-            			{!!Form::text('title',null,['class'=>'form-control','placeholder'=>'Search Photopost','aria-describedby'=>'search'])!!}
+            			{!!Form::text('title',null,['class'=>'form-control','placeholder'=>'Search Photophoto','aria-describedby'=>'search'])!!}
             			<span class="input-group-addon" id="search">
             				<span class="glyphicon glyphicon-search" aria-hidden="true" ></span>
             			</span>
@@ -35,18 +35,23 @@
 								<td>{{$photo->status}}</td>
 								<td>{{$photo->views}}</td>
 								<td>
-									@if($photo->status == 'approved' && Auth::user()->type=='admin')
-									<a href="#" onclick="return confirm('This posts is already approved.');" class="btn btn-success" disabled="disabled">Approve</a>
-									@elseif(Auth::user()->type == 'admin')
-										<a href="{{route('admin.photos.approve',$photo->id)}}" onclick="return confirm('Are you sure?');" class="btn btn-success">Approve</a>
+									@if($photo->status == 'approved' && Auth::user()->type=='admin' || Auth::user()->type == 'editor')
+									<a href="#" onclick="return confirm('This photos is already approved.');" class="approve-disable btn btn-success" disabled="disabled">Approve</a>
+									@elseif(Auth::user()->type == 'admin' || Auth::user()->type == 'editor')
+									<a href="{{route('admin.photos.approve',$photo->id)}}"  class="approve btn btn-success">Approve</a>
 									@endif
-									@if($photo->status == 'suspended' && Auth::user()->type=='admin')
-									<a href="{{route('admin.photos.suspend',$photo->id)}}" onclick="return confirm('This posts is already suspended.');" disabled="disabled" class="btn btn-primary">Suspend</a>
-									@elseif(Auth::user()->type == 'admin')									
-									<a href="{{route('admin.photos.suspend',$photo->id)}}" onclick="return confirm('Are you sure?');" class="btn btn-primary">Suspend</a>
+									@if($photo->status == 'suspended' && Auth::user()->type=='admin' || Auth::user()->type == 'editor')
+									<a href="{{route('admin.photos.suspend',$photo->id)}}"  disabled="disabled" class="suspend-disable btn btn-primary">Suspend</a>
+									@elseif(Auth::user()->type == 'admin' || Auth::user()->type == 'editor')
+									@if(Auth::user()->type != 'subscriptor')					
+									<a href="{{route('admin.photos.suspend',$photo->id)}}" class="suspend btn btn-primary">Suspend</a>
 									@endif
-									<a href="{{route('admin.photos.edit',$photo->id)}}" class="btn btn-warning">Edit</a>
-								   <a href="{{route('admin.photos.destroy',$photo->id)}}" onclick="return confirm('Are you sure?');" class="btn btn-danger">Delete</a> </td>
+									@endif
+									<a href="{{route('admin.photos.edit',$photo->id)}}" class="edit btn btn-warning">Edit</a>
+									@if(Auth::user()->type == 'admin')
+								    <a href="{{route('admin.photos.destroy',$photo->id)}}"  class="delete btn btn-danger">Delete</a>
+								    @endif 
+								</td>
 							</tr>
 						@endforeach
 					</tbody>

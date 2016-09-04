@@ -35,18 +35,23 @@
 								<td>{{$video->status}}</td>
 								<td>{{$video->views}}</td>
 								<td>
-									@if($video->status == 'approved' && Auth::user()->type=='admin')
-									<a href="#" onclick="return confirm('This posts is already approved.');" class="btn btn-success" disabled="disabled">Approve</a>
-									@elseif(Auth::user()->type == 'admin')
-										<a href="{{route('admin.videos.approve',$video->id)}}" onclick="return confirm('Are you sure?');" class="btn btn-success">Approve</a>
+									@if($video->status == 'approved' && Auth::user()->type=='admin' || Auth::user()->type == 'editor')
+									<a href="#"  class="approve-disable btn btn-success" disabled="disabled">Approve</a>
+									@elseif(Auth::user()->type == 'admin' || Auth::user()->type == 'editor')
+									<a href="{{route('admin.videos.approve',$video->id)}}"  class="approve btn btn-success">Approve</a>
 									@endif
-									@if($video->status == 'suspended' && Auth::user()->type=='admin')
-									<a href="{{route('admin.videos.suspend',$video->id)}}" onclick="return confirm('This posts is already suspended.');" disabled="disabled" class="btn btn-primary">Suspend</a>
-									@elseif(Auth::user()->type == 'admin')									
-									<a href="{{route('admin.videos.suspend',$video->id)}}" onclick="return confirm('Are you sure?');" class="btn btn-primary">Suspend</a>
+									@if($video->status == 'suspended' && Auth::user()->type=='admin' || Auth::user()->type == 'editor')
+									<a href="{{route('admin.videos.suspend',$video->id)}}"  disabled="disabled" class="suspend-disable btn btn-primary">Suspend</a>
+									@elseif(Auth::user()->type == 'admin' || Auth::user()->type == 'editor')
+									@if(Auth::user()->type != 'subscriptor')					
+									<a href="{{route('admin.videos.suspend',$video->id)}}" class="suspend btn btn-primary">Suspend</a>
 									@endif
-									<a href="{{route('admin.videos.edit',$video->id)}}" class="btn btn-warning">Edit</a>
-								   <a href="{{route('admin.videos.destroy',$video->id)}}" onclick="return confirm('Are you sure?');" class="btn btn-danger">Delete</a> </td>
+									@endif
+									<a href="{{route('admin.videos.edit',$video->id)}}" class="edit btn btn-warning">Edit</a>
+									@if(Auth::user()->type == 'admin')
+								    <a href="{{route('admin.videos.destroy',$video->id)}}"  class="delete btn btn-danger">Delete</a>
+								    @endif 
+								</td>
 							</tr>
 						@endforeach
 					</tbody>

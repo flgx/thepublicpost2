@@ -25,8 +25,12 @@
 									@if($user->type == "admin")
 
 										<span class="label label-danger">Administrator</span>
-									@else
-										<span class="label label-primary">Member</span>								
+									@elseif($user->type == "editor")
+										<span class="label label-primary">Editor</span>		
+									@elseif($user->type == "writer")
+										<span class="label label-primary">Writer</span>	
+									@elseif($user->type == "subscriber")
+										<span class="label label-primary">Subscriber</span>								
 									@endif
 								</td>
 								<td><a href="{{route('admin.users.edit',$user->id)}}" class="btn btn-warning">Edit</a> <a href="{{route('admin.users.destroy',$user->id)}}" onclick="return confirm('Are you sure?');" class="btn btn-danger">Delete</a> </td>
