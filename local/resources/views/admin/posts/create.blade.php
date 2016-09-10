@@ -69,15 +69,12 @@
 
 @section('js')
     <script>
+
         $(".select-tag").chosen({
             placeholder_text_multiple: "Select your tags"
         });
         $(".select-category").chosen({
             placeholder_text_single: "Select a category"
-        });
-
-        $('.textarea-content').trumbowyg({
-            
-        });
+        });    
     </script>
 @endsection

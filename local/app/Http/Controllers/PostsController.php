@@ -12,6 +12,12 @@ use App\Tag;
 use App\Image;
 use App\Category;
 use App\User;
+use App\Photo;
+use App\Comment;
+use App\Navbar;
+use App\Footer;
+use App\Sidebar;
+use App\Views;
 use Auth;
 use Config;
 class PostsController extends Controller
@@ -33,11 +39,28 @@ class PostsController extends Controller
         return view('admin.posts.user')
         ->with('posts',$posts)->with('user',$user);
     }
-    public function addView(Request $request,$id){
-        $post = Post::find($id);
-        $post->views = $post->views + 1;
-        $post->update();
-        return response()->json(['msg'=>'success']);
+    public function addView(Request $request,$id){        
+        $ipAddress = '';
+
+
+        // Check for X-Forwarded-For headers and use those if found
+        if (isset($_SERVER['HTTP_X_FORWARDED_FOR']) && ('' !== trim($_SERVER['HTTP_X_FORWARDED_FOR']))) {
+            $ipAddress = trim($_SERVER['HTTP_X_FORWARDED_FOR']);
+        } else {
+            if (isset($_SERVER['REMOTE_ADDR']) && ('' !== trim($_SERVER['REMOTE_ADDR']))) {
+                $ipAddress = trim($_SERVER['REMOTE_ADDR']);
+            }
+        }
+        $isViewed= Views::where('ip',$ipAddress)->where('post_id',$id)->count();
+        if($isViewed == 0){  
+            $view = new Views();
+            $view->post_id = $id;
+            $view->ip=$ipAddress;
+            $view->save();
+            return response()->json(['msg'=>'success']);    
+        }else{
+            return response()->json(['msg'=>'error']); 
+        }
      
         
     }
@@ -186,8 +209,32 @@ class PostsController extends Controller
      */
     public function show($id)
     {
-        $post = Post::find($id);
-        return view('admin.posts.show')->with('Post',$post);
+        $navbars = Navbar::orderBy('position','ASC')->get();
+        $sidebars = Sidebar::orderBy('position','ASC')->get();
+        $footers = Footer::orderBy('position','ASC')->get();
+        $post = Post::where('id',$id)->first();
+        $post->views();
+                $post->tags()->get();
+        $comments = $post->comments()->orderBy('id','DESC')->get();
+   
+        $comments->each(function($comments){
+
+                $comments->user;
+         
+        });
+
+        $categories = Category::orderBy('name','DESC')->paginate(15);
+        $related_posts = Post::orderBy('id','DESC')->paginate(3);
+        $related_photos = Photo::orderBy('id','DESC')->paginate(3);
+        return view('front.posts.show')
+        ->with('related_photos',$related_photos)
+        ->with('related_posts',$related_posts)
+        ->with('categories',$categories)
+        ->with('comments',$comments)
+        ->with('post',$post)
+        ->with('navbars',$navbars)
+        ->with('sidebars',$sidebars)
+        ->with('footers',$footers);
     }
 
     /**

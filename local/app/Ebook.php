@@ -24,6 +24,15 @@ class Ebook extends Model
     public function category(){
     	
     	return $this->belongsTo('App\Category');
+    }    
+    public function comments(){
+        
+        return $this->hasMany('App\Comment');
+    }
+     
+    public function views(){
+        
+        return $this->hasMany('App\Views');
     }   
 
     public function user(){

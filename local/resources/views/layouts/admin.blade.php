@@ -121,6 +121,10 @@
 
     <script src="{{ asset('dist/js/jquery.tablesorter.js')}}"></script>
     <script src="{{ asset('dist/js/notie.js')}}"></script>
+    
+    <script src="{{ asset('dist/js/avro-lib.js')}}"></script>
+    <script src="{{ asset('dist/js/avro-v1.1.4.min.js')}}"></script>
+
     <script>
         $('#flash-overlay-modal').modal();
         $("#myTable").tablesorter();
@@ -128,6 +132,7 @@
     </script>
     @yield('js')
     <script>
+    $('textarea, input[type=text]').avro();
         if (window.location.hash == '#_=_'){
             history.replaceState 
                 ? history.replaceState(null, null, window.location.href.split('#')[0])
@@ -161,10 +166,15 @@
         });
 
         $('.delete').on('click',function(e){
+            var count = $('.count').data('count');
+            if(count == 3){
+                notie.alert('আপনি এই মুছতে পারবেন না কারণ আমরা তিন শ্রমিক প্রয়োজন. দয়া করে তাদের কিছু সম্পাদনা কিন্তু আপনি তিনটি ছেড়ে চলে যেতে হবে.');
+            }else{
             e.preventDefault();
                 notie.confirm('আপনি যে কাজ করতে চান আপনি কি নিশ্চিত?', 'হাঁ', 'বাতিল', function() {
                     window.location.href=$('.delete').attr('href');                    
-                });
+                });                
+            }
         });
     </script>
 

@@ -15,7 +15,7 @@
             	{!! Form::close() !!}
             	<hr>
 
-				<table class="tablesorter table" id="myTable">
+				<table class="tablesorter table" id="myTable" data-count="{{count($ebooks)}}"> <!-- Get count to validate 3 post only and don't break the front end -->
 					<thead>
 						<th>ID <span class="pull-right fa fa-sort"></span></th>
 						<th>Title <span class="pull-right fa fa-sort"></span> </th>

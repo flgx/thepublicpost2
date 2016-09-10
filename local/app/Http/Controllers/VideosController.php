@@ -12,6 +12,10 @@ use App\Tag;
 use App\Image;
 use App\Category;
 use App\User;
+use App\Navbar;
+use App\Footer;
+use App\Sidebar;
+use App\Views;
 use Auth;
 use Config;
 class VideosController extends Controller
@@ -33,11 +37,28 @@ class VideosController extends Controller
         return view('admin.videos.user')
         ->with('videos',$videos)->with('user',$user);
     }
-    public function addView(Request $request,$id){
-        $video = Video::find($id);
-        $video->views = $video->views + 1;
-        $video->update();
-        return response()->json(['msg'=>'success']);
+    public function addView(Request $request,$id){        
+        $ipAddress = '';
+
+
+        // Check for X-Forwarded-For headers and use those if found
+        if (isset($_SERVER['HTTP_X_FORWARDED_FOR']) && ('' !== trim($_SERVER['HTTP_X_FORWARDED_FOR']))) {
+            $ipAddress = trim($_SERVER['HTTP_X_FORWARDED_FOR']);
+        } else {
+            if (isset($_SERVER['REMOTE_ADDR']) && ('' !== trim($_SERVER['REMOTE_ADDR']))) {
+                $ipAddress = trim($_SERVER['REMOTE_ADDR']);
+            }
+        }
+        $isViewed= Views::where('ip',$ipAddress)->where('video_id',$id)->count();
+        if($isViewed == 0){  
+            $view = new Views();
+            $view->video_id = $id;
+            $view->ip=$ipAddress;
+            $view->save();
+            return response()->json(['msg'=>'success']);    
+        }else{
+            return response()->json(['msg'=>'error']); 
+        }
      
         
     }
@@ -128,10 +149,44 @@ class VideosController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request,$id)
     {
-        $video = Video::find($id);
-        return view('admin.videos.show')->with('Video',$video);
+        $navbars = Navbar::orderBy('position','ASC')->get();
+        $footers = Footer::orderBy('position','ASC')->get();
+        $video = Video::where('id',$id)->first();
+   
+        $video->tags()->get();
+        $comments = $video->comments()->orderBy('id','DESC')->get();     
+        $comments->each(function($comments){
+
+                $comments->user;
+         
+        });
+        $categories = Category::orderBy('name','DESC')->paginate(15);
+        $related_videos = Video::orderBy('id','DESC')->paginate(3);
+
+        return view('front.videos.show')
+        ->with('related_videos',$related_videos)
+        ->with('categories',$categories)
+        ->with('comments',$comments)
+        ->with('video',$video)
+        ->with('navbars',$navbars)
+        ->with('footers',$footers);
+    }
+    public function showAll(Request $request)
+    {
+        $sidebars = Sidebar::orderBy('position','ASC')->get();
+        $navbars = Navbar::orderBy('position','ASC')->get();
+        $footers = Footer::orderBy('position','ASC')->get();
+        $video = Video::orderBy('id','DESC')->first();
+     
+        $related_videos = Video::orderBy('id','DESC')->paginate(3);
+        return view('front.videos.index')
+        ->with('related_videos',$related_videos)
+        ->with('video',$video)
+        ->with('navbars',$navbars)
+        ->with('sidebars',$sidebars)
+        ->with('footers',$footers);
     }
 
     /**

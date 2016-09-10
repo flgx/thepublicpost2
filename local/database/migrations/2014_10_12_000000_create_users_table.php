@@ -26,7 +26,7 @@ class CreateUsersTable extends Migration
             $table->string('bkash');
             $table->string('password');
             $table->string('featured');
-            $table->enum('type',['admin','editor','writer','subscriber'])->default('subscriber');
+            $table->enum('type',['admin','editor','writer','subscriber'])->default('writer');
             $table->rememberToken();
             $table->timestamps();
         });

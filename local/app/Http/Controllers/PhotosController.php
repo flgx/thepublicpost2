@@ -11,7 +11,11 @@ use App\Photo;
 use App\Tag;
 use App\Image;
 use App\Category;
+use App\Views;
 use App\User;
+use App\Navbar;
+use App\Footer;
+use App\Sidebar;
 use Auth;
 use Config;
 class PhotosController extends Controller
@@ -21,7 +25,7 @@ class PhotosController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function getUserPosts($id){
+    public function getUserPhotos($id){
         $photos =  Photo::orderBy('id','DESC')->where('user_id',$id)->paginate(5);
         $photos->each(function($photos){
             $photos->category;
@@ -33,11 +37,29 @@ class PhotosController extends Controller
         return view('admin.photos.user')
         ->with('photos',$photos)->with('user',$user);
     }
-    public function addView(Request $request,$id){
-        $photo = Photo::find($id);
-        $photo->views = $photo->views + 1;
-        $photo->update();
-        return response()->json(['msg'=>'success']);
+    public function addView(Request $request,$id){        
+        $ipAddress = '';
+
+        // Check for X-Forwarded-For headers and use those if found
+        if (isset($_SERVER['HTTP_X_FORWARDED_FOR']) && ('' !== trim($_SERVER['HTTP_X_FORWARDED_FOR']))) {
+            $ipAddress = trim($_SERVER['HTTP_X_FORWARDED_FOR']);
+        } else {
+            if (isset($_SERVER['REMOTE_ADDR']) && ('' !== trim($_SERVER['REMOTE_ADDR']))) {
+                $ipAddress = trim($_SERVER['REMOTE_ADDR']);
+            }
+        }
+
+        
+        $isViewed= Views::where('ip',$ipAddress)->where('photo_id',$id)->count();
+        if($isViewed == 0){  
+            $view = new Views();
+            $view->photo_id = $id;
+            $view->ip=$ipAddress;
+            $view->save();
+            return response()->json(['msg'=>'success']);    
+        }else{
+            return response()->json(['msg'=>'error']); 
+        }
      
         
     }
@@ -184,12 +206,45 @@ class PhotosController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request,$id)
     {
-        $photo = Photo::find($id);
-        return view('admin.photos.show')->with('Photo',$photo);
-    }
+        $navbars = Navbar::orderBy('position','ASC')->get();
+        $footers = Footer::orderBy('position','ASC')->get();
+        $photo = Photo::where('id',$id)->first();
+       
+        $photo->tags()->get();
+        $comments = $photo->comments()->orderBy('id','DESC')->get();     
+        $comments->each(function($comments){
 
+                $comments->user;
+         
+        });
+        $categories = Category::orderBy('name','DESC')->paginate(15);
+        $related_photos = Photo::orderBy('id','DESC')->paginate(3);
+
+        return view('front.photos.show')
+        ->with('related_photos',$related_photos)
+        ->with('related_photos',$related_photos)
+        ->with('categories',$categories)
+        ->with('comments',$comments)
+        ->with('photo',$photo)
+        ->with('navbars',$navbars)
+        ->with('footers',$footers);
+    }
+    public function showAll(Request $request)
+    {
+        $sidebars = Sidebar::orderBy('position','ASC')->get();
+        $navbars = Navbar::orderBy('position','ASC')->get();
+        $footers = Footer::orderBy('position','ASC')->get();
+        $photo = Photo::orderBy('id','DESC')->first();
+        $related_photos = Photo::orderBy('id','DESC')->paginate(1);
+        return view('front.photos.index')
+        ->with('related_photos',$related_photos)
+        ->with('photo',$photo)
+        ->with('navbars',$navbars)
+        ->with('sidebars',$sidebars)
+        ->with('footers',$footers);
+    }
     /**
      * Show the form for editing the specified resource.
      *

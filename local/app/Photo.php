@@ -24,6 +24,11 @@ class Photo extends Model
     public function category(){
     	
     	return $this->belongsTo('App\Category');
+    } 
+     
+    public function views(){
+        
+        return $this->hasMany('App\Views');
     }   
 
     public function user(){
@@ -31,8 +36,12 @@ class Photo extends Model
     	return $this->belongsTo('App\User');
     } 
     public function images(){
+        
+        return $this->hasMany('App\Image');
+    }  
+    public function comments(){
     	
-    	return $this->hasMany('App\Image');
+    	return $this->hasMany('App\Comment');
     }  
     public function tags(){
     	

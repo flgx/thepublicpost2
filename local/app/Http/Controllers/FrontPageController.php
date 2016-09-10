@@ -12,6 +12,8 @@ use App\Video;
 use App\User;
 use App\Image;
 use App\Category;
+use App\Navbar;
+use App\Footer;
 
 use App\Photo;
 class FrontPageController extends Controller
@@ -23,6 +25,8 @@ class FrontPageController extends Controller
      */
     public function index()
     {
+        $navbars = Navbar::orderBy('position','ASC')->get();
+        $footers = Footer::orderBy('position','ASC')->get();
         $slider_posts = Post::orderBy('id','DESC')->where('status','approved')->paginate(5);
         $lastest_posts = Post::orderBy('id','DESC')->where('status','approved')->paginate(5);
         $pagination= Post::orderBy('id','DESC')->where('status','approved')->paginate(10, ['*'], 'p');
@@ -65,7 +69,8 @@ class FrontPageController extends Controller
         ->with('lastest_videos',$lastest_videos)
         ->with('lastest_photos',$lastest_photos)
         ->with('pagination',$pagination)
-        ->with('categories',$categories);
+        ->with('navbars',$navbars)
+        ->with('footers',$footers);
     }
     public function posts()
     {

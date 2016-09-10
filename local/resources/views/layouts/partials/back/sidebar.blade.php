@@ -38,6 +38,44 @@
         <li class="{{ (Request::is('admin/users/'.Auth::user()->id.'/edit') ? 'active' : '') }}"><a href="{{route('admin.home')}}"><i class="fa fa-dashboard"></i>Dashboard</a>
         </li>
         @if(Auth::user()->type == 'admin' || Auth::user()->type == 'editor')
+
+        <li class="treeview {{ (Request::is('admin/navbars') ? 'active' : '') }}">
+          <a href="#">
+            <i class="fa fa-dashboard"></i> <span>Navbars</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu {{ (Request::is('admin/navbars') ? 'active' : '') }}">
+            <li class="{{ (Request::is('admin/navbars') ? 'active' : '') }}"><a href="{{url('admin/navbars')}}"><i class="fa fa-circle-o"></i> View Items</a></li>
+            <li class="{{ (Request::is('admin/navbars/create') ? 'active' : '') }}"><a href="{{url('admin/navbars/create')}}"><i class="fa fa-circle-o"></i> Create Item</a></li>
+          </ul>
+        </li>
+
+        <li class="treeview {{ (Request::is('admin/sidebars') ? 'active' : '') }}">
+          <a href="#">
+            <i class="fa fa-dashboard"></i> <span>Sidebar</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu {{ (Request::is('admin/sidebars') ? 'active' : '') }}">
+            <li class="{{ (Request::is('admin/sidebars') ? 'active' : '') }}"><a href="{{url('admin/sidebars')}}"><i class="fa fa-circle-o"></i> View Items</a></li>
+            <li class="{{ (Request::is('admin/sidebars/create') ? 'active' : '') }}"><a href="{{url('admin/sidebars/create')}}"><i class="fa fa-circle-o"></i> Create Item</a></li>
+          </ul>
+        </li>
+        <li class="treeview {{ (Request::is('admin/footers') ? 'active' : '') }}">
+          <a href="#">
+            <i class="fa fa-dashboard"></i> <span>Footer</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu {{ (Request::is('admin/footers') ? 'active' : '') }}">
+            <li class="{{ (Request::is('admin/footers') ? 'active' : '') }}"><a href="{{url('admin/footers')}}"><i class="fa fa-circle-o"></i> View Items</a></li>
+            <li class="{{ (Request::is('admin/footers/create') ? 'active' : '') }}"><a href="{{url('admin/footers/create')}}"><i class="fa fa-circle-o"></i> Create Item</a></li>
+          </ul>
+        </li>
         <li class="treeview {{ (Request::is('admin/categories') ? 'active' : '') }}">
           <a href="#">
             <i class="fa fa-dashboard"></i> <span>Categories</span>

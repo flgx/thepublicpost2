@@ -11,7 +11,7 @@ class Post extends Model
     
     protected $table = 'posts';
 
-    protected $fillable = ['title','content','featured','status','featured_text','views','category_id','user_id','slug'];
+    protected $fillable = ['title','content','featured','status','featured_text','views','category_id','user_id','slug','likes','shares','points'];
 
     public function sluggable()
     {
@@ -25,7 +25,14 @@ class Post extends Model
     	
     	return $this->belongsTo('App\Category');
     }   
-
+     
+    public function views(){
+        
+        return $this->hasMany('App\Views');
+    } 
+    public function comments(){
+        return $this->hasMany('App\Comment');
+    }
     public function user(){
     	
     	return $this->belongsTo('App\User');

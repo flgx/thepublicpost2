@@ -65,7 +65,7 @@
             <!-- Ebook Images -->
             <div class="col-md-6 type" data-type="ebooks">
                 <h1>Images</h1>
-                <hr>
+                <hr class="count" data-count="{{count($ebook->images)}}">
                 @if(count($ebook->images) > 0)  
                     <?php
                         $i=0;
@@ -101,8 +101,5 @@
             placeholder_text_single: "Select a category"
         });
 
-        $('.textarea-content').trumbowyg({
-            
-        });
     </script>
 @endsection

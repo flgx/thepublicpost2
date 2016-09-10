@@ -12,6 +12,9 @@ use App\Tag;
 use App\Image;
 use App\Category;
 use App\User;
+use App\Navbar;
+use App\Footer;
+use App\Sidebar;
 use Auth;
 use Config;
 class EbooksController extends Controller
@@ -33,11 +36,28 @@ class EbooksController extends Controller
         return view('admin.ebooks.user')
         ->with('ebooks',$ebooks)->with('user',$user);
     }
-    public function addView(Request $request,$id){
-        $ebook = Ebook::find($id);
-        $ebook->views = $ebook->views + 1;
-        $ebook->update();
-        return response()->json(['msg'=>'success']);
+    public function addView(Request $request,$id){        
+        $ipAddress = '';
+
+
+        // Check for X-Forwarded-For headers and use those if found
+        if (isset($_SERVER['HTTP_X_FORWARDED_FOR']) && ('' !== trim($_SERVER['HTTP_X_FORWARDED_FOR']))) {
+            $ipAddress = trim($_SERVER['HTTP_X_FORWARDED_FOR']);
+        } else {
+            if (isset($_SERVER['REMOTE_ADDR']) && ('' !== trim($_SERVER['REMOTE_ADDR']))) {
+                $ipAddress = trim($_SERVER['REMOTE_ADDR']);
+            }
+        }
+        $isViewed= Views::where('ip',$ipAddress)->where('ebook_id',$id)->count();
+        if($isViewed == 0){  
+            $view = new Views();
+            $view->ebook_id = $id;
+            $view->ip=$ipAddress;
+            $view->save();
+            return response()->json(['msg'=>'success']);    
+        }else{
+            return response()->json(['msg'=>'error']); 
+        }
      
         
     }
@@ -184,10 +204,40 @@ class EbooksController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request,$id)
     {
-        $ebook = Ebook::find($id);
-        return view('admin.ebooks.show')->with('Ebook',$ebook);
+        $navbars = Navbar::orderBy('position','ASC')->get();
+        $footers = Footer::orderBy('position','ASC')->get();
+        $ebook = Ebook::where('id',$id)->first();
+       
+        $ebook->tags()->get();
+        $comments = $ebook->comments()->orderBy('id','DESC')->get();     
+        $comments->each(function($comments){
+
+                $comments->user;
+         
+        });
+        $related_ebooks = Ebook::orderBy('id','DESC')->paginate(3);
+
+        return view('front.ebooks.show')
+        ->with('related_ebooks',$related_ebooks)
+        ->with('ebook',$ebook)
+        ->with('navbars',$navbars)
+        ->with('footers',$footers);
+    }
+    public function showAll(Request $request)
+    {
+        $sidebars = Sidebar::orderBy('position','ASC')->get();
+        $navbars = Navbar::orderBy('position','ASC')->get();
+        $footers = Footer::orderBy('position','ASC')->get();
+        $ebook = Ebook::orderBy('id','DESC')->first();
+        $related_ebooks = Ebook::orderBy('id','DESC')->paginate(1);
+        return view('front.ebooks.index')
+        ->with('related_ebooks',$related_ebooks)
+        ->with('ebook',$ebook)
+        ->with('navbars',$navbars)
+        ->with('sidebars',$sidebars)
+        ->with('footers',$footers);
     }
 
     /**

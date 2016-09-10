@@ -17,10 +17,19 @@
             <div class="collapse navbar-collapse main-menu" id="bs-example-navbar-collapse-1">
                 <div class="ul">
                 <ul class="nav navbar-nav">
-                @if(count($categories)>0)
-                    @foreach($categories as $category)
+                @if(count($navbars)>0)
+                    @foreach($navbars as $item)
                     <li class="li-items" style="height:100%">
-                        <a href="#" style="line-height:65px;padding:0px 10px;color:white; text-decoration:none">{{$category->name}}</a>
+                    <?php $type=''; ?>
+                        @if($item->category()->first()->name == 'ভিডিও')
+                            <?php $url='videos/allvideos'; ?>
+                        @elseif($item->category()->first()->type == 'ফটো')
+                            <?php $url="photos/allphotos";?>
+                        @elseif($item->category()->first()->type == 'ইসলাম')
+                            <?php $url="ebooks/allebooks"; ?>
+                        @endif
+                        <a href="{{url($url)}}" style="line-height:65px;padding:0px 10px;color:white; text-decoration:none">{{$item->category()->first()->name}}</a>
+
                     </li>
                     @endforeach
                 @endif
@@ -31,7 +40,7 @@
                                 
                                     @if(Auth::user()->profile_image && Auth::user()->facebook_id == null && Auth::user()->twitter_id == null)
                                     
-                                      <img src="{{asset('img/users/profile').'/profile_'.Auth::user()->profile_image}}" class="img-circle" alt="The Post Page " style="max-width:40px" alt="">
+                                      <img src="{{asset('img/users/profile/profile_'.Auth::user()->profile_image)}}" class="img-circle" alt="The Post Page " style="max-width:40px" alt="">
                                     @elseif(Auth::user()->facebook_id != null || Auth::user()->twitter_id != null )          
                                       <img src="{{Auth::user()->profile_image}}" style="max-width:40px" alt="" class="img-circle" alt="The Post Page ">
                                     @else
@@ -56,7 +65,10 @@
                         </div>
                         </a>
                         @else
-                        <a href="{{url('/login')}}" style="line-height:65px;padding:0px 10px;color:white" class="register pull-right">sign in / sign up</a>
+                        <div class="pull-right" style="color:white;"> 
+                                <a href="{{url('/login')}}" style="line-height:65px;padding:0px 10px;color:white" class="register">sign in </a> / <a href="{{url('/register')}}" style="line-height:65px;padding:0px 10px;color:white">sign up</a>
+                        </div>
+                    
                     @endif
                     
                     </li>

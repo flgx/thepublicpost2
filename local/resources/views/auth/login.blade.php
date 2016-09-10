@@ -24,9 +24,21 @@
                     <div class="logo center-block" style="background-color:#f0f0f0;border-top:3px solid #0054a6;height:125px; width:100%">
                         <img class="center-block img-response" src="{{asset('img/Logo_footer.png')}}" alt="" style="margin-top: 30px;">
                     </div>
+                    @if (session()->has('flash_notification.message'))
+                        <div class="alert alert-{{ session('flash_notification.level') }}">
+                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+
+                            {!! session('flash_notification.message') !!}
+                        </div>
+                    @endif
                     @if (session('status'))
                         <div class="alert alert-success">
                             {{ session('status') }}
+                        </div>
+                    @endif
+                    @if (isset($status))
+                        <div class="alert alert-success">
+                            {{$status}}
                         </div>
                     @endif
                     @if (session('warning'))

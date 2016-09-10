@@ -1,6 +1,9 @@
 @extends('layouts.admin')
-@section('title','Edit User: '. $user->name)
-
+@section('title')
+    <h2>Edit User: {{$user->name}}
+    <span class="label label-success">{{$user->type}}</span> 
+</h2>
+@endsection
 @section('content')
         <div class="row">
             <div class="col-lg-6 col-md-6">
@@ -11,7 +14,7 @@
                     <a class="btn btn-primary" href="{{url('admin/ebooks/'.$user->id.'/user')}}"><i class="fa fa-book"></i> User Ebooks</a>
                 </div>
                 <hr>
-            	{!! Form::open(['route' => ['admin.users.update',$user->id],'method' => 'PUT','files' => true]) !!}
+                {!! Form::open(['route' => ['admin.users.update',$user->id],'method' => 'PUT','files' => true]) !!}
                     @if($user->profile_image)
                     <div class="col-xs-6">
 
@@ -44,11 +47,11 @@
                         {!! Form::text('name', $user->name,['class'=> 'form-control','placeholder'=>'Type a name','required']) !!}
                     </div>
                                 
-                	<div class="form-group col-xs-12">
+                    <div class="form-group col-xs-12">
                         <i class="fa fa-tag"></i>
-            			{!! Form::label('tagline','Tagline') !!}
-            			{!! Form::text('tagline', $user->tagline,['class'=> 'form-control','placeholder'=>'Type a tagline','required']) !!}
-                	</div>
+                        {!! Form::label('tagline','Tagline') !!}
+                        {!! Form::text('tagline', $user->tagline,['class'=> 'form-control','placeholder'=>'Type a tagline','required']) !!}
+                    </div>
                     <div class="form-group col-xs-12">
                     <i class="fa fa-facebook-square"></i>
                         {!! Form::label('facebook_real','Facebook ID') !!}
@@ -60,12 +63,12 @@
                         {!! Form::text('twitter_real', $user->twitter_real,['class'=> 'form-control','placeholder'=>'Type your Twitter ID']) !!}
                     </div>
                    
-            		<div class="form-group col-xs-12">
+                    <div class="form-group col-xs-12">
                         <i class="fa fa-envelope"></i>
 
-            			{!! Form::label('email','E-mail') !!}
-            			{!! Form::email('email', $user->email,['class'=> 'form-control','placeholder'=>'youremail@gmail.com','required']) !!}
-            		</div>
+                        {!! Form::label('email','E-mail') !!}
+                        {!! Form::email('email', $user->email,['class'=> 'form-control','placeholder'=>'youremail@gmail.com','required']) !!}
+                    </div>
                         
                     <div class="form-group col-xs-12">
                         <i class="fa fa-money"></i>
@@ -74,17 +77,17 @@
                     </div>
 
                     @if(Auth::user()->type == 'admin' || Auth::user()->type == 'editor')
-            		<div class="form-group col-xs-12">
+                    <div class="form-group col-xs-12">
                         <i class="fa fa-user-group"></i>
-            			{!! Form::label('type','User Type') !!}
-            			{!! Form::select('type',[''=>'Select type of user','member'=> 'Member','admin' => 'Administrator'],$user->type,['class'=> 'form-control','required']) !!}
-            		</div>
+                        {!! Form::label('type','User Type') !!}
+                        {!! Form::select('type',[''=>'Select type of user','member'=> 'Member','admin' => 'Administrator'],$user->type,['class'=> 'form-control','required']) !!}
+                    </div>
                     @endif
-            		<div class="form-group col-xs-12">
-            			{!! Form::submit('Edit User',['class'=>'btn btn-primary']) !!}
-            		</div>
+                    <div class="form-group col-xs-12">
+                        {!! Form::submit('Edit User',['class'=>'btn btn-primary']) !!}
+                    </div>
 
-            	{!! Form::close() !!}
+                {!! Form::close() !!}
             </div>
         </div>
         <!-- /.row -->

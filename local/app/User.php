@@ -27,6 +27,9 @@ class User extends Authenticatable
         
         return $this->hasMany('App\Post');
     }
+    public function comments(){
+        return $this->hasMany('App\Comment');
+    }
     public function photos(){
         
         return $this->hasMany('App\Photo');
@@ -40,5 +43,4 @@ class User extends Authenticatable
         
         return $this->hasMany('App\Image');
     }
-
 }

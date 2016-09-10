@@ -18,6 +18,8 @@ Route::group(['prefix' => 'admin','middleware'=>'auth'], function () {
 			'uses' => 'HomeController@index',
 			'as'   => 'admin.home',
 	]);	
+
+	//Verify Email//
 	Route::get('/verifyemail', 'HomeController@index');
 
 	//Images Routes//
@@ -32,7 +34,24 @@ Route::group(['prefix' => 'admin','middleware'=>'auth'], function () {
 			'uses' => 'TagsController@destroy',
 			'as'   => 'admin.tags.destroy',
 		]);
-
+	//Navbar routes //
+	Route::resource('navbars', 'NavbarController');	
+		Route::get('navbars/{id}/destroy',[
+			'uses' => 'NavbarController@destroy',
+			'as'   => 'admin.navbars.destroy',
+		]);
+	//Sidebar routes //
+	Route::resource('sidebars', 'SidebarController');	
+		Route::get('sidebars/{id}/destroy',[
+			'uses' => 'SidebarController@destroy',
+			'as'   => 'admin.sidebars.destroy',
+		]);
+	//Footer routes //
+	Route::resource('footers', 'FooterController');	
+		Route::get('footers/{id}/destroy',[
+			'uses' => 'FooterController@destroy',
+			'as'   => 'admin.footers.destroy',
+		]);
 	//Posts Routes//
 	Route::get('posts/all',[
 			'uses' => 'PostsController@all',
@@ -104,7 +123,7 @@ Route::group(['prefix' => 'admin','middleware'=>'auth'], function () {
 		'as'   => 'admin.photos.suspend',
 	]);
 	Route::post('photos/addView/{id}',[
-		'uses' => 'EbooksController@addView',
+		'uses' => 'PhotosController@addView',
 		'as'   => 'admin.ebook.addview',
 	]);
 	Route::get('photos/{id}/user',[
@@ -158,21 +177,66 @@ Route::group(['prefix' => 'admin','middleware'=>'auth'], function () {
 		]);
 });
 
-;
-Route::group(['middleware' => 'web'], function() {
-Route::get('/',[
-'uses' => 'FrontPageController@index',
-'as'   => 'front.index',
-]);
-Route::get('posts', [ 'as' => 'posts', 'uses' => 'FrontPageController@posts' ]);
-Route::auth();
-Route::get('user/activation/{token}', 'Auth\AuthController@activateUser')->name('user.activate');
-Route::get('auth/facebook', 'SocialAuth2Controller@redirectToProvider');
 
-Route::get('auth/facebook/callback', 'SocialAuth2Controller@handleProviderCallback');
-Route::get('auth/twitter', 'SocialAuth2Controller@redirectToProvider2');
-Route::get('auth/twitter/callback', 'SocialAuth2Controller@twitterCallback');
-});
+//web routes
+	Route::get('/activated',[
+				'uses' => 'Auth\AuthController@showActivatedForm',
+				'as'   => 'auth.activated',
+	]);
 
+
+	//Comments Route//
+	Route::post('comment/{type}/{post_id}/{user_id?}/',[
+			'uses' => 'CommentsController@store',
+			'as'   => 'add.comments',
+	]);	
+
+	Route::get('/posts/{id}',[
+	'uses' => 'PostsController@show',
+	'as'   => 'front.posts.index',
+	]);
+
+	//Front Photos
+	Route::get('/photos/allphotos',[
+	'uses' => 'PhotosController@showAll',
+	'as'   => 'front.photos.index',
+	]);
+	Route::get('/photos/{id}',[
+	'uses' => 'PhotosController@show',
+	'as'   => 'front.photos.index',
+	]);
+	//Front Videos
+	Route::get('/videos/allvideos',[
+	'uses' => 'VideosController@showAll',
+	'as'   => 'front.videos.index',
+	]);
+
+	Route::get('/videos/{id}',[
+	'uses' => 'VideosController@show',
+	'as'   => 'front.videos.show',
+	]);
+	//Front Ebooks
+	Route::get('/ebooks/allebooks',[
+	'uses' => 'EbooksController@showAll',
+	'as'   => 'front.ebooks.index',
+	]);
+
+	Route::get('/ebooks/{id}',[
+	'uses' => 'EbooksController@show',
+	'as'   => 'front.ebooks.show',
+	]);
+	
+	Route::get('/',[
+	'uses' => 'FrontPageController@index',
+	'as'   => 'front.index',
+	]);
+	Route::get('posts', [ 'as' => 'posts', 'uses' => 'FrontPageController@posts' ]);
+	Route::auth();
+	Route::get('user/activation/{token}', 'Auth\AuthController@activateUser')->name('user.activate');
+	Route::get('auth/facebook', 'SocialAuth2Controller@redirectToProvider');
+
+	Route::get('auth/facebook/callback', 'SocialAuth2Controller@handleProviderCallback');
+	Route::get('auth/twitter', 'SocialAuth2Controller@redirectToProvider2');
+	Route::get('auth/twitter/callback', 'SocialAuth2Controller@twitterCallback');
 
 Route::auth();

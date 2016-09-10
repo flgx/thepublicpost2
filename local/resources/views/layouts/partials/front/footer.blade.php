@@ -2,10 +2,9 @@
     <div class="footer">
         <br>
     <div class="col-lg-12 col-md-12 col-sm-12">
-    <a href="#" class="items" style="padding-left:10px; padding-right:20%; color:black;">Item#1</a>
-    <a href="#" class="items" style="padding-right:20%; color:black;">Item#2</a>
-    <a href="#" class="items" style="padding-right:15%; color:black;">Item#3</a>
-    <a href="#" class="items" style="color:black;">Item#4</a>
+    @foreach($footers as $item)
+    <a href="#" class="items" style="padding-left:10px; padding-right:20%; color:black;">{{$item->category()->first()->name}}</a>
+    @endforeach
     <br>
     <a href="#" class="pull-left"><img src="{{asset('img/play_store.png')}}" width="auto" height="40px" alt="play store" style="margin-top:10px; margin-right:10px"></a>
     <a href="#" class="pull-left"><img src="{{asset('img/app_store.png')}}" width="auto" height="40px" alt="app store" style="margin-top:10px; "></a>

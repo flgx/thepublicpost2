@@ -14,4 +14,13 @@ class Category extends Model
     	
     	return $this->hasMany('App\Post');
     }
+    public function navbars(){
+    	return $this->hasMany('App\Navbar');
+    }
+    public function footers(){
+        return $this->hasMany('App\Footer');
+    }
+    public function sidebars(){
+    	return $this->hasMany('App\Sidebar');
+    }
 }

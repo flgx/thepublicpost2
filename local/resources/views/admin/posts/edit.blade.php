@@ -99,20 +99,5 @@
         $(".select-category").chosen({
             placeholder_text_single: "Select a category"
         });
-
-        $('.textarea-content').trumbowyg({
-            
-        }); 
-
-        var dataId = $('.myid').data('post');
-
-        $.ajax({
-            url: '{{ url('/admin/posts/addView') }}' + '/' + dataId,
-            type: 'POST',
-            data:{_token:token,id:dataId},
-            success: function(msg) {
-                console.log(msg['msg']);
-            }
-        });
 </script>
 @endsection

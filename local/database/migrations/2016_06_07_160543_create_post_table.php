@@ -20,6 +20,9 @@ class CreatePostTable extends Migration
             $table->string('featured_text');
             $table->string('views');
             $table->string('slug');
+            $table->integer('likes')->default(0);
+            $table->integer('shares')->default(0);
+            $table->integer('points')->default(0);
             $table->enum('status',['approved','suspended'])->default('suspended');
             $table->integer('user_id')->unsigned();
             $table->integer('category_id')->unsigned();

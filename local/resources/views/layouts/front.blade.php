@@ -4,11 +4,14 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}" />
     <meta name="description" content="">
     <meta name="author" content="">
     <title>The Public Post | @yield('title')</title>
     <!-- Bootstrap Core CSS -->
     <link href="{{asset('dist/css/bootstrap.min.css')}}" rel="stylesheet">
+    <link href="{{asset('dist/css/jssocials.css')}}" rel="stylesheet">
+    <link href="{{asset('dist/css/jssocials-theme-flat.css')}}" rel="stylesheet">
 
     @yield('css')
     <link href="{{asset('dist/icons/style.css')}}" rel="stylesheet">
@@ -49,24 +52,42 @@
 @yield('content')
 @include('layouts.partials.front.footer')    
 
-    <!-- jQuery -->
-  <!-- jQuery 2.2.3 -->
-    <script src="{{ asset('plugins/jQuery/jquery-2.2.3.min.js')}}"></script>
-    <!-- Bootstrap Core JavaScript -->
-    <script src="{{asset('bootstrap/js/bootstrap.min.js')}}"></script>
-  <script type="text/javascript">
-  setInterval(function() {
-    var post = document.querySelector(".active .div-post").innerHTML;
-    document.querySelector(".contenedor_post").innerHTML = post;
-  }, 500);
-  </script>
-    <script>
-    $('.login').click(function(){
-        console.log('click');
-        $('.profile-menu').toggleClass('mostrar'),
-        $('.icono-toggle').toggleClass('glyphicon-triangle-top');
-    });
-    </script>
+<!-- jQuery -->
+<!-- jQuery 2.2.3 -->
+<script src="{{ asset('plugins/jQuery/jquery-2.2.3.min.js')}}"></script>
+<!-- Bootstrap Core JavaScript -->
+<script src="{{asset('bootstrap/js/bootstrap.min.js')}}"></script>
+<script src="{{asset('dist/js/platform/platform.js')}}"></script>
+<script src="{{asset('dist/js/jssocials.js')}}"></script>
+
+<script>
+ 
+var token = $('meta[name="csrf-token"]').attr('content');       
+$('.login').click(function(){
+console.log('click');
+$('.profile-menu').toggleClass('mostrar'),
+$('.icono-toggle').toggleClass('glyphicon-triangle-top');
+});
+</script>
+<script>
+$("#share").jsSocials({
+    url: "{{url()->full()}}",
+    text: "Google Search Page",
+    showCount: true,
+    showLabel: true,
+    shares: [
+        { share: "twitter", via: "artem_tabalin", hashtags: "search,google" },
+        "facebook",
+        "googleplus",
+        "linkedin",
+        "pinterest",
+        "stumbleupon",
+        "whatsapp"
+    ]
+});
+
+</script>
+
 @yield('front-js')
 </body>
 

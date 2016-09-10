@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
 use Socialite;
+use Laracasts\Flash\Flash;
 use Illuminate\Http\Request;
 use App\ActivationService;
 class AuthController extends Controller
@@ -91,7 +92,9 @@ class AuthController extends Controller
      *
      * @return Response
      */
-
+    public function showActivatedForm(){
+        return view('auth.activated');
+    }
     public function register(Request $request)
     {
         $validator = $this->validator($request->all());      
@@ -110,15 +113,15 @@ class AuthController extends Controller
         if (!$user->activated) {
             $this->activationService->sendActivationMail($user);
             auth()->logout();
-            return back()->with('warning', 'You need to confirm your account. We have sent you an activation code, please check your email.');
+            return back()->with('status', 'You need to confirm your account. We have sent you an activation code, please check your email.');
         }
         return redirect()->intended($this->redirectPath());
     }
-    public function activateUser($token)
+    public function activateUser(Request $request,$token)
     {
         if ($user = $this->activationService->activateUser($token)) {
-            auth()->login($user);
-            return redirect($this->redirectPath());
+           auth()->logout();
+           return redirect('/activated');
         }
         abort(404);
     }

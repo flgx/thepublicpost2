@@ -6,7 +6,7 @@
 @section('content')
         <div class="row">
             <div class="col-lg-12 col-md-6">
-            	<a href="{{ route('admin.users.create')}}" class="btn btn-info"> Create New User</a>
+            	<a href="{{ route('admin.users.create')}}" class="btn btn-info"> User List</a>
 				<table class="table">
 					<thead>
 						<th>ID</th>
@@ -23,8 +23,7 @@
 								<td>{{$user->email}}</td>
 								<td>
 									@if($user->type == "admin")
-
-										<span class="label label-danger">Administrator</span>
+									<span class="label label-danger">Administrator</span>
 									@elseif($user->type == "editor")
 										<span class="label label-primary">Editor</span>		
 									@elseif($user->type == "writer")

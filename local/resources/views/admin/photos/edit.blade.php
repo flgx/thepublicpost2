@@ -64,7 +64,7 @@
             <!-- Photo Images -->
             <div class="col-md-6 type" data-type="photos">
                 <h1>Images</h1>
-                <hr>
+                <hr class="count" data-count="{{count($photo->images)}}">
                 @if(count($photo->images) > 0)  
                     <?php
                         $i=0;
@@ -80,7 +80,7 @@
                     @endforeach
                 @else
                     <p>Not images found. Please add a new image.</p>  
-                @endif      
+                @endif
             </div>
         </div>
         <!-- /.row -->
@@ -98,10 +98,6 @@
         });
         $(".select-category").chosen({
             placeholder_text_single: "Select a category"
-        });
-
-        $('.textarea-content').trumbowyg({
-            
         });
     </script>
 @endsection

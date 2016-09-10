@@ -76,9 +76,5 @@
         $(".select-category").chosen({
             placeholder_text_single: "Select a category"
         });
-
-        $('.textarea-content').trumbowyg({
-            
-        });
     </script>
 @endsection
