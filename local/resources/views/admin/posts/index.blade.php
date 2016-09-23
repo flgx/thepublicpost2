@@ -34,7 +34,7 @@
 								<td>{{$post->category->name}}</td>
 								<td>{{$post->user->name}}</td>
 								<td>{{$post->status}}</td>
-								<td>{{$post->views}}</td>
+								<td>{{$post->views()->count()}} </td>
 								<td>
 									@if($post->status == 'approved' && Auth::user()->type=='admin' || Auth::user()->type == 'editor')
 									<a href="#"  class="approve-disable btn btn-success" disabled="disabled">Approve</a>

@@ -22,6 +22,7 @@ class CreateUsersTable extends Migration
             $table->string('twitter_id');
             $table->string('twitter_real');
             $table->string('facebook_real');
+            $table->integer('points');
             $table->boolean('activated')->default(false);
             $table->string('bkash');
             $table->string('password');

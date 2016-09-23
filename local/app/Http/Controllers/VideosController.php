@@ -124,20 +124,82 @@ class VideosController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(VideoRequest $request)
+    public function store(Request $request)
     {
-        if(Auth::user()->type != 'subscriber'){   
-        //if pass all the validations we add the video                       
-        $video = new Video($request->except('images','category_id','tags'));
-        $video->user_id = \Auth::user()->id;
-       //associate category with video
-        $category = Category::find($request['category_id']);
-        $video->category()->associate($category);
-        $video->save();  
-        //associate all tags for the video
-        $video->tags()->sync($request->tags);          
-        Flash::success("Video <strong>".$video->title."</strong> was created.");
-        return redirect()->route('admin.videos.index');          
+        if(Auth::user()->type != 'subscriber'){
+            if($request['video_link'] != '' && $request['videos'][0] != null){
+                Flash::error('You have to select one type of video');
+                return redirect()->back()->withInput();
+            }
+            if($request['video_link']){
+                //if pass all the validations we add the video and the images                        
+                $video = new Video($request->except('category_id','tags'));
+                $video->user_id = \Auth::user()->id;
+               //associate category with video
+                $category = Category::find($request['category_id']);
+                $video->category()->associate($category);
+                $video->save();  
+                //associate all tags for the video
+                $video->tags()->sync($request->tags);                                
+                Flash::success("Video <strong>".$video->title."</strong> was created.");
+                return redirect()->route('admin.videos.index');
+
+            }      
+            if($request->hasFile('videos')){
+                //Check if the images are null or not.
+                $fileArray0 = array('videos' => $request->file('videos')[0]);
+                // Tell the validator that this file should be required
+                $rules0 = array(
+                    'videos' => 'required'//max 10000kb
+                );
+                // Now pass the input and rules into the validator
+                $validator0 = \Validator::make($fileArray0, $rules0);       
+                if($validator0->fails()){
+                   return redirect()->back()->withErrors($validator0)->withInput();
+                }else{
+                    //Process Form Images
+                    if ($request->hasFile('videos')) {
+                        $files = $request->file('videos');
+                        foreach($files as $file){             
+
+                                //Slider
+                                $filename = $file->getClientOriginalName();
+                                $extension = $file->getClientOriginalExtension();
+                                $vidname = date('His').'_'.$filename;
+                                // Build the input for validation
+                                $fileArray = array('videos' => $file);
+                                // Tell the validator that this file should be an image
+                                $rules = array(
+                                    'videos' => 'max:700000'//max 10000kb
+                                );
+                                // Now pass the input and rules into the validator
+                                $validator = \Validator::make($fileArray, $rules);
+                                
+                                if($validator->fails()){
+                                    
+                                    return redirect()->back()->withErrors($validator)->withInput();
+                                }else{
+                                    //if pass all the validations we add the video and the images                        
+                                    $video = new Video($request->except('category_id','tags'));
+                                    $video->user_id = \Auth::user()->id;
+                                   //associate category with video
+                                    $category = Category::find($request['category_id']);
+                                    $video->category()->associate($category);
+                                    $video->filename = $vidname;
+                                    $video->save();  
+                                    //associate all tags for the video
+                                    $video->tags()->sync($request->tags);
+                                   
+                                    $destinationPath = 'videos/';
+                                    $file->move($destinationPath,'vid_'.$vidname);   
+                                }        
+                        }//endforeach                                
+                        Flash::success("Video <strong>".$video->title."</strong> was created.");
+                        return redirect()->route('admin.videos.index');
+                    }
+                }
+
+            }
         }else{
                 Flash::error("You don't have permissions");
                 return redirect()->route('admin.home');
@@ -218,7 +280,7 @@ class VideosController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(VideoRequest $request, $id)
+    public function update(Request $request, $id)
     {
         if(Auth::user()->type != 'subscriber'){
             $video =Video::find($id);
@@ -250,6 +312,9 @@ class VideosController extends Controller
     {
         if(Auth::user()->type == 'admin' || Auth::user()->type == 'editor' || $video->user()->first()->id == Auth::user()->id){
             $video = Video::find($id);
+
+            $myvideo = "videos/vid_".$video->filename;
+        \File::delete($myvideo);
             $video->delete();
             Flash::error("Video <strong>".$video->name."</strong> was deleted.");
             return redirect()->route('admin.videos.index');
@@ -285,5 +350,19 @@ class VideosController extends Controller
             Flash::error("You don't have permissions to do that.");
             return redirect()->route('admin.home');
         }
+    }
+    public function destroyVideo(Request $request,$id)
+    {
+        $image = Image::find($id);
+
+        $myimage = "img/".$type."/slider_".$image->name;
+        $myimageThumb = "img/".$type."/thumbs/thumb_".$image->name;
+        
+        \File::delete([
+            $myimage,
+            $myimageThumb
+        ]);
+        $image->delete();
+        return response()->json(['msg'=>'success']);
     }
 }

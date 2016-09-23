@@ -2,55 +2,65 @@
 @section('css')
 <link rel="stylesheet" href="{{asset('dist/css/home-logged.css')}}">
 @endsection
-@section('title','Home')
+@section('title','Category')
 @section('content')
     <!-- Page Content -->
     <!-- Banner_ad -->
     <img class="img-responsive center-block banner-ad2" width="728" height="90" src="{{asset('img/banner_ad.png')}}" alt="banner_ad" style="padding-top:10px;padding-bottom:10px" />
     <div class="container">
-
+        @if(Auth::check())
+        <span class="myuser" data-user="{{Auth::user()->id}}"></span>
+        @endif
         <div class="row">
-
+            
             <!-- Blog Post Content Column -->
             <div class="col-lg-8 post">
-
+            <h1>বিভাগ: {{$category->name}}</h1>
+            @if(Auth::user()->type == 'subscriber')  
+                <span>
+                    <button class="btn btn-success subscribe">সাবস্ক্রাইব</button>
+                    <button class="btn btn-success unsubscribe">আন-সাবস্ক্রাইব করুন</button>
+                </span>
+            @endif
+            @if($slider_posts->count() > 0)
             <div class="col-md-9" style="padding:0;margin-top: 15px;">
-            <div id="carousel-1" class="carousel slide" data-ride="corousel">
-                <!-- Indicadores -->
-                <ol class="carousel-indicators">
-                    <li data-target="#carousel-1" data-slide-to="0" class="active"></li>
-                    <li data-target="#carousel-1" data-slide-to="1"></li>
-                    <li data-target="#carousel-1" data-slide-to="2"></li>
-                    <li data-target="#carousel-1" data-slide-to="3"></li>
-                    <li data-target="#carousel-1" data-slide-to="4"></li>
-                </ol>
-                <!-- Contenedor de los slide -->
-                <div class="carousel-inner slider" role="listbox">
-                <!-- Slider Posts Interaction -->
-                @if(count($slider_posts )>0)
-                    @foreach($slider_posts as $key => $slider)                    
-                        <div class="item {{$key == 0 ? 'active' : '' }}">
-                            <img src="{{asset('img/posts/slider_'.$slider->images->first()->name)}}" class="img-responsive center-block" alt="The Public Post News {{$slider->title}}">
-                            <div class="carousel-caption">
-                                <h3 style="margin-left: 10px; font-size: 20px; padding: 0px; ">{{$slider->title}}</h3>
-                            </div>
-                        </div>          
-                    @endforeach
-                @endif
+                <div id="carousel-1" class="carousel slide" data-ride="corousel">
+                    <!-- Indicadores -->
+                    <ol class="carousel-indicators">
+                        <li data-target="#carousel-1" data-slide-to="0" class="active"></li>
+                        <li data-target="#carousel-1" data-slide-to="1"></li>
+                        <li data-target="#carousel-1" data-slide-to="2"></li>
+                        <li data-target="#carousel-1" data-slide-to="3"></li>
+                        <li data-target="#carousel-1" data-slide-to="4"></li>
+                    </ol>
+                    <!-- Contenedor de los slide -->
+                    <div class="carousel-inner slider" role="listbox">
+                    <!-- Slider Posts Interaction -->
+                    @if(count($slider_posts )>0)
+                        @foreach($slider_posts as $key => $slider)                    
+                            <div class="item {{$key == 0 ? 'active' : '' }}">
+                                <img src="{{asset('img/posts/slider_'.$slider->images->first()->name)}}" class="img-responsive" alt="The Public Post News {{$slider->title}}">
+                                <div class="carousel-caption">
+                                    <h3 style="margin-left: 10px; font-size: 20px; padding: 0px; ">{{$slider->title}}</h3>
+                                </div>
+                            </div>          
+                        @endforeach
+                    @endif
+                    </div>
+                    <!-- Controles -->
+                    <a href="#carousel-1" class="left carousel-control" role="button" data-slide="prev">
+                        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true" style="margin-left:-5px;"></span>
+                    </a>
+                    <a href="#carousel-1" class="right carousel-control" role="button" data-slide="next">
+                        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true" style="margin-right:-5px;"></span> 
+                    </a>
                 </div>
-                <!-- Controles -->
-                <a href="#carousel-1" class="left carousel-control" role="button" data-slide="prev">
-                    <span class="glyphicon glyphicon-chevron-left" aria-hidden="true" style="margin-left:-5px;"></span>
-                </a>
-                <a href="#carousel-1" class="right carousel-control" role="button" data-slide="next">
-                    <span class="glyphicon glyphicon-chevron-right" aria-hidden="true" style="margin-right:-5px;"></span> 
-                </a>
             </div>
-        </div>
+            
+
         <div class="carousel-indicators selector col-lg-4 col-md-12 col-sm-12" style="margin-top:15px">
             <div class="tabs center-block" style="width: 136px">
-                <h3>সাম্প্রতিক পোস্ট
-</h3>
+                <h3>{{$category->name}}</h3>
             </div>
             <div class="titulos col-sm-12" style="text-align:left;padding:0">
                 <p style="margin-top:10px">
@@ -65,6 +75,7 @@
                 </p> 
             </div>
             </div>
+
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="padding:0; margin-top:50px">
                 @if(count($featured_posts  )>0) 
                 @foreach($featured_posts as $featured)
@@ -88,9 +99,9 @@
                 @endif
 
             </div>
+            @endif
                 <div class="tabs col-lg-12 col-md-12 col-sm-12 col-xs-12" style="margin-top:20px;padding:0">
-                    <h2>সর্বশেষ পোস্ট
-</h2>
+                    <h2>সর্বশেষ পোস্ট</h2>
                 </div>
                 <hr>
                 <!-- Project 1 -->
@@ -123,64 +134,66 @@
         <!-- Pagination -->
      
                 <hr>
-            <div class="row" style="height:400px">
-                <div class="col-md-10">
-                <div class="tabs" style="margin-bottom:10px">
-                    <h2>সাম্প্রতিক ফটো</h2>
-                </div>
-                </div>
-        <!--SLIDER-->
+    @if($lastest_photos->count() > 0)
+    <div class="row" style="height:400px">
+                    <div class="col-md-10">
+                    <div class="tabs" style="margin-bottom:10px">
+                        <h2>সাম্প্রতিক ফটো</h2>
+                    </div>
+                    </div>
+            <!--SLIDER-->
 
-    <div class="col-lg-12" style="">
-        <div class="col-lg-10 col-md-10 col-sm-12 col-xs-12" id="ninja-slider" style="float:left;">
-            <div class="slider-inner">
-                <ul>
-                @if(count($lastest_photos)>0)
-                    @foreach($lastest_photos as $photo)                
-                    <li><a class="ns-img" href="{{asset('img/photos/slider_'.$photo->images()->first()->name)}}"><p class="caption" style="background-color: rgba(0, 0, 0, 0.6); color: white; position: absolute; bottom: 0px; padding: 10px; margin: 0px;text-align:justify;"><span>{{$photo->title}}</span></p></a></li>
-                    @endforeach
-                @endif
-                </ul>
-            </div>
-        </div>
-        <div class="thumbnail-slider-padre col-lg-2 col-md-2 col-sm-12 col-xs-12" style="padding:0;">
-        <div class="thumbnail-slider" id="thumbnail-slider">
-            <div class="inner" style="padding:0;">
-                <ul>
+        <div class="col-lg-12" style="">
+            <div class="col-lg-10 col-md-10 col-sm-12 col-xs-12" id="ninja-slider" style="float:left;">
+                <div class="slider-inner">
+                    <ul>
                     @if(count($lastest_photos)>0)
-                        @foreach($lastest_photos as $photo)                 
-                            <li style="padding:0;margin:0;">
-                                <a class="thumb" href="{{asset('img/photos/slider_'.$photo->images()->first()->name)}}">
-                                <p class="title"><a href="{{url('photos/'.$photo->id)}}" style="text-decoration:none;color:black"><strong>{{$photo->title}}</strong></a></p>
-                                </a>
-                            <div class="oculto div-post col-md-8 col-sm-8 col-xs-12">
-                                <h3>{{$photo->title}}</h3>
-                                @if($photo->user()->first()->profile_image && $photo->user()->first()->facebook_id == null && $photo->user()->first()->twitter_id == null)                                
-                                        <a href="#" class="pull-left" style="margin-right:5px"><img src="{{asset('img/users/profile/profile_'.$photo->user()->first()->profile_image)}}" class="img-responsive" width="20px" height="20px" alt=""></a>
-                                @elseif($photo->user()->first()->facebook_id != null || $photo->user()->first()->twitter_id != null)
-                                        <a href="#" class="pull-left" style="margin-right:5px"><img src="{{$photo->user()->first()->profile_image}}" class="img-responsive" width="20px" height="20px" alt=""></a>
-                                @endif
-
-                                {{$photo->user()->first()->name}} <span class="glyphicon glyphicon-time" style="margin-left:10px;margin-right:10px">{{$photo->created_at}}</span><span class="icon icon-eye"> {{$photo->views()->count()}} মতামত</span><br>
-                                <a class="btn btn-primary" href="{{url('photos/'.$photo->id)}}" style="margin:10px 0px">আরো দেখুন <span class="glyphicon glyphicon-chevron-right"></span></a>
-                            </div>
-                            </li>
+                        @foreach($lastest_photos as $photo)                
+                        <li><a class="ns-img" href="{{asset('img/photos/slider_'.$photo->images()->first()->name)}}"><p class="caption" style="background-color: rgba(0, 0, 0, 0.6); color: white; position: absolute; bottom: 0px; padding: 10px; margin: 0px;text-align:justify;"><span>{{$photo->title}}</span></p></a></li>
                         @endforeach
                     @endif
-                </ul>
-            </div>
-        </div>
-    </div>
-        <div class="contenedor_post col-lg-12 col-md-12 col-sm-12 col-xs-12" style="padding:0"></div> 
-    </div>        
-                <div class="col-md-12 col-sm-12 col-xs-12 transformar nopadding" style="padding:0">
-                    <img class="img-responsive center-block" style="height:150px;" src="{{asset('img/ad.png')}}" alt="">
+                    </ul>
                 </div>
             </div>
+            <div class="thumbnail-slider-padre col-lg-2 col-md-2 col-sm-12 col-xs-12" style="padding:0;">
+            <div class="thumbnail-slider" id="thumbnail-slider">
+                <div class="inner" style="padding:0;">
+                    <ul>
+                        @if(count($lastest_photos)>0)
+                            @foreach($lastest_photos as $photo)                 
+                                <li style="padding:0;margin:0;">
+                                    <a class="thumb" href="{{asset('img/photos/slider_'.$photo->images()->first()->name)}}">
+                                    <p class="title"><a href="{{url('photos/'.$photo->id)}}" style="text-decoration:none;color:black"><strong>{{$photo->title}}</strong></a></p>
+                                    </a>
+                                <div class="oculto div-post col-md-8 col-sm-8 col-xs-12">
+                                    <h3>{{$photo->title}}</h3>
+                                    @if($photo->user()->first()->profile_image && $photo->user()->first()->facebook_id == null && $photo->user()->first()->twitter_id == null)                                
+                                            <a href="#" class="pull-left" style="margin-right:5px"><img src="{{asset('img/users/profile/profile_'.$photo->user()->first()->profile_image)}}" class="img-responsive" width="20px" height="20px" alt=""></a>
+                                    @elseif($photo->user()->first()->facebook_id != null || $photo->user()->first()->twitter_id != null)
+                                            <a href="#" class="pull-left" style="margin-right:5px"><img src="{{$photo->user()->first()->profile_image}}" class="img-responsive" width="20px" height="20px" alt=""></a>
+                                    @endif
+
+                                    {{$photo->user()->first()->name}} <span class="glyphicon glyphicon-time" style="margin-left:10px;margin-right:10px">{{$photo->created_at}}</span><span class="icon icon-eye"> {{$photo->views()->count()}} মতামত</span><br>
+                                    <a class="btn btn-primary" href="{{url('photos/'.$photo->id)}}" style="margin:10px 0px">আরো দেখুন <span class="glyphicon glyphicon-chevron-right"></span></a>
+                                </div>
+                                </li>
+                            @endforeach
+                        @endif
+                    </ul>
+                </div>
+            </div>
+        </div>
+            <div class="contenedor_post col-lg-12 col-md-12 col-sm-12 col-xs-12" style="padding:0"></div> 
+        </div>        
+                    <div class="col-md-12 col-sm-12 col-xs-12 transformar nopadding" style="padding:0">
+                        <img class="img-responsive center-block" style="height:150px;" src="{{asset('img/ad.png')}}" alt="">
+                    </div>
+    </div>
+    @endif
             <div class="col-md-12 col-sm-12 col-xs-12">
             <img class="img-responsive center-block banner-ad" src="{{asset('img/banner_ad2.png')}}" alt="banner_ad" style="padding-bottom:10px;padding-top:10px;padding-bottom:10px" height="90" width="728">
             </div>
-
+            @if($lastest_videos->count() > 0)
             <div class="col-md-10 col-sm-12 col-xs-12" style="padding:0;margin-bottom:20px">
                 <div class="tabs" style="margin-bottom:10px">
                   <h2> সাম্প্রতিক ভিডিও</h2>
@@ -222,10 +235,10 @@
                                $image2=$video->user()->first()->profile_image;
                             } 
                         ?>
-                    @elseif($key == 2)
+                    @else
                         <?php 
                             $video3 = $video->title;
-                            $url3=$video->id;
+                            $url3=$video->video_id;
                             $user3=$video->user()->first()->name;
                             if($video->user()->first()->profile_image && $video->user()->first()->facebook_id == null && $video->user()->first()->twitter_id == null){
                                $image3='img/users/profile/profile_'.$video->user()->first()->profile_image;      
@@ -234,13 +247,10 @@
                             } 
                         ?>
                     @endif
-                    
                     <div class="col-md-3 col-sm-3 col-xs-3 view video video3" style="margin:0px 7px;padding:0px">
-                    <a href="{{url('videos/'.$video->id)}}">
-                        <img src="http://img.youtube.com/vi/{{$video->video_link}}/1.jpg" alt="" class="center-block">
-                    </a>
+                        <iframe width="150" height="117" src="https://www.youtube.com/embed/{{$video->video_link}}" frameborder="0" allowfullscreen></iframe>
+                 
                     </div>
-                    
                     @endforeach
                     @if($image1)
                     <div class="col-md-3 col-sm-3 col-xs-3 descripcion desc1" style="margin-right:7px;padding:0px">
@@ -272,6 +282,8 @@
                     @endif
                 @endif   
                 </div>
+
+            @endif
             </div>
             <!-- Blog Sidebar Widgets Column -->
             <div class="col-lg-4 col-md-12 col-sm-12 col-xs-12 sidebar">
@@ -344,14 +356,21 @@
         
 @endsection
 @section('front-js')
-<script type="text/javascript">
-    
-        setInterval(function() {
-        var post = document.querySelector(".active .div-post").innerHTML;
-        if(post != null){            
-            document.querySelector(".contenedor_post").innerHTML = post;
-        }
-        }, 500);
-  
+<script>
+    $('.subscribe').on('click',function(e){
+        $.ajax({
+            
+            url: '{{ url('/newsletters/subscribe') }}' + '/'+'ebooks'+ '/' + dataId + '/' + shares,
+            type: 'POST',
+            data:{_token:token,id:dataId},
+            success: function(msg) {
+                console.log(msg['msg']);
+            }
+        });
+
+    });
+    $('.unsubscribe').on('click',function(e){
+
+    });
 </script>
 @endsection

@@ -18,44 +18,48 @@
                 @endif
                     {!! Form::open(['route' => ['admin.videos.update',$video->id],'method' => 'PUT','files'=>'true']) !!}
 
-                        <div class="form-group">
-                            {!! Form::label('title','Title') !!}
-                            {!! Form::text('title', $video->title,['class'=> 'form-control','placeholder'=>'Type a title','required']) !!}
-                        </div>
-                        <div class="form-group">
-                            {!! Form::label('video_link','Video Id') !!}
-                            {!! Form::text('video_link', $video->video_link,['class'=> 'form-control','placeholder'=>'Type a Video ID','required']) !!}.
-                            <h2>Copy and Paste from YouTube Video ID: </h2>
-                            <img src="{{asset('img/youtube.jpg')}}" alt="">                        
-                        </div>
 
-                        <div class="form-group">
-                            {!! Form::label('category_id','Category') !!}
-                            {!! Form::select('category_id', $categories,$video->category->id,['class'=> 'form-control select-category','required']) !!}
-                        </div>
+                    <div class="form-group">
+                        {!! Form::label('title','Title') !!}
+                        {!! Form::text('title', $video->title,['class'=> 'form-control','placeholder'=>'Type a title','required']) !!}
+                    </div>
 
-                        <div class="form-group">
-                            {!! Form::label('content','Content') !!}
-                            {!! Form::textarea('content', $video->content,['class' => 'textarea-content','required']) !!}
-                        </div>
-                        <div class="form-group">
-                            {!! Form::label('featured','Mark as Featured') !!}
-                            @if($video->featured == 'true')
-                            {{ Form::checkbox('featured', 'true',true) }}
-                            @else
-                            {{ Form::checkbox('featured', 'true',false) }}
-                            @endif      
-                        </div>
+                    <div class="form-group">
+                        {!! Form::label('category_id','Category') !!}
+                        {!! Form::select('category_id', $categories,$video->category->id,['class'=> 'form-control select-category','required']) !!}
+                    </div>
 
-                        <div class="form-group">
-                            {!! Form::label('tags','Tags') !!}
-                            {!! Form::select('tags[]', $tags,$myTags,['class'=> 'form-control select-tag','multiple','required']) !!}
-                        </div>
-                        <div class="form-group">
-                            {!! Form::submit('Edit Video',['class'=>'btn btn-primary']) !!}
-                        </div>
+                    <div class="form-group">
+                        {!! Form::label('content','Content') !!}
+                        {!! Form::textarea('content', $video->content,['class' => 'textarea-content form-control','required']) !!}
+                    </div>
+                    @if(Auth::user()->type == 'admin' || Auth::user()->type == 'editor')
+                    <div class="form-group">
+                        {!! Form::label('featured','Mark as Featured') !!}                        
+                        {{ Form::checkbox('featured', 'true') }}                         
+                    </div>
+                    @endif
+
+                    <div class="form-group">
+                        {!! Form::label('tags','Tags') !!}
+                        {!! Form::select('tags[]', $tags,$myTags,['class'=> 'form-control select-tag chosen-select','multiple']) !!}
+                    </div>
+
+                    <div class="form-group">
+                        {!! Form::submit('Edit Video',['class'=>'btn btn-primary']) !!}
+                    </div>
 
                     {!! Form::close() !!}
+                </div>
+                <div class="col-md-6">
+                <div align="center" class="embed-responsive embed-responsive-16by9">
+                @if($video->filename != '' && $video->video_link == '')
+                    <video  class="embed-responsive-item" controls>
+                        <source src="{{asset('videos/vid_'.$video->filename)}}" type="video/mp4">
+                    </video>
+                @else
+                    <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/{{$video->video_link}}"></iframe>
+                @endif
                 </div>
             </div>
         <!-- /.row -->

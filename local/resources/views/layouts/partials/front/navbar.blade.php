@@ -20,16 +20,19 @@
                 @if(count($navbars)>0)
                     @foreach($navbars as $item)
                     <li class="li-items" style="height:100%">
-                    <?php $type=''; ?>
+                    <?php $url=''; ?>
                         @if($item->category()->first()->name == 'ভিডিও')
                             <?php $url='videos/allvideos'; ?>
-                        @elseif($item->category()->first()->type == 'ফটো')
+                        @elseif($item->category()->first()->name == 'ফটো')
                             <?php $url="photos/allphotos";?>
-                        @elseif($item->category()->first()->type == 'ইসলাম')
+                        @elseif($item->category()->first()->name == 'ইসলাম')
                             <?php $url="ebooks/allebooks"; ?>
                         @endif
-                        <a href="{{url($url)}}" style="line-height:65px;padding:0px 10px;color:white; text-decoration:none">{{$item->category()->first()->name}}</a>
-
+                        @if(isset($url) && $url != '')
+                            <a href="{{url($url)}}" style="line-height:65px;padding:0px 10px;color:white; text-decoration:none">{{$item->category()->first()->name}}</a>
+                        @else
+                            <a href="{{url('categories/'.$item->category()->first()->id)}}" style="line-height:65px;padding:0px 10px;color:white; text-decoration:none">{{$item->category()->first()->name}}</a>
+                        @endif
                     </li>
                     @endforeach
                 @endif
@@ -51,6 +54,7 @@
                             <span class="glyphicon glyphicon-triangle-top triangulo" style="right: 12px; color: rgb(255, 255, 255); top: -11px; position:absolute;"></span>
                             <ul class="profile-ul">
                                 @if(Auth::user()->type != 'subscriber')
+                                <li class="li-first"><a href="{{url('/admin')}}">Dashboard</a></li>
                                 <li class="li-first"><a href="{{url('admin/posts/create')}}">Post your story</a></li>
                                 <li><a href="{{url('admin/photos/create')}}">Post photo story</a></li>
                                 <li><a href="{{url('admin/videos/create')}}">Post video story</a></li>

@@ -10,12 +10,12 @@
     <title>The Public Post | @yield('title')</title>
     <!-- Bootstrap Core CSS -->
     <link href="{{asset('dist/css/bootstrap.min.css')}}" rel="stylesheet">
-    <link href="{{asset('dist/css/jssocials.css')}}" rel="stylesheet">
-    <link href="{{asset('dist/css/jssocials-theme-flat.css')}}" rel="stylesheet">
-
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
     @yield('css')
     <link href="{{asset('dist/icons/style.css')}}" rel="stylesheet">
     <link href="{{asset('dist/css/ninja-slider.css')}}" rel="stylesheet">
+    <link href="{{asset('dist/css/likely.css')}}" rel="stylesheet">
+    <link href="{{asset('dist/css/jumboShare.min.css')}}" rel="stylesheet">
     <script src="{{asset('dist/js/ninja-slider.js')}}"></script>
     <link href="{{asset('dist/css/thumbnail-slider.css')}}" rel="stylesheet" type="text/css" />
     <script src="{{asset('dist/js/thumbnail-slider.js')}}" type="text/javascript"></script>
@@ -48,6 +48,16 @@
 </head>
 
 <body>
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/es_LA/sdk.js#xfbml=1&version=v2.7&appId=167806036983988";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
 @include('layouts.partials.front.navbar')
 @yield('content')
 @include('layouts.partials.front.footer')    
@@ -58,7 +68,11 @@
 <!-- Bootstrap Core JavaScript -->
 <script src="{{asset('bootstrap/js/bootstrap.min.js')}}"></script>
 <script src="{{asset('dist/js/platform/platform.js')}}"></script>
-<script src="{{asset('dist/js/jssocials.js')}}"></script>
+<script src="{{asset('dist/js/likely.js')}}"></script>
+
+<script src="{{asset('dist/js/jumboShare.min.js')}}"></script>
+<script src="{{asset('dist/js/jquery.media.js')}}"></script>
+<script src="{{asset('dist/js/jquery.metadata.js')}}"></script>
 
 <script>
  
@@ -68,25 +82,35 @@ console.log('click');
 $('.profile-menu').toggleClass('mostrar'),
 $('.icono-toggle').toggleClass('glyphicon-triangle-top');
 });
-</script>
-<script>
-$("#share").jsSocials({
-    url: "{{url()->full()}}",
-    text: "Google Search Page",
-    showCount: true,
-    showLabel: true,
-    shares: [
-        { share: "twitter", via: "artem_tabalin", hashtags: "search,google" },
-        "facebook",
-        "googleplus",
-        "linkedin",
-        "pinterest",
-        "stumbleupon",
-        "whatsapp"
-    ]
+var userid = $('.user-name').data('user');
+
+$.ajax({
+    
+    url: '{{ url('/points/getUserPoints') }}'+ '/' + userid,
+    type: 'GET',
+    success: function(data) {
+        console.log('USER POINTS -->'+data);
+        $(".userpoints").text(data);
+    }
 });
 
+// ** MOUSE HOVER ON PROFILE IMAGE ** //
+$('.login').mouseover(function(){
+    $('.profile-menu').fadeIn("fast");
+});
+$('.login').mouseleave(function(){
+    $('.profile-menu').fadeOut("slow");
+});
 </script>
+
+
+<!-- Go to www.addthis.com/dashboard to customize your tools -->
+<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-57d8292603024e18"></script>
+
+<!-- Go to www.addthis.com/dashboard to customize your tools -->
+
+<!-- Go to www.addthis.com/dashboard to customize your tools -->
+
 
 @yield('front-js')
 </body>

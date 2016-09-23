@@ -2,7 +2,8 @@
 @section('title')
     <h2>Edit User: {{$user->name}}
     <span class="label label-success">{{$user->type}}</span> 
-</h2>
+    </h2>
+    <h3>User Points: <span class="userpoints label label-warning"></span></h3>
 @endsection
 @section('content')
         <div class="row">
@@ -42,7 +43,7 @@
 
                     </div>          
                     <div class="form-group col-xs-12">
-                    <i class="fa fa-pencil"></i>
+                    <i class="fa fa-pencil user-name" data-user="{{$user->id}}"></i>
                         {!! Form::label('name','Name') !!}
                         {!! Form::text('name', $user->name,['class'=> 'form-control','placeholder'=>'Type a name','required']) !!}
                     </div>
@@ -80,7 +81,7 @@
                     <div class="form-group col-xs-12">
                         <i class="fa fa-user-group"></i>
                         {!! Form::label('type','User Type') !!}
-                        {!! Form::select('type',[''=>'Select type of user','member'=> 'Member','admin' => 'Administrator'],$user->type,['class'=> 'form-control','required']) !!}
+                        {!! Form::select('type',[''=>'Select type of user','subscriber'=> 'Subscriber','writer'=> 'Writer','editor'=> 'Editor','admin' => 'Administrator'],$user->type,['class'=> 'form-control','required']) !!}
                     </div>
                     @endif
                     <div class="form-group col-xs-12">

@@ -29,8 +29,23 @@
                     </div>
 
                     <div class="form-group">
-                        {!! Form::label('ebook_link','Ebook Link') !!}
-                        {!! Form::text('ebook_link', null,['class'=> 'form-control','placeholder'=>'Type ebook download url','required']) !!}
+                        {!! Form::label('title','Wich type of Ebook you want to upload?') !!}
+                        <br>
+                        <div class="btn btn-danger pdf">URL PDF</div>
+                        <div class="btn btn-success normal">Normal PDF</div>
+                    </div>
+
+                    <div class="form-group ebooklink">
+                        {!! Form::label('ebook_link','Copy and Paste Your Ebook Url') !!}
+
+                        
+                        {!! Form::text('ebook_link', null,['class'=> 'form-control','placeholder'=>'Copy and Paste Your Ebook Url']) !!}
+                    </div>
+                    <div class="form-group ebooknormal">
+                        {!! Form::label('images','Upload your PDF FILE') !!}
+
+                        {!! Form::file('images[]', array('multiple'=>true)) !!}
+                        <br>
                     </div>
 
                     <div class="form-group">
@@ -38,22 +53,15 @@
                         {!! Form::textarea('content', null,['class' => 'textarea-content form-control','required']) !!}
                     </div>
                     
+                    @if(Auth::user()->type == 'admin' || Auth::user()->type == 'editor')
                     <div class="form-group">
                         {!! Form::label('featured','Mark as Featured') !!}                        
                         {{ Form::checkbox('featured', 'true') }}                         
                     </div>
-                    
+                    @endif
                     <div class="form-group">
                         {!! Form::label('tags','Tags') !!}
                         {!! Form::select('tags[]', $tags,null,['class'=> 'form-control select-tag','multiple','required']) !!}
-                    </div>
-                    <div class="form-group">
-                        {!! Form::label('images','Images') !!}
-
-                        {!! Form::file('images[]', array('multiple'=>true)) !!}
-                        <div class="alert alert-warning">
-                            <p>* Images must be 450px tall.</p>
-                        </div>
                     </div>
 
                     <div class="form-group">
@@ -70,6 +78,20 @@
 
 @section('js')
     <script>
+        $('.ebooknormal').hide();
+        $('.ebooklink').hide();
+
+        $('.pdf').on('click',function(e){
+            $('.ebooklink').fadeIn();
+            $('.ebooknormal').hide();
+        });
+        $('.normal').on('click',function(e){
+            $('.ebooknormal').fadeIn();
+            $('.ebooklink').hide();
+        });
+        $('.textarea-content').trumbowyg({
+            
+        });
         $(".select-tag").chosen({
             placeholder_text_multiple: "Select your tags"
         });

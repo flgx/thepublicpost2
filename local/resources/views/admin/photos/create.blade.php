@@ -37,12 +37,12 @@
                         {!! Form::label('content','Content') !!}
                         {!! Form::textarea('content', null,['class' => 'textarea-content form-control','required']) !!}
                     </div>
-                    
+                    @if(Auth::user()->type == 'admin' || Auth::user()->type == 'editor')
                     <div class="form-group">
                         {!! Form::label('featured','Mark as Featured') !!}                        
                         {{ Form::checkbox('featured', 'true') }}                         
                     </div>
-                    
+                    @endif
                     <div class="form-group">
                         {!! Form::label('tags','Tags') !!}
                         {!! Form::select('tags[]', $tags,null,['class'=> 'form-control select-tag','multiple','required']) !!}
@@ -70,6 +70,9 @@
 
 @section('js')
     <script>
+        $('.textarea-content').trumbowyg({
+            
+        });
         $(".select-tag").chosen({
             placeholder_text_multiple: "Select your tags"
         });

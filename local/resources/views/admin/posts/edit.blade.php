@@ -35,6 +35,7 @@
                         {!! Form::label('featured_text','Featured Text') !!}
                         {!! Form::textarea('featured_text', $post->featured_text,['class' => 'textarea-content form-control','required']) !!}
                     </div>
+                    @if(Auth::user()->type == 'admin' || Auth::user()->type == 'editor')
                     <div class="form-group">
                         {!! Form::label('featured','Mark as Featured') !!}
                         @if($post->featured == 'true')
@@ -43,6 +44,7 @@
                         {{ Form::checkbox('featured', 'true',false) }}
                         @endif  
                     </div>
+                    @endif
                     <div class="form-group">
                         {!! Form::label('tags','Tags') !!}
                         {!! Form::select('tags[]', $tags,$myTags,['class'=> 'form-control select-tag','multiple','required']) !!}
@@ -98,6 +100,10 @@
         });
         $(".select-category").chosen({
             placeholder_text_single: "Select a category"
+        });
+        
+        $('.textarea-content').trumbowyg({
+            
         });
 </script>
 @endsection

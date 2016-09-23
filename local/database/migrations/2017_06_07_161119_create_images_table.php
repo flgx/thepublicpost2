@@ -19,11 +19,13 @@ class CreateImagesTable extends Migration
             $table->integer('photo_id')->unsigned()->nullable()->default(null);
             $table->integer('video_id')->unsigned()->nullable()->default(null);
             $table->integer('ebook_id')->unsigned()->nullable()->default(null);
+            $table->integer('adv_id')->unsigned()->nullable()->default(null);
 
             $table->foreign('post_id')->references('id')->on('posts')->onDelete('cascade');
             $table->foreign('photo_id')->references('id')->on('photos')->onDelete('cascade');
             $table->foreign('video_id')->references('id')->on('videos')->onDelete('cascade');
             $table->foreign('ebook_id')->references('id')->on('ebooks')->onDelete('cascade');
+            $table->foreign('adv_id')->references('id')->on('advs')->onDelete('cascade');
             $table->timestamps();
         });
     }

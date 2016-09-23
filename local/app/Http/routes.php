@@ -70,10 +70,6 @@ Route::group(['prefix' => 'admin','middleware'=>'auth'], function () {
 		'uses' => 'PostsController@suspend',
 		'as'   => 'admin.posts.suspend',
 	]);
-	Route::post('posts/addView/{id}',[
-		'uses' => 'PostsController@addView',
-		'as'   => 'admin.posts.addview',
-	]);
 	Route::get('posts/{id}/user',[
 		'uses' => 'PostsController@getUserPosts',
 		'as'   => 'admin.posts.user',
@@ -96,10 +92,6 @@ Route::group(['prefix' => 'admin','middleware'=>'auth'], function () {
 		'uses' => 'EbooksController@suspend',
 		'as'   => 'admin.ebooks.suspend',
 	]);
-	Route::post('ebooks/addView/{id}',[
-		'uses' => 'EbooksController@addView',
-		'as'   => 'admin.ebook.addview',
-	]);
 	Route::get('ebooks/{id}/user',[
 		'uses' => 'EbooksController@getUserPosts',
 		'as'   => 'admin.ebooks.user',
@@ -121,10 +113,6 @@ Route::group(['prefix' => 'admin','middleware'=>'auth'], function () {
 	Route::get('photos/{id}/suspend',[
 		'uses' => 'PhotosController@suspend',
 		'as'   => 'admin.photos.suspend',
-	]);
-	Route::post('photos/addView/{id}',[
-		'uses' => 'PhotosController@addView',
-		'as'   => 'admin.ebook.addview',
 	]);
 	Route::get('photos/{id}/user',[
 		'uses' => 'PhotosController@getUserPosts',
@@ -149,10 +137,6 @@ Route::group(['prefix' => 'admin','middleware'=>'auth'], function () {
 		'uses' => 'VideosController@suspend',
 		'as'   => 'admin.videos.suspend',
 	]);
-	Route::post('videos/addView/{id}',[
-		'uses' => 'VideosController@addView',
-		'as'   => 'admin.videos.addview',
-	]);
 	Route::get('videos/{id}/user',[
 		'uses' => 'VideosController@getUserPosts',
 		'as'   => 'admin.videos.user',
@@ -164,21 +148,36 @@ Route::group(['prefix' => 'admin','middleware'=>'auth'], function () {
 			'uses' => 'UsersController@destroy',
 			'as'   => 'admin.users.destroy',
 		]);
-
+	//Category Routes//
 	Route::resource('categories', 'CategoriesController');
 		Route::get('categories/{id}/destroy',[
 			'uses' => 'CategoriesController@destroy',
 			'as'   => 'admin.categories.destroy',
 		]);
+	//Tag Routes //
 	Route::resource('tags', 'TagsController');
 		Route::get('tags/{id}/destroy',[
 			'uses' => 'TagsController@destroy',
 			'as'   => 'admin.tags.destroy',
 		]);
+	//Advertisement Routes //
+	Route::resource('advs', 'AdvsController');
+		Route::get('advs/{id}/destroy',[
+			'uses' => 'AdvsController@destroy',
+			'as'   => 'admin.advs.destroy',
+		]);
+	Route::get('advs/{id}/approve',[
+		'uses' => 'AdvsController@approve',
+		'as'   => 'admin.advs.approve',
+	]);
+	Route::get('advs/{id}/suspend',[
+		'uses' => 'AdvsController@suspend',
+		'as'   => 'admin.advs.suspend',
+	]);
 });
 
 
-//web routes
+//WEB ROUTES
 	Route::get('/activated',[
 				'uses' => 'Auth\AuthController@showActivatedForm',
 				'as'   => 'auth.activated',
@@ -191,37 +190,87 @@ Route::group(['prefix' => 'admin','middleware'=>'auth'], function () {
 			'as'   => 'add.comments',
 	]);	
 
-	Route::get('/posts/{id}',[
+	//Points
+	Route::post('/points/addShare/{type}/{id}/{shares}',[
+		'uses' => 'PointsController@addShare',
+		'as'   => 'front.points.addshare',
+	]);
+	Route::post('/points/addComment/{type}/{id}/{comments}',[
+		'uses' => 'PointsController@addComment',
+		'as'   => 'front.points.addcomment',
+	]);
+	Route::post('/points/addLike/{type}/{id}/{likes}',[
+		'uses' => 'PointsController@addLike',
+		'as'   => 'front.points.addlike',
+	]);
+	Route::get('/points/getUserPoints/{id}',[
+		'uses' => 'PointsController@getUserPoints',
+		'as'   => 'front.points.getUserPoints',
+	]);
+
+	Route::get('/points/getfacebookstats/{url}',[
+		'uses'=> 'PointsController@getFacebooks',
+		'as' => 'front.points.getfacebooks',
+	]);
+
+	//Front Posts 
+	Route::get('/posts/{id}/{share?}',[
 	'uses' => 'PostsController@show',
 	'as'   => 'front.posts.index',
+	]);	
+	Route::post('posts/addView/{id}',[
+		'uses' => 'PostsController@addView',
+		'as'   => 'admin.posts.addview',
+	]);
+	Route::post('/posts/addShare/{id}/{shares}',[
+	'uses' => 'PostsController@addShare',
+	'as'   => 'front.posts.share',
+	]);
+
+	//Front Category 
+	Route::get('/categories/{id}/{share?}',[
+	'uses' => 'CategoriesController@show',
+	'as'   => 'front.categories.show',
 	]);
 
 	//Front Photos
+	Route::post('photos/addView/{id}',[
+		'uses' => 'PhotosController@addView',
+		'as'   => 'admin.ebook.addview',
+	]);
 	Route::get('/photos/allphotos',[
 	'uses' => 'PhotosController@showAll',
 	'as'   => 'front.photos.index',
 	]);
-	Route::get('/photos/{id}',[
+	Route::get('/photos/{id}/{share?}',[
 	'uses' => 'PhotosController@show',
 	'as'   => 'front.photos.index',
 	]);
 	//Front Videos
+	Route::post('videos/addView/{id}',[
+		'uses' => 'VideosController@addView',
+		'as'   => 'admin.videos.addview',
+	]);
 	Route::get('/videos/allvideos',[
 	'uses' => 'VideosController@showAll',
 	'as'   => 'front.videos.index',
 	]);
 
-	Route::get('/videos/{id}',[
+	Route::get('/videos/{id}/{share?}',[
 	'uses' => 'VideosController@show',
 	'as'   => 'front.videos.show',
 	]);
 	//Front Ebooks
+	Route::post('ebooks/addView/{id}',[
+		'uses' => 'EbooksController@addView',
+		'as'   => 'admin.ebook.addview',
+	]);
 	Route::get('/ebooks/allebooks',[
 	'uses' => 'EbooksController@showAll',
 	'as'   => 'front.ebooks.index',
 	]);
 
-	Route::get('/ebooks/{id}',[
+	Route::get('/ebooks/{id}/{share?}',[
 	'uses' => 'EbooksController@show',
 	'as'   => 'front.ebooks.show',
 	]);
@@ -230,7 +279,19 @@ Route::group(['prefix' => 'admin','middleware'=>'auth'], function () {
 	'uses' => 'FrontPageController@index',
 	'as'   => 'front.index',
 	]);
+	//Newsletters		
+	Route::post('/newsletters/subscribe/{user}/{category}',[
+		'uses' => 'NewslettersController@subscribe',
+		'as'   => 'front.newsletters.subscribe',
+	]);
+	
+	Route::get('/newsletters/checksubscription/{user}/{category}',[
+		'uses' => 'NewslettersController@checksubscription',
+		'as'   => 'front.newsletters.checksubscription',
+	]);
+	//End Newsletters
 	Route::get('posts', [ 'as' => 'posts', 'uses' => 'FrontPageController@posts' ]);
+	//Login and Register
 	Route::auth();
 	Route::get('user/activation/{token}', 'Auth\AuthController@activateUser')->name('user.activate');
 	Route::get('auth/facebook', 'SocialAuth2Controller@redirectToProvider');
@@ -238,5 +299,6 @@ Route::group(['prefix' => 'admin','middleware'=>'auth'], function () {
 	Route::get('auth/facebook/callback', 'SocialAuth2Controller@handleProviderCallback');
 	Route::get('auth/twitter', 'SocialAuth2Controller@redirectToProvider2');
 	Route::get('auth/twitter/callback', 'SocialAuth2Controller@twitterCallback');
+
 
 Route::auth();

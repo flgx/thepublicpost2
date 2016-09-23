@@ -86,6 +86,7 @@
         $(this).parent().addClass('active').siblings().removeClass('active')  
       })
     })
+
     </script>
     <!-- Bootstrap 3.3.6 -->
     <script src="{{ asset('bootstrap/js/bootstrap.min.js')}}"></script>
@@ -126,13 +127,28 @@
     <script src="{{ asset('dist/js/avro-v1.1.4.min.js')}}"></script>
 
     <script>
+    
+        $('.textarea-content').trumbowyg({
+            
+        });
         $('#flash-overlay-modal').modal();
         $("#myTable").tablesorter();
         var token = $('meta[name="csrf-token"]').attr('content');
     </script>
     @yield('js')
     <script>
-    $('textarea, input[type=text]').avro();
+    //user points
+    var userid = $('.user-name').data('user');
+
+    $.ajax({
+        
+        url: '{{ url('/points/getUserPoints') }}'+ '/' + userid,
+        type: 'GET',
+        success: function(data) {
+            console.log('USER POINTS');
+            $(".userpoints").text(data);
+        }
+    });
         if (window.location.hash == '#_=_'){
             history.replaceState 
                 ? history.replaceState(null, null, window.location.href.split('#')[0])
@@ -146,7 +162,10 @@
             }else{
                 var myThis = $(this).parent().parent();
                 var imgid = $(this).data('imgid');
+                var vidid = $(this).data('vidid');
                 var type = $('.type').data('type');
+                //if image delete
+                if(imgid != ''){
                 notie.confirm('আপনি যে কাজ করতে চান আপনি কি নিশ্চিত?', 'হাঁ', 'বাতিল', function() {
                     notie.alert(1, 'ঠিক আছে, দূর', 2)
 
@@ -160,7 +179,25 @@
                             $(myThis).fadeOut(150);
                         }
                     });
-                });  
+                });
+                }else{ 
+                    //if video delete 
+                    console.log('video delete');               
+                    notie.confirm('আপনি যে কাজ করতে চান আপনি কি নিশ্চিত?', 'হাঁ', 'বাতিল', function() {
+                        notie.alert(1, 'ঠিক আছে, দূর', 2)
+
+                        $.ajax({
+                            url: '{{ url('/admin/videos/destroyVideo') }}' + '/' + type + '/' + imgid,
+                            type: 'DELETE',
+                            data:{_token:token,id:imgid,type:type},
+                            success: function(msg) {
+                                console.log(msg['msg']);
+                                
+                                $(myThis).fadeOut(150);
+                            }
+                        });
+                    });
+                }
 
             }
         });

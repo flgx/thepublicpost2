@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use App\Http\Requests\Request;
 
-class EbookRequest extends Request
+class AdvRequest extends Request
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,11 +24,9 @@ class EbookRequest extends Request
     public function rules()
     {
         $rules = [
-            'title' => 'required|min:5|max:100',
-            'category_id' => 'required',
-            'tags' => 'required',
-            'content' => 'required|min:250',
-            'images'  => "required|mimes:pdf|max:10000",
+            'type' => 'required',
+            'image' => 'required',
+            'position' => 'required'
         ];
         return $rules;
     }

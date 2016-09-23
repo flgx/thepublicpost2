@@ -24,7 +24,7 @@ All videos | The Public Post
 
                 </div>
                     <div class="col-lg-9 col-md-12 embed-responsive embed-responsive-16by9">
-                        <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/{{$video->video_link}}"></iframe>
+                        <iframe class="embed-responsive-item"  src="https://www.youtube.com/embed/{{$video->video_link}}"></iframe>
                     </div>
                     <div class="ad-up col-lg-3 col-md-3">
                         <img class="center-block img-responsive m-tb50" src="https://placeholdit.imgix.net/~text?txtsize=19&txt=150%C3%97300&w=150&h=300">

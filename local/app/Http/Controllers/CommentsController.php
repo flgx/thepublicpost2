@@ -7,6 +7,10 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use Laracasts\Flash\Flash;
 use App\Comment;
+use App\Post;
+use App\Video;
+use App\Photo;
+use App\Ebook;
 class CommentsController extends Controller
 {
     /**
@@ -35,21 +39,37 @@ class CommentsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request,$type,$post, $user=null)
+    public function store(Request $request,$type,$post, $user=null,$isfb)
     {
         $comment = new Comment($request->all());
         $comment->comment = $request['comment'];
         if($type == 'photos'){
-            $comment->photo_id = $post;            
+            $comment->photo_id = $post;
+            $photo = Photo::find($post);
+            $points = $photo->points+5;
+            $photo->points=$points;
+            $photo->save();                       
         }
         if($type == 'posts'){
-            $comment->post_id = $post;            
+            $comment->post_id = $post;
+            $post = Post::find($post);
+            $points = $post->points+5;
+            $post->points=$points;
+            $post->save();                 
         }
         if($type == 'videos'){
-            $comment->video_id = $post;            
+            $comment->video_id = $post;
+            $video = Video::find($post);
+            $points = $video->points+5;
+            $video->points=$points;
+            $video->save();               
         }
         if($type == 'ebooks'){
-            $comment->ebook_id = $post;            
+            $comment->ebook_id = $post;
+            $ebook = Ebook::find($post);
+            $points = $ebook->points+5;
+            $ebook->points=$points;
+            $ebook->save();                 
         }
         if(isset($user)){
             $comment->user_id = $user;            

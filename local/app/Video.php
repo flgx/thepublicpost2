@@ -24,6 +24,10 @@ class Video extends Model
     public function category(){
     	
     	return $this->belongsTo('App\Category');
+    }       
+    public function newsletters(){
+        
+        return $this->hasMany('App\Newsletter');
     }     
     public function comments(){
         

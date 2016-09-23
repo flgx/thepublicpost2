@@ -39,13 +39,16 @@
                     <div class="col-lg-12 col-md-12 col-sm-12" style="padding:0; margin-bottom:20px">
                         <a href="#" style="text-decoration:none;color:black">
                             <h3>{{$photo->title}}</h3>
+                            <p class="tiempo"><i class="fa fa-archive" aria-hidden="true"></i>  বিভাগ: {{$photo->category()->first()->name}}</p>
+
                         </a>
                         <a href="#" class="pull-left" style="margin-right:5px">
-
-                        @if(Auth::user()->first()->profile_image && Auth::user()->first()->facebook_id == null && Auth::user()->first()->twitter_id == null)
-                        <img style="max-width:30px" alt="" class="img-circle" src="{{asset('img/users/profile/profile_'.Auth::user()->first()->profile_image)}}" alt="The Public Post">
-                        @elseif(Auth::user()->first()->facebook_id != null || Auth::user()->first()->twitter_id != null)
-                        <img style="max-width:30px" alt="" class="img-circle" src="{{Auth::user()->first()->profile_image}}" alt="The Public Post">
+                        @if($photo->user()->first()->profile_image && $photo->user()->first()->facebook_id == null && $photo->user()->first()->twitter_id == null)
+                            <img class="img-responsive center-block img-circle" style="max-width:30px" src="{{asset('img/users/profile/profile_'.$photo->user()->first()->profile_image)}}" alt="">
+                        @elseif($photo->user()->first()->facebook_id != null || $photo->user()->first()->twitter_id != null )
+                         <img src="{{$photo->user()->first()->profile_image}}" style="max-width:30px" alt="" class="img-circle" alt="The Post Page"> 
+                        @else
+                        <img src="{{asset('img/profile.png')}}" style="max-width:40px" alt="" class="img-circle" alt="The Post Page ">
                         @endif
                         </a>{{$photo->user()->first()->name}} <span class="glyphicon glyphicon-time" style="margin-left:10px;margin-right:10px"> {{$photo->created_at}}</span><span class="icon icon-eye"> {{$photo->views()->count()}} মতামত</span><br><br>
                         <a class="btn btn-primary" href="/{{$photo->photo_link}}">ডাউনলোড <span class="glyphicon glyphicon-chevron-right"></span></a>
@@ -59,14 +62,15 @@
                 <div class="col-lg-10 col-md-10 col-sm-9 col-xs-12 portafolio-content">
                     <!-- Projects Row -->
                 <div class="user col-lg-2 col-md-2 col-sm-2 col-xs-12">
-                @if($photo->user()->first()->profile_image && $photo->user()->first()->facebook_id == null && $photo->user()->first()->twitter_id == null)
-                    <img class="img-responsive center-block img-circle" src="{{asset('img/users/profile/profile_'.$photo->user()->first()->profile_image)}}" alt="">
-                @elseif($photo->user()->facebook_id != null || $photo->user()->twitter_id != null )
-                 <img src="{{$photo->user()->first()->profile_image}}" style="max-width:40px" alt="" class="img-circle" alt="The Post Page"> 
-                @else
-                <img src="{{asset('img/profile.png')}}" style="max-width:40px" alt="" class="img-circle" alt="The Post Page ">
-                @endif
-                    <p class="text-center user-name">{{$photo->user()->first()->name}}</p>
+                    @if($photo->user()->first()->profile_image && $photo->user()->first()->facebook_id == null && $photo->user()->first()->twitter_id == null)
+                        <img class="img-responsive center-block img-circle" src="{{asset('img/users/profile/profile_'.$photo->user()->first()->profile_image)}}" alt="">
+                    @elseif($photo->user()->first()->facebook_id != null || $photo->user()->first()->twitter_id != null )
+                     <img src="{{$photo->user()->first()->profile_image}}" style="max-width:40px" alt="" class="img-circle" alt="The Post Page"> 
+                    @else
+                    <img src="{{asset('img/profile.png')}}" style="max-width:40px" alt="" class="img-circle" alt="The Post Page ">
+                    @endif
+                    <p class="text-center user-name"  data-user="{{$photo->user()->first()->id}}">{{$photo->user()->first()->name}}</p>
+                    <p class="user-name">Points: <span class="userpoints"></span></p>
                     <div class="redes col-lg-10 col-md-8 col-sm-12 col-xs-12 col-lg-offset-1 col-md-offset-2 col-sm-offset-0 col-xs-offset-0" style="padding:0">
                             <p><a href="http://facebook.com/{{$photo->user()->first()->facebook_real}}"><span class="icon icon-facebook"></span></a>
                             <a href="http://twitter.com/{{$photo->user()->first()->twitter_real}}"><span class="icon icon-twitter"></span></a>
@@ -81,8 +85,11 @@
                 <span class="icon icon-price-tag pull-left">{!!$tag->name!!}</span> 
                 @endforeach
                 <hr>
-                
-                <div id="share" class="col-xs-12"></div>
+                <!-- Social media plugin -->
+
+                <div class="center-block addthis_inline_share_toolbox_wzi8" addthis:url="{{url()->current()}}"></div>
+                <!-- Go to www.addthis.com/dashboard to customize your tools -->
+                <div class="addthis_inline_share_toolbox_bi9p" addthis:url="{{url()->current()}}" data-url="{{url()->current()}}"></div>
                 <div class="ad-photo">
                     <img src="https://placehold.it/600x100" alt="">
                 </div>
@@ -105,59 +112,69 @@
                     @endforeach
                 </div>
                 <div class="col-xs-12" style="border:1px solid #eee;margin:20px 0px;"></div>
+                <h2>ফেসবুক মন্তব্য</h2>
+                <div class="fb-comments" data-href="{{url()->current()}}" data-numposts="5"></div>
+                <div class="col-xs-12" style="border:1px solid #eee;margin:20px 0px;"></div>
 
                 <h2>মন্তব্য</h2>
                 <!-- Blog Comments -->
-                <ul class="comments">
-                @foreach($comments as $key => $comment)
-                    <li>
-                    @if($comment->user_id == null)
-                    <img src="{{asset('img/profile.png')}}" style="max-width:40px" alt="" class="img-circle" alt="The Post Page ">  
-                        <span>{{$comment->name}}</span>
-                        <p class="comment">মন্তব্য প্রদান করেছে {{$comment->created_at}}</p>
-                        <p>{{$comment->comment}}</p>        
-                    @else
-                        @if($comment->user()->first()->profile_image && $comment->user()->first()->facebook_id == null && $comment->user()->first()->twitter_id == null)
-                            <img style="max-width:40px" alt="" class="img-circle" src="{{asset('img/users/profile/profile_'.$comment->user()->first()->profile_image)}}" alt="The Public Post">
-                        @elseif($comment->user()->first()->facebook_id != null || $comment->user()->first()->twitter_id != null)
-                            <img style="max-width:40px" alt="" class="img-circle" src="{{$comment->user()->first()->profile_image}}" alt="The Public Post">
-                        @else
-                            <img src="{{asset('img/profile.png')}}" style="max-width:40px" alt="" class="img-circle" alt="The Post Page ">
-                            <span>{{$comment->user()->first()->name}}</span>
-                        @endif 
-                        <span>{{$comment->user()->first()->name}}</span>
+
+                @if($comments->count()>0)
+                    <ul class="comments">
+                    @foreach($comments as $key => $comment)
+                        <li>
+                        @if($comment->user_id == null)
+                        <img src="{{asset('img/profile.png')}}" style="max-width:40px" alt="" class="img-circle" alt="The Post Page ">  
+                            <span>{{$comment->name}}</span>
                             <p class="comment">মন্তব্য প্রদান করেছে {{$comment->created_at}}</p>
-                            <p>{{$comment->comment}}</p>
-                    @endif
-                    </li>
-                    <div class="col-xs-12" style="border:1px solid #eee;margin:20px 0px;"></div>
-                @endforeach
-                </ul>
+                            <p>{{$comment->comment}}</p>        
+                        @else
+                            @if($comment->user()->first()->profile_image && $comment->user()->first()->facebook_id == null && $comment->user()->first()->twitter_id == null)
+                                <img style="max-width:40px" alt="" class="img-circle" src="{{asset('img/users/profile/profile_'.$comment->user()->first()->profile_image)}}" alt="The Public Post">
+                            @elseif($comment->user()->first()->facebook_id != null || $comment->user()->first()->twitter_id != null)
+                                <img style="max-width:40px" alt="" class="img-circle" src="{{$comment->user()->first()->profile_image}}" alt="The Public Post">
+                            @else
+                                <img src="{{asset('img/profile.png')}}" style="max-width:40px" alt="" class="img-circle" alt="The Post Page ">
+                                <span>{{$comment->user()->first()->name}}</span>
+                            @endif 
+                            <span>{{$comment->user()->first()->name}}</span>
+                                <p class="comment">মন্তব্য প্রদান করেছে {{$comment->created_at}}</p>
+                                <p>{{$comment->comment}}</p>
+                        @endif
+                        </li>
+                        <div class="col-xs-12" style="border:1px solid #eee;margin:20px 0px;"></div>
+                    @endforeach
+                    </ul>
+                @endif
                 <!-- Comments Form -->
-                @if(Auth::check())
                 <div class="well comentarios nopadding">
+                @if(Auth::check())
                     <h4>মতামত দিন:</h4>
+                    
                     <div class="col-lg-21 col-md-2 col-sm-2 col-xs-2 nopadding">
                     <a class="pull-left" href="#">
-                    @if(Auth::user()->profile_image && Auth::user()->first()->facebook_id == null && Auth::user()->first()->twitter_id == null)
-                        <img style="max-width:80px" alt="fafa" class="img-circle" src="{{asset('img/users/profile/profile_'.Auth::user()->profile_image)}}" alt="The Public Post">
-                    @elseif(Auth::user()->facebook_id != null || Auth::user()->first()->twitter_id != null)
-                        <img style="max-width:100px" alt="" class="img-circle" src="{{Auth::user()->profile_image}}" alt="The Public Post">
-                    @else
-                        <img src="{{asset('img/profile.png')}}" style="max-width:40px" alt="" class="img-circle" alt="The Post Page ">
-                    @endif  
-                    </a>
-                    </a>
-                    </div>
-                    <form role="form" action="{{url('comment/photos/'.$id.'/'.Auth::user()->id)}}" method="POST">
-                        {{ csrf_field() }}
-                        <div class="form-group col-lg-10 col-md-10 col-sm-9 col-xs-9 nopadding">
-                            <textarea class="form-control ta-styl" name="comment" rows="3"></textarea>
+                    
+                        @if(Auth::user()->profile_image && Auth::user()->first()->facebook_id == null && Auth::user()->first()->twitter_id == null)
+                            <img style="max-width:80px" alt="fafa" class="img-circle" src="{{asset('img/users/profile/profile_'.Auth::user()->profile_image)}}" alt="The Public Post">
+                        @elseif(Auth::user()->facebook_id != null || Auth::user()->first()->twitter_id != null)
+                            <img style="max-width:100px" alt="" class="img-circle" src="{{Auth::user()->profile_image}}" alt="The Public Post">
+                        @else
+                            <img src="{{asset('img/profile.png')}}" style="max-width:40px" alt="" class="img-circle" alt="The Post Page ">
+                        @endif  
+                        </a>
+                        </a>
                         </div>
-                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 nopadding m-0">
-                            <button type="submit" class="btn btn-primary">পাঠান</button>
-                        </div>
-                    </form>
+                        <form role="form" action="{{url('comment/photos/'.$id.'/'.Auth::user()->id)}}" method="POST">
+                            {{ csrf_field() }}
+                            <div class="form-group col-lg-10 col-md-10 col-sm-9 col-xs-9 nopadding">
+                                <textarea class="form-control ta-styl" name="comment" rows="3"></textarea>
+                            </div>
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 nopadding m-0">
+                                <button type="submit" class="btn btn-primary">পাঠান</button>
+                            </div>
+                        </form>
+                @else                    
+                    মন্তব্য করতে আপনাকে অবশ্যই লগইন করতে হবে.
                 @endif
                 <div class="col-md-12 col-sm-12 col-xs-12 nopadding m-t20 m-0">
                 </div>
@@ -290,19 +307,135 @@
     <!-- /.container -->
 @endsection
 @section('front-js')
+
 <script>
-//add views each time
+var uri = '{{url()->current()}}';
+var userid=$('.user').data('userid');
+
+//point system
+var googleshares=0;
+var facebookshares=0;
+var likes=0; //this is for Facebook likes and Pinterest pins.
+var facebookcomments=0;
+var totalshares=0;
+var sum=0;
+var shares=0;
 var dataId = $('.myid').data('photo');
-console.log(dataId);    
+var type = $('.mytype').data('type');
+
+//get google plus shares.
+$.ajax({
+  type: 'POST',
+  url: 'https://clients6.google.com/rpc',
+  processData: true,
+  contentType: 'application/json',
+  data: JSON.stringify({
+    'method': 'pos.plusones.get',
+    'id': uri,
+    'params': {
+      'nolog': true,
+      'id': uri,
+      'source': 'widget',
+      'userId': '@viewer',
+      'groupId': '@self'
+    },
+    'jsonrpc': '2.0',
+    'key': 'p',
+    'apiVersion': 'v1'
+  }),
+  success: function(response) {
+    console.log('GOOGLE PLUS SHARES -> '+response.result.metadata.globalCounts.count);
+    googleshares=response.result.metadata.globalCounts.count;
+  }
+});
+
+//get facebook shares and comments
+$.getJSON("http://graph.facebook.com/"+uri, function(data){
+    facebookshares=data['share']['share_count'];
+
+    console.log('Facebook Shares-->'+data['share']['share_count']);
+    console.log('Facebook Comments-->'+data['share']['comment_count']);
+
+
+    //add facebook comment point
+    $.ajax({
+        
+        url: '{{ url('/points/addComment') }}' + '/'+'photos'+ '/' + dataId + '/' +data['share']['comment_count'], 
+        type: 'POST',
+        data:{_token:token,id:dataId},
+        success: function(msg) {
+            console.log(msg['msg']);
+        }
+    }); 
+    
+});
+function getShares(){
+    shares = facebookshares + googleshares;
+        //shares watcher
+    $.ajax({
+        
+        url: '{{ url('/points/addShare') }}' + '/'+'photos'+ '/' + dataId + '/' + shares,
+        type: 'POST',
+        data:{_token:token,id:dataId},
+        success: function(msg) {
+            console.log(msg['msg']);
+        }
+    });
+    console.log('TOtal sharesss '+shares);
+}
+setTimeout(getShares,4000);
+//total shares
+
+
+
+
+
+
+//Function from Addthis plugin to get shares from Facebook and Pinterest.
+addthis.sharecounters.getShareCounts(['facebook','pinterest'], function(obj) {
+ 
+    //sum all counts from likes
+    for(var key in obj) {
+        if(obj[key]['count'] != '?'){
+            sum= sum+obj[key]['count'];            
+        }
+    }
+    //get the shares with jquery
+    
+    //
+    likes = sum; //sum of Facebook Likes and Pintereset Pins.
+    console.log('Facebook & Pinteresets Likes --> '+likes);
+
+    //like watcher: check new likes or unlikes from Facebook or Pinterest and save on db to add points.
+    $.ajax({
+        
+        url: '{{ url('/points/addLike') }}' + '/'+'photos'+ '/' + dataId + '/' + likes,
+        type: 'POST',
+        data:{_token:token,id:dataId},
+        success: function(msg) {
+            console.log(msg['msg']);
+        }
+    });  
+});
+//end point system
+
+
+
+
+//Views System. Check ip and add view or not if the same ip.
+
 $.ajax({
     
-    url: '{{ url('/admin/photos/addView') }}' + '/' + dataId,
+    url: '{{ url('/photos/addView') }}' + '/' + dataId,
     type: 'POST',
     data:{_token:token,id:dataId},
     success: function(msg) {
-        console.log(msg['msg']);
+        
     }
 });
+//end Views System
+
+//captcha
 $(".captcha-error").hide();
 $(".captcha-correct").hide();
 $('#submit').prop('disabled', true);
@@ -322,6 +455,6 @@ $('#submit').prop('disabled', true);
             $(".captcha-correct").hide();
         }
     });
-
+//endcaptcha
 </script>
 @endsection

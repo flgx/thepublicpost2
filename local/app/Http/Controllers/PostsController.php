@@ -27,6 +27,17 @@ class PostsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function addShare(Request $request,$id,$shares){
+        $post = Post::find($id);
+        $real_shares= $post->shares;
+        if($real_shares == $shares && $shares == 0){
+            return response()->json(['msg'=>'error']);   
+        }else{
+            $post->shares = $shares;
+            $post->save();
+            return response()->json(['msg'=>'success']);
+        }
+    }
     public function getUserPosts($id){
         $posts =  Post::orderBy('id','DESC')->where('user_id',$id)->paginate(5);
         $posts->each(function($posts){
@@ -42,6 +53,9 @@ class PostsController extends Controller
     public function addView(Request $request,$id){        
         $ipAddress = '';
 
+        $post = Post::find($id);
+        $points=$post->points;
+
 
         // Check for X-Forwarded-For headers and use those if found
         if (isset($_SERVER['HTTP_X_FORWARDED_FOR']) && ('' !== trim($_SERVER['HTTP_X_FORWARDED_FOR']))) {
@@ -55,6 +69,7 @@ class PostsController extends Controller
         if($isViewed == 0){  
             $view = new Views();
             $view->post_id = $id;
+            $points = $points + 1;
             $view->ip=$ipAddress;
             $view->save();
             return response()->json(['msg'=>'success']);    
@@ -175,7 +190,7 @@ class PostsController extends Controller
                             $post->tags()->sync($request->tags);
                            
                             $destinationPath = 'img/posts/';
-                            $image->resize(null,280, function ($constraint) {
+                            $image->resize(null,450, function ($constraint) {
                                 $constraint->aspectRatio();
                             });
                             $image->save($destinationPath.'slider_'.$picture);
@@ -214,7 +229,7 @@ class PostsController extends Controller
         $footers = Footer::orderBy('position','ASC')->get();
         $post = Post::where('id',$id)->first();
         $post->views();
-                $post->tags()->get();
+        $post->tags()->get();
         $comments = $post->comments()->orderBy('id','DESC')->get();
    
         $comments->each(function($comments){
@@ -222,7 +237,6 @@ class PostsController extends Controller
                 $comments->user;
          
         });
-
         $categories = Category::orderBy('name','DESC')->paginate(15);
         $related_posts = Post::orderBy('id','DESC')->paginate(3);
         $related_photos = Photo::orderBy('id','DESC')->paginate(3);
@@ -311,7 +325,7 @@ class PostsController extends Controller
                              return redirect()->back();
                         }else{
                             $destinationPath = 'img/posts/';
-                            $image->resize(null,280, function ($constraint) {
+                            $image->resize(null,450, function ($constraint) {
                                 $constraint->aspectRatio();
                             });
                             $image->save($destinationPath.'slider_'.$picture);

@@ -25,7 +25,7 @@ class PhotosController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function getUserPhotos($id){
+    public function getUserPosts($id){
         $photos =  Photo::orderBy('id','DESC')->where('user_id',$id)->paginate(5);
         $photos->each(function($photos){
             $photos->category;
@@ -174,7 +174,7 @@ class PhotosController extends Controller
                             $photo->tags()->sync($request->tags);
                            
                             $destinationPath = 'img/photos/';
-                            $image->resize(null,280, function ($constraint) {
+                            $image->resize(null,450, function ($constraint) {
                                 $constraint->aspectRatio();
                             });
                             $image->save($destinationPath.'slider_'.$picture);
@@ -319,7 +319,7 @@ class PhotosController extends Controller
                              return redirect()->back();
                         }else{
                             $destinationPath = 'img/photos/';
-                            $image->resize(null,280, function ($constraint) {
+                            $image->resize(null,450, function ($constraint) {
                                 $constraint->aspectRatio();
                             });
                             $image->save($destinationPath.'slider_'.$picture);

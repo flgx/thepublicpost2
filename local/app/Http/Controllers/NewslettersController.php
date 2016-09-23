@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
-use App\Newsletter;
-class NewsletterController extends Controller
+
+class NewslettersController extends Controller
 {
     /**
      * Display a listing of the resource.

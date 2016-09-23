@@ -39,6 +39,19 @@
         </li>
         @if(Auth::user()->type == 'admin' || Auth::user()->type == 'editor')
 
+        <li class="treeview {{ (Request::is('admin/advs') ? 'active' : '') }}">
+          <a href="#">
+            <i class="fa fa-dashboard"></i> <span>Advertisement</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu {{ (Request::is('admin/advs') ? 'active' : '') }}">
+            <li class="{{ (Request::is('admin/advs') ? 'active' : '') }}"><a href="{{url('admin/advs')}}"><i class="fa fa-circle-o"></i>View Ads</a></li>
+            <li class="{{ (Request::is('admin/advs/create') ? 'active' : '') }}"><a href="{{url('admin/advs/create')}}"><i class="fa fa-circle-o"></i> Create Ads</a></li>
+          </ul>
+        </li>
+
         <li class="treeview {{ (Request::is('admin/navbars') ? 'active' : '') }}">
           <a href="#">
             <i class="fa fa-dashboard"></i> <span>Navbars</span>

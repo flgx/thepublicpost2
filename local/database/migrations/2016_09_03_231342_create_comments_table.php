@@ -18,6 +18,7 @@ class CreateCommentsTable extends Migration
             $table->string('name');
             $table->string('email');
             $table->string('web');
+            $table->integer('fb');
             $table->integer('post_id')->unsigned()->nullable();
             $table->integer('video_id')->unsigned()->nullable();
             $table->integer('photo_id')->unsigned()->nullable();

@@ -36,7 +36,9 @@ class EbooksController extends Controller
         return view('admin.ebooks.user')
         ->with('ebooks',$ebooks)->with('user',$user);
     }
-    public function addView(Request $request,$id){        
+    public function addView(Request $request,$id){   
+             
+     
         $ipAddress = '';
 
 
@@ -48,6 +50,7 @@ class EbooksController extends Controller
                 $ipAddress = trim($_SERVER['REMOTE_ADDR']);
             }
         }
+        return response()->json(['msg'=>'success']);  
         $isViewed= Views::where('ip',$ipAddress)->where('ebook_id',$id)->count();
         if($isViewed == 0){  
             $view = new Views();
@@ -217,10 +220,14 @@ class EbooksController extends Controller
                 $comments->user;
          
         });
+        $categories = Category::orderBy('name','DESC')->paginate(15);
         $related_ebooks = Ebook::orderBy('id','DESC')->paginate(3);
 
         return view('front.ebooks.show')
         ->with('related_ebooks',$related_ebooks)
+        ->with('related_ebooks',$related_ebooks)
+        ->with('categories',$categories)
+        ->with('comments',$comments)
         ->with('ebook',$ebook)
         ->with('navbars',$navbars)
         ->with('footers',$footers);
